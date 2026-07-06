@@ -5,16 +5,10 @@ import { Cpu, Terminal as TermIcon, Code, ChevronDown, Sparkles } from "lucide-r
 import { CLUBS_DATA } from "../data/clubs";
 
 interface ClubsHubProps {
-  onScrollToPast: () => void;
-  onScrollToPresent: () => void;
-  onScrollToFuture: () => void;
+  onScrollToEra: (eraId: string) => void;
 }
 
-export default function ClubsHub({
-  onScrollToPast,
-  onScrollToPresent,
-  onScrollToFuture,
-}: ClubsHubProps) {
+export default function ClubsHub({ onScrollToEra }: ClubsHubProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -22,18 +16,14 @@ export default function ClubsHub({
     offset: ["start start", "end end"],
   });
 
-  // Hero animations
   const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 0.92]);
   const heroY = useTransform(scrollYProgress, [0, 0.3], [0, -60]);
+  const heroScrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
 
-  // Scaler Core animations (scales down from hero state and moves into position as background element)
-  const coreScale = useTransform(scrollYProgress, [0, 0.45], [1, 0.45]);
-  const coreY = useTransform(scrollYProgress, [0, 0.45], [0, -110]);
-  const coreRotate = useTransform(scrollYProgress, [0, 1], [0, 90]);
 
-  // Hub Content animations
-  const hubOpacity = useTransform(scrollYProgress, [0.3, 0.45], [0, 1]);
+  // Hub Content animations (fades in and then fades out near scroll exit)
+  const hubOpacity = useTransform(scrollYProgress, [0.3, 0.45, 0.8, 0.95], [0, 1, 1, 0]);
   const hubY = useTransform(scrollYProgress, [0.3, 0.45], [40, 0]);
 
   // Cards staggered layers animations (opacity + scale + dynamic slide translation)
@@ -49,9 +39,8 @@ export default function ClubsHub({
   const card3Scale = useTransform(scrollYProgress, [0.56, 0.71], [0.85, 1]);
   const card3Y = useTransform(scrollYProgress, [0.56, 0.71], [60, 0]);
 
-  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0.72, 0.85], [0, 1]);
+  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0.72, 0.85, 0.9, 0.95], [0, 1, 1, 0]);
 
-  const clickHandlers = [onScrollToPast, onScrollToPresent, onScrollToFuture];
   const cardTransforms = [
     { opacity: card1Opacity, scale: card1Scale, y: card1Y },
     { opacity: card2Opacity, scale: card2Scale, y: card2Y },
@@ -65,7 +54,7 @@ export default function ClubsHub({
   };
 
   return (
-    <div ref={containerRef} className="relative w-full h-[220vh] bg-transparent">
+    <div ref={containerRef} className="relative w-full h-[220vh] bg-transparent z-10">
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-center justify-center px-4 sm:px-6">
         
         {/* ========================================== */}
@@ -73,7 +62,7 @@ export default function ClubsHub({
         {/* ========================================== */}
         <motion.div
           style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-          className="absolute z-10 flex flex-col items-center text-center max-w-5xl pointer-events-none"
+          className="flex flex-col items-center text-center pointer-events-none select-none"
         >
           <div className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan-400/30 bg-cyan-400/5 mb-8">
             <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
@@ -96,31 +85,6 @@ export default function ClubsHub({
           </p>
         </motion.div>
 
-        {/* ========================================== */}
-        {/* THE PLAYBOOK SCALER: 3D Nexus Core         */}
-        {/* ========================================== */}
-        <motion.div
-          style={{ scale: coreScale, y: coreY, rotate: coreRotate }}
-          className="relative z-0 w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] rounded-3xl border border-white/10 flex items-center justify-center bg-nexus-card backdrop-blur-xl shadow-nexus-card pointer-events-none"
-        >
-          <div className="absolute inset-3 rounded-2xl border border-white/5" />
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-            className="absolute w-[90%] h-[90%] rounded-full border border-dashed border-cyan-400/20"
-          />
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
-            className="absolute w-[70%] h-[70%] rounded-full border border-dashed border-purple-400/20"
-          />
-          <div className="relative z-10 flex flex-col items-center gap-3 px-6 text-center">
-            <Cpu className="w-10 h-10 sm:w-12 sm:h-12 text-cyan-300" strokeWidth={1.2} />
-            <span className="font-grotesk text-sm sm:text-base tracking-[0.25em] text-slate-200 uppercase">
-              3D Nexus Core
-            </span>
-          </div>
-        </motion.div>
 
         {/* ========================================== */}
         {/* PHASE 2: CLUBS HUB LAYOUT                  */}
@@ -153,7 +117,7 @@ export default function ClubsHub({
             {CLUBS_DATA.map((club, idx) => {
               const Icon = icons[club.iconName];
               const transform = cardTransforms[idx];
-              const onClick = clickHandlers[idx];
+              const onClick = () => onScrollToEra(club.id);
 
               return (
                 <motion.div
@@ -207,6 +171,23 @@ export default function ClubsHub({
                 </motion.div>
               );
             })}
+          </div>
+        </motion.div>
+
+        {/* Hero scroll initiate indicator */}
+        <motion.div
+          style={{ opacity: heroScrollIndicatorOpacity }}
+          className="absolute bottom-10 flex flex-col items-center gap-3 pointer-events-none z-10"
+        >
+          <span className="font-rajdhani text-[10px] tracking-[0.3em] text-cyan-300 uppercase animate-pulse">
+            Scroll to Initiate
+          </span>
+          <div className="w-[1px] h-12 bg-gradient-to-b from-cyan-400/50 to-transparent relative overflow-hidden">
+            <motion.div
+              animate={{ y: ["-100%", "100%"] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute left-0 top-0 w-full h-[30%] bg-cyan-300"
+            />
           </div>
         </motion.div>
 

@@ -1,26 +1,18 @@
 // src/components/ChronoNexia.tsx
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useSpring, useMotionValueEvent } from "framer-motion";
+import { motion, useScroll, useSpring, useMotionValueEvent, useTransform } from "framer-motion";
 import type { Era } from "../data/schedule";
+import { CLUBS_DATA } from "../data/clubs";
 import Chronometer from "./Chronometer";
 import ClubsHub from "./ClubsHub";
-import PastSection from "./PastSection";
-import PresentSection from "./PresentSection";
-import FutureSection from "./FutureSection";
+import ClubPavilionSection from "./ClubPavilionSection";
+import NexusGraphBackground from "./NexusGraphBackground";
+import SponsorsSection from "./SponsorsSection";
 import Footer from "./Footer";
-
-interface SectionRef {
-  ref: React.RefObject<HTMLDivElement>;
-  id: Era;
-}
 
 export default function ChronoNexia() {
   const [era, setEra] = useState<Era>("hero");
-
   const heroHubRef = useRef<HTMLDivElement>(null);
-  const pastRef = useRef<HTMLDivElement>(null);
-  const presentRef = useRef<HTMLDivElement>(null);
-  const futureRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -50,13 +42,6 @@ export default function ChronoNexia() {
   });
 
   useEffect(() => {
-    const sections: SectionRef[] = [
-      { ref: heroHubRef, id: "hero" },
-      { ref: pastRef, id: "past" },
-      { ref: presentRef, id: "present" },
-      { ref: futureRef, id: "future" },
-    ];
-
     const observer = new IntersectionObserver(
       (entries) => {
         let best: IntersectionObserverEntry | null = null;
@@ -68,36 +53,37 @@ export default function ChronoNexia() {
           }
         }
         if (best) {
-          if (best.target === heroHubRef.current) {
+          const id = best.target.id;
+          if (id === "hero-hub") {
             const progress = hubScrollProgress.get();
             setEra(progress < 0.35 ? "hero" : "hub");
-          } else {
-            const match = sections.find((s) => s.ref.current === best!.target);
-            if (match) setEra(match.id);
+          } else if (id) {
+            setEra(id as Era);
           }
         }
       },
       { threshold: [0.15, 0.5, 0.8], rootMargin: "0px" }
     );
 
-    sections.forEach((s) => {
-      if (s.ref.current) observer.observe(s.ref.current);
+    const heroHubEl = document.getElementById("hero-hub");
+    if (heroHubEl) observer.observe(heroHubEl);
+
+    CLUBS_DATA.forEach((club) => {
+      const el = document.getElementById(club.id);
+      if (el) observer.observe(el);
     });
 
     return () => observer.disconnect();
   }, [hubScrollProgress]);
 
-  const scrollToPast = () => {
-    pastRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToEra = (eraId: string) => {
+    const el = document.getElementById(eraId);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
-  const scrollToPresent = () => {
-    presentRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const scrollToFuture = () => {
-    futureRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const indicatorTop = useTransform(scrollYProgress, [0, 1], ["0%", "98%"]);
 
   return (
     <div className="relative w-full">
@@ -107,8 +93,11 @@ export default function ChronoNexia() {
         style={{ scaleX }}
       />
 
+      {/* Global Dynamic Node Network Background */}
+      <NexusGraphBackground />
+
       {/* Fixed Backdrop Layer */}
-      <div className="fixed inset-0 pointer-events-none -z-10 select-none overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none z-[-20] select-none overflow-hidden">
         {/* Hero Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -148,8 +137,12 @@ export default function ChronoNexia() {
           initial={{ opacity: 0 }}
           animate={{ opacity: era === "present" ? 1 : 0 }}
           transition={{ duration: 0.8 }}
-          className="absolute inset-0 bg-offwhite"
-        />
+          className="absolute inset-0 bg-void"
+        >
+          <div className="absolute inset-0 opacity-[0.04] bg-grid-cyan" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-[80px] opacity-30" style={{ background: "radial-gradient(circle, rgba(37,99,235,0.4) 0%, transparent 70%)" }} />
+        </motion.div>
+
 
         {/* Future Backdrop */}
         <motion.div
@@ -163,17 +156,66 @@ export default function ChronoNexia() {
         </motion.div>
       </div>
 
-      <Chronometer era={era} />
-      <div ref={heroHubRef}>
-        <ClubsHub
-          onScrollToPast={scrollToPast}
-          onScrollToPresent={scrollToPresent}
-          onScrollToFuture={scrollToFuture}
-        />
+      {/* Persistent Vertical Timeline Thread Sidebar */}
+      <div className="fixed right-6 md:right-10 top-1/2 -translate-y-1/2 hidden sm:flex flex-col items-center gap-6 z-40 pointer-events-none">
+        <div className="relative w-[1px] h-[200px] bg-white/10 flex flex-col justify-between items-center py-2">
+          {/* Vertical progress fill */}
+          <motion.div
+            style={{ scaleY: scrollYProgress, originY: 0 }}
+            className="absolute top-0 left-0 w-full h-full bg-nexus-gradient"
+          />
+          
+          {/* Moving Indicator Node */}
+          <motion.div
+            style={{ 
+              top: indicatorTop,
+              boxShadow: era === "past" ? "0 0 10px #33ff00" : era === "present" ? "0 0 10px #2563eb" : era === "future" ? "0 0 10px #b026ff" : "0 0 10px #00f0ff"
+            }}
+            className={`absolute left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full z-10 transition-all duration-300 ${
+              era === "past" ? "bg-term-green" : era === "present" ? "bg-techblue" : era === "future" ? "bg-purple-400" : "bg-cyan-300"
+            }`}
+          />
+
+          {/* Label anchors */}
+          <div className="absolute right-4 top-[5%] flex items-center gap-2">
+            <span className={`text-[10px] tracking-[0.2em] font-rajdhani font-semibold transition-all duration-300 ${
+              era === "hero" || era === "hub" ? "text-cyan-300 scale-105" : "text-slate-500 opacity-60"
+            }`}>NEXUS</span>
+          </div>
+          <div className="absolute right-4 top-[35%] flex items-center gap-2">
+            <span className={`text-[10px] tracking-[0.2em] font-mono transition-all duration-300 ${
+              era === "past" ? "text-term-green scale-105" : "text-slate-500 opacity-60"
+            }`}>PAST</span>
+          </div>
+          <div className="absolute right-4 top-[65%] flex items-center gap-2">
+            <span className={`text-[10px] tracking-[0.2em] font-inter transition-all duration-300 ${
+              era === "present" ? "text-techblue scale-105 font-bold" : "text-slate-500 opacity-60"
+            }`}>PRESENT</span>
+          </div>
+          <div className="absolute right-4 top-[95%] flex items-center gap-2">
+            <span className={`text-[10px] tracking-[0.2em] font-grotesk transition-all duration-300 ${
+              era === "future" ? "text-purple-300 scale-105 font-bold" : "text-slate-500 opacity-60"
+            }`}>FUTURE</span>
+          </div>
+        </div>
       </div>
-      <PastSection ref={pastRef} />
-      <PresentSection ref={presentRef} />
-      <FutureSection ref={futureRef} />
+
+      <Chronometer era={era} />
+      
+      <div id="hero-hub" ref={heroHubRef} className="relative z-10">
+        <ClubsHub onScrollToEra={scrollToEra} />
+      </div>
+
+      {CLUBS_DATA.map((club, idx) => (
+        <ClubPavilionSection
+          key={club.id}
+          club={club}
+          isLast={idx === CLUBS_DATA.length - 1}
+        />
+      ))}
+
+      <SponsorsSection />
+
       <Footer />
     </div>
   );

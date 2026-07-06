@@ -194,3 +194,57 @@ a:focus-visible {
   outline: 2px solid #00f0ff;
   outline-offset: 2px;
 }
+
+/* ---------------------------------------------------------------------- */
+/* Evolving Nexus UI overrides                                            */
+/* ---------------------------------------------------------------------- */
+
+.future-card-mesh {
+  position: relative;
+  background: radial-gradient(at 0% 0%, rgba(0, 240, 255, 0.1) 0px, transparent 50%),
+              radial-gradient(at 100% 100%, rgba(176, 38, 255, 0.1) 0px, transparent 50%),
+              linear-gradient(135deg, rgba(16, 8, 38, 0.8), rgba(6, 3, 14, 0.9));
+  border: none !important;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 40px -15px rgba(0, 240, 255, 0.12),
+              0 15px 55px -10px rgba(176, 38, 255, 0.08);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Premium translucent border gradient mask */
+.future-card-mesh::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(255, 255, 255, 0.02) 50%, rgba(176, 38, 255, 0.15));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.future-card-mesh:hover {
+  box-shadow: 0 15px 50px -10px rgba(0, 240, 255, 0.22),
+              0 20px 65px -5px rgba(176, 38, 255, 0.18);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Retro Boot Loader — CRT terminal animations                            */
+/* ---------------------------------------------------------------------- */
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.retro-boot-line {
+  display: block;
+  animation: type-in 0.05s ease both;
+}
+
+@keyframes type-in {
+  from { opacity: 0; transform: translateX(-4px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
