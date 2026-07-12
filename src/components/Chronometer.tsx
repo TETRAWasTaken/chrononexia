@@ -11,6 +11,13 @@ interface ChronometerConfig {
 }
 
 const CONFIG: Record<Era, ChronometerConfig> = {
+  symbitech: {
+    label: "SYMBI TECH",
+    sub: "EST-2026",
+    fontClass: "font-grotesk",
+    wrapperClass: "border-cyan-400/40 text-cyan-300 bg-black/40",
+    glow: "0 0 20px rgba(0,240,255,0.35)",
+  },
   hero: {
     label: "NEXUS",
     sub: "T+00:00:00",

@@ -1,6 +1,6 @@
 // src/data/schedule.ts
 
-export type Era = "hero" | "hub" | "past" | "present" | "future";
+export type Era = "symbitech" | "hero" | "hub" | "past" | "present" | "future";
 
 export interface PastEvent {
   time: string;
