@@ -8,6 +8,7 @@ import RetroBootLoader from "./RetroBootLoader";
 interface ClubPavilionSectionProps {
   club: ClubInfo;
   isLast?: boolean;
+  onSelectClub: (club: { id: string; name: string; era: "past" | "present" | "future" }) => void;
 }
 
 interface EventCardProps {
@@ -16,6 +17,7 @@ interface EventCardProps {
   total: number;
   parentScrollYProgress: MotionValue<number>;
   club: ClubInfo;
+  onSelectClub: (club: { id: string; name: string; era: "past" | "present" | "future" }) => void;
 }
 
 function EventCard({
@@ -24,6 +26,7 @@ function EventCard({
   total,
   parentScrollYProgress,
   club,
+  onSelectClub,
 }: EventCardProps) {
   // Distribute start scroll triggers across 0.2 to 0.6 range based on index
   const cardProgressStart = 0.2 + (index / total) * 0.4;
@@ -57,9 +60,18 @@ function EventCard({
     [0.92, 1]
   );
 
+  const handleCardClick = () => {
+    onSelectClub({
+      id: event.title.toLowerCase().replace(/\s+/g, "-"),
+      name: event.title,
+      era: club.id
+    });
+  };
+
   return (
     <motion.div
       style={{ opacity, x, y, scale }}
+      onClick={handleCardClick}
       whileHover={{
         y: -6,
         scale: 1.025,
@@ -71,7 +83,7 @@ function EventCard({
             : "0 20px 45px -10px rgba(176, 38, 255, 0.25)",
         transition: { duration: 0.25, ease: "easeOut" }
       }}
-      className={`relative overflow-hidden flex flex-col justify-between group ${club.cardStyle} ${club.textStyle}`}
+      className={`relative overflow-hidden flex flex-col justify-between cursor-pointer group ${club.cardStyle} ${club.textStyle}`}
     >
       <div>
         <div className="flex items-center justify-between mb-4">
@@ -100,17 +112,21 @@ function EventCard({
           <span>{event.room}</span>
         </div>
         <button
-          aria-label={`RSVP for ${event.title}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleCardClick();
+          }}
+          aria-label={`View portal for ${event.title}`}
           className={`w-full text-xs sm:text-sm tracking-wider py-2.5 rounded-xl transition-all duration-150 ${club.btnStyle}`}
         >
-          {club.id === "past" ? "ACKNOWLEDGE" : "RSVP"}
+          {club.id === "past" ? "ENTER ARCHIVE" : "VIEW PORTAL"}
         </button>
       </div>
     </motion.div>
   );
 }
 
-export default function ClubPavilionSection({ club, isLast = false }: ClubPavilionSectionProps) {
+export default function ClubPavilionSection({ club, isLast = false, onSelectClub }: ClubPavilionSectionProps) {
   const localRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -192,6 +208,7 @@ export default function ClubPavilionSection({ club, isLast = false }: ClubPavili
                   total={club.events.length}
                   parentScrollYProgress={scrollYProgress}
                   club={club}
+                  onSelectClub={onSelectClub}
                 />
               ))}
             </div>
@@ -206,6 +223,7 @@ export default function ClubPavilionSection({ club, isLast = false }: ClubPavili
                 total={club.events.length}
                 parentScrollYProgress={scrollYProgress}
                 club={club}
+                onSelectClub={onSelectClub}
               />
             ))}
           </div>
