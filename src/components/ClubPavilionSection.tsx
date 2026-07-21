@@ -62,7 +62,7 @@ function EventCard({
 
   const handleCardClick = () => {
     onSelectClub({
-      id: event.title.toLowerCase().replace(/\s+/g, "-"),
+      id: event.clubId || event.title.toLowerCase().replace(/\s+/g, "-"),
       name: event.title,
       era: club.id
     });
@@ -86,15 +86,34 @@ function EventCard({
       className={`relative overflow-hidden flex flex-col justify-between cursor-pointer group ${club.cardStyle} ${club.textStyle}`}
     >
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${club.badgeStyle}`}>
-            {event.extra}
-          </span>
-          <span className="text-xs sm:text-sm font-medium flex items-center gap-1 opacity-75">
-            <Clock className="w-3.5 h-3.5" />
-            {event.time}
-          </span>
+        <div className="flex items-start justify-between mb-4 gap-3">
+          {event.logo ? (
+            <div className="w-14 h-14 rounded-xl bg-slate-900/90 p-2 border border-slate-700/60 shadow-md flex items-center justify-center overflow-hidden shrink-0 group-hover:border-cyan-400/60 transition-colors duration-300">
+              <img
+                src={event.logo}
+                alt={`${event.title} logo`}
+                className="w-full h-full object-contain filter drop-shadow group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+          ) : (
+            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${club.badgeStyle}`}>
+              {event.extra}
+            </span>
+          )}
+
+          <div className="flex flex-col items-end gap-1">
+            {event.logo && (
+              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${club.badgeStyle}`}>
+                {event.extra}
+              </span>
+            )}
+            <span className="text-xs sm:text-sm font-medium flex items-center gap-1 opacity-75">
+              <Clock className="w-3.5 h-3.5" />
+              {event.time}
+            </span>
+          </div>
         </div>
+
         <h3 className={`text-lg sm:text-xl font-semibold mb-3 leading-snug ${
           club.id === "past"
             ? "text-term-amber font-vt323 text-2xl"

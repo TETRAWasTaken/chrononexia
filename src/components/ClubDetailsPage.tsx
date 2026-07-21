@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, MapPin, Sparkles } from "lucide-react";
+import { PAST_SCHEDULE, PRESENT_SCHEDULE, FUTURE_SCHEDULE } from "../data/schedule";
 
 interface ClubDetailsPageProps {
   club: {
@@ -18,23 +19,27 @@ interface ClubDetailsData {
   eventDescription: string;
   learningOutcomes: string[];
   location: string;
+  logo?: string;
 }
+
+const ALL_SCHEDULE = [...PAST_SCHEDULE, ...PRESENT_SCHEDULE, ...FUTURE_SCHEDULE];
 
 const CLUB_MOCKED_EVENTS: Record<
   string,
   { eventName: string; eventDescription: string; learningOutcomes: string[]; location: string }
 > = {
-  "symbiosis-economic-club": {
-    eventName: "EcoGenesis: The Fiscal Policy Simulation",
-    eventDescription: "A high-stakes macroeconomic simulation game where participants act as central bankers and finance ministers to navigate simulated global economic crises.",
+  // EPOCH 1: Foundations
+  "cess": {
+    eventName: "TrussForce: Structural Integrity & Civil Design Sprint",
+    eventDescription: "A hands-on civil engineering competition where teams calculate force vectors and build eco-friendly bridge trusses subjected to real-time stress testing.",
     learningOutcomes: [
-      "Understanding fiscal and monetary policy transmission mechanisms",
-      "Analyzing economic indicators and market dependencies",
-      "Crisis management and financial decision-making under uncertainty"
+      "Analyzing tension, compression, and shear stresses in truss structures",
+      "Optimizing material efficiency under high structural loads",
+      "Applying green building principles to civil infrastructure"
     ],
-    location: "Block A — Room 101"
+    location: "Civil Block"
   },
-  "electronics-design-club": {
+  "edc": {
     eventName: "CircuitCraft: IoT Hardware & PCB Design Workshop",
     eventDescription: "A comprehensive, hands-on workshop focused on designing microchip schematics, simulating analog-to-digital signals, and fabricating printed circuit boards (PCBs).",
     learningOutcomes: [
@@ -44,7 +49,27 @@ const CLUB_MOCKED_EVENTS: Record<
     ],
     location: "Electronics Lab"
   },
-  "mathelete-club": {
+  "epic": {
+    eventName: "EcoGenesis: Macroeconomic & Fiscal Policy Summit",
+    eventDescription: "A high-stakes economic simulation game where participants act as central bankers and economic policy makers to navigate simulated financial markets.",
+    learningOutcomes: [
+      "Understanding fiscal and monetary policy transmission mechanisms",
+      "Analyzing economic indicators and market dependencies",
+      "Strategic crisis management and financial decision-making"
+    ],
+    location: "Block A — Room 101"
+  },
+  "mesa": {
+    eventName: "MechShift: 3D CAD Kinematics & Thermal Sprint",
+    eventDescription: "A fast-paced mechanical design sprint where participants model high-performance gearboxes and run kinematic motion and heat transfer simulations.",
+    learningOutcomes: [
+      "Advanced parametric 3D modeling using industrial CAD software",
+      "Analyzing gear ratios, torque transmission, and mechanical stress",
+      "Simulating assembly constraints and kinematics of complex linkages"
+    ],
+    location: "Block B — Seminar Hall"
+  },
+  "matheletes": {
     eventName: "Mathlete Decathlon: Numeric & Logic Olympiad",
     eventDescription: "An intensive logic and mathematics tournament challenging participants with advanced problems in discrete structures, game theory, and number theory.",
     learningOutcomes: [
@@ -54,37 +79,29 @@ const CLUB_MOCKED_EVENTS: Record<
     ],
     location: "Math Wing"
   },
-  "civil-engineering-society": {
-    eventName: "TrussForce: High-Load Bridge Design Challenge",
-    eventDescription: "A design-and-test competition where teams engineer structural bridges using eco-friendly materials, culminating in a real-time destructive load test.",
+  "sec": {
+    eventName: "VentureVault: Startup Pitch & Incubation Hack",
+    eventDescription: "An entrepreneurial pitching arena where student founders formulate business models, perform unit economics analysis, and present to seed investors.",
     learningOutcomes: [
-      "Understanding stress-strain distribution in truss structures",
-      "Applying civil engineering principles to optimize material efficiency",
-      "Analyzing failure modes under vertical and lateral loads"
+      "Formulating customer acquisition strategies and pitch narratives",
+      "Understanding financial projections, burn rate, and valuation",
+      "Developing lean canvas business models for tech startups"
     ],
-    location: "Civil Block"
+    location: "Incubation Centre"
   },
-  "mesa": {
-    eventName: "MechShift: 3D CAD Modeling & Kinematics Challenge",
-    eventDescription: "A fast-paced mechanical design sprint where participants model high-performance gearboxes and run kinematic motion simulations.",
+  "varsity-care": {
+    eventName: "CarePulse: Student Wellness & Community Outreach",
+    eventDescription: "A student-centric welfare and social impact hackathon focused on mental health initiatives, peer mentoring networks, and campus community care.",
     learningOutcomes: [
-      "Advanced parametric 3D modeling using industrial CAD software",
-      "Analyzing gear ratios, torque transmission, and mechanical stress",
-      "Simulating assembly constraints and kinematics of complex linkages"
+      "Designing empathetic support programs for campus student welfare",
+      "Managing social impact projects and volunteer networks",
+      "Building peer engagement and community health awareness"
     ],
-    location: "Block B — Seminar Hall"
+    location: "Student Welfare Office"
   },
-  "brushes-&-pixels": {
-    eventName: "PixelCanvas: Generative Digital Art Exhibition",
-    eventDescription: "A showcase of student artwork merging traditional sketching techniques with generative coding, shader programming, and digital painting suites.",
-    learningOutcomes: [
-      "Synthesizing mathematical functions into creative visual shaders",
-      "Understanding color theory and digital composition principles",
-      "Exploring UI/UX design patterns for creative web interfaces"
-    ],
-    location: "Art Studio"
-  },
-  "acm-student-chapter": {
+
+  // EPOCH 2: Silicon / Tech
+  "acm": {
     eventName: "ACM DevHack: 24-Hour Systems & App Hackathon",
     eventDescription: "The premier annual 24-hour hackathon where student developers build full-stack applications solving modern urban and educational problems.",
     learningOutcomes: [
@@ -94,17 +111,27 @@ const CLUB_MOCKED_EVENTS: Record<
     ],
     location: "CS Lab 1"
   },
-  "cbc-club": {
-    eventName: "PitchPerfect: Venture Capital & Startup Ideation",
-    eventDescription: "A business pitching arena where student founders present tech-driven business models to a panel of venture capitalists and industry veterans.",
+  "codex": {
+    eventName: "CodeRush: Extreme Algorithmic Programming Arena",
+    eventDescription: "A highly competitive algorithmic coding contest featuring complex data structures, graph theory, and mathematical optimization problems.",
     learningOutcomes: [
-      "Crafting comprehensive market analysis and unit economics tables",
-      "Formulating customer acquisition strategies and pitch narratives",
-      "Handling financial projections and valuation negotiations"
+      "Optimizing time and space complexity of computational algorithms",
+      "Implementing complex data structures like segment trees and graphs",
+      "Formulating dynamic programming solutions under strict time limits"
     ],
-    location: "Block C — Room 203"
+    location: "CS Lab 2"
   },
-  "google-developer-students-club": {
+  "foss": {
+    eventName: "Git-Init: Open Source Contribution & Linux Workflow",
+    eventDescription: "An interactive workshop introducing students to the Linux command line environment, version control workflows, and submitting pull requests to open-source repositories.",
+    learningOutcomes: [
+      "Navigating the POSIX terminal and automating tasks via shell scripts",
+      "Mastering Git branches, rebasing, and merge conflict resolution",
+      "Contributing code and documentation to production open-source projects"
+    ],
+    location: "Open Source Lounge"
+  },
+  "gdsc": {
     eventName: "Google Cloud Study Jam & Kubernetes Deployment",
     eventDescription: "A practical laboratory session diving deep into containerizing applications, setting up CI/CD pipelines, and deploying microservices to Google Kubernetes Engine.",
     learningOutcomes: [
@@ -114,37 +141,7 @@ const CLUB_MOCKED_EVENTS: Record<
     ],
     location: "Innovation Hub"
   },
-  "codex-club": {
-    eventName: "CodeRush: Extreme Competitive Programming Arena",
-    eventDescription: "A highly competitive algorithmic coding contest featuring complex data structures, graph theory, and mathematical optimization problems.",
-    learningOutcomes: [
-      "Optimizing time and space complexity of computational algorithms",
-      "Implementing complex data structures like segment trees and graphs",
-      "Formulating dynamic programming solutions under strict time limits"
-    ],
-    location: "CS Lab 2"
-  },
-  "foss-club": {
-    eventName: "Git-Init: Open Source Contribution & Linux Setup",
-    eventDescription: "An interactive workshop introducing students to the Linux command line environment, version control workflows, and submitting pull requests to open-source repositories.",
-    learningOutcomes: [
-      "Navigating the POSIX terminal and automating tasks via shell scripts",
-      "Mastering Git branches, rebasing, and merge conflict resolution",
-      "Contributing code and documentation to production open-source projects"
-    ],
-    location: "Open Source Lounge"
-  },
-  "rpa-club": {
-    eventName: "AutoBot: Robotic Process Automation Hackathon",
-    eventDescription: "A development challenge where teams construct software bots to automate repetitive, data-intensive office workflows and scraping pipelines.",
-    learningOutcomes: [
-      "Configuring RPA workflows using modern automation tools",
-      "Designing web-scraping agents to collect and process unorganized data",
-      "Integrating API webhooks for cross-application task triggers"
-    ],
-    location: "Automation Lab"
-  },
-  "ieee-sit-student-branch": {
+  "ieee": {
     eventName: "SignalSphere: Telemetry & Wireless Communication Labs",
     eventDescription: "Exploring modern telemetry, encoding RF waves, analyzing frequency domains, and setting up localized wireless communication setups.",
     learningOutcomes: [
@@ -154,6 +151,8 @@ const CLUB_MOCKED_EVENTS: Record<
     ],
     location: "Electronics Block"
   },
+
+  // EPOCH 3: Quantum / Frontier Tech
   "ai-club": {
     eventName: "NeuralNexus: Finetuning LLMs & Agentic Workflows",
     eventDescription: "A technical hackathon where students build multi-agent AI systems, run retrieval-augmented generation (RAG) pipelines, and finetune specialized open-source models.",
@@ -164,37 +163,7 @@ const CLUB_MOCKED_EVENTS: Record<
     ],
     location: "AI Research Lab"
   },
-  "rotonity-club": {
-    eventName: "RoboFight: Combat Robotics & Automation Arena",
-    eventDescription: "A high-octane engineering competition where student-built combat robots battle in an armored cage, testing mechanical durability and electronic control.",
-    learningOutcomes: [
-      "Designing robust mechanical chassis to withstand shock and impact",
-      "Interfacing high-torque brushed/brushless motors with speed controllers",
-      "Configuring secure radio-frequency telemetry links for real-time control"
-    ],
-    location: "Robotics Workshop"
-  },
-  "ar/vr-club": {
-    eventName: "ImmersionSpace: Unity 3D Spatial Computing Hackathon",
-    eventDescription: "A design sprint focused on building immersive augmented and virtual reality experiences using modern game engines and spatial headsets.",
-    learningOutcomes: [
-      "Developing interactive 3D spatial scenes using Unity or Unreal Engine",
-      "Programming physics interactions for virtual reality hands",
-      "Optimizing framerates and rendering budgets for mobile headsets"
-    ],
-    location: "Immersion Studio"
-  },
-  "robotics-&-automation-club": {
-    eventName: "AutoNavigator: Autonomous Maze Solving Challenge",
-    eventDescription: "Designing and programming self-driving miniature vehicles to navigate complex obstacle-filled mazes using LiDAR, ultrasonic sensors, and PID control algorithms.",
-    learningOutcomes: [
-      "Implementing PID feedback loops for precise motor speed control",
-      "Interfacing LiDAR and ultrasonic sensors to parse spatial distances",
-      "Coding path-finding and obstacle-avoidance routing algorithms in C++"
-    ],
-    location: "Automation Bay"
-  },
-  "antriksh-club": {
+  "antariksh": {
     eventName: "StarLaunch: CanSat & Rocket Telemetry Workshop",
     eventDescription: "Building and launching miniature CanSat payloads to capture atmospheric pressure, altitude, and GPS coordinates, transmitting data in real time to ground stations.",
     learningOutcomes: [
@@ -204,7 +173,27 @@ const CLUB_MOCKED_EVENTS: Record<
     ],
     location: "Space Systems Lab"
   },
-  "symbiosis-quantum-club": {
+  "arvr": {
+    eventName: "ImmersionSpace: Unity 3D Spatial Computing Hackathon",
+    eventDescription: "A design sprint focused on building immersive augmented and virtual reality experiences using modern game engines and spatial headsets.",
+    learningOutcomes: [
+      "Developing interactive 3D spatial scenes using Unity or Unreal Engine",
+      "Programming physics interactions for virtual reality hands",
+      "Optimizing framerates and rendering budgets for mobile headsets"
+    ],
+    location: "Immersion Studio"
+  },
+  "rotonity": {
+    eventName: "RoboFight: Combat Robotics & Automation Arena",
+    eventDescription: "A high-octane engineering competition where student-built combat robots battle in an armored cage, testing mechanical durability and electronic control.",
+    learningOutcomes: [
+      "Designing robust mechanical chassis to withstand shock and impact",
+      "Interfacing high-torque brushed/brushless motors with speed controllers",
+      "Configuring secure radio-frequency telemetry links for real-time control"
+    ],
+    location: "Robotics Workshop"
+  },
+  "sqc": {
     eventName: "QuantumSphere: Simulating Superposition & Qubit Circuits",
     eventDescription: "A theoretical and practical lab using Python and Qiskit to construct quantum logic gates, simulate quantum entanglement, and explore quantum key distribution.",
     learningOutcomes: [
@@ -225,26 +214,42 @@ export default function ClubDetailsPage({ club, onBack }: ClubDetailsPageProps) 
     setLoading(true);
     let isMounted = true;
 
+    // Resolve matching schedule entry to get logo image
+    const normalizedId = club.id.toLowerCase();
+    const matchedSchedule = ALL_SCHEDULE.find((s) => 
+      s.id === normalizedId ||
+      normalizedId.includes(s.id) ||
+      s.id.includes(normalizedId) ||
+      s.title.toLowerCase().includes(club.name.toLowerCase()) ||
+      club.name.toLowerCase().includes(s.title.toLowerCase())
+    );
+
+    // Fallback key search
+    const key = Object.keys(CLUB_MOCKED_EVENTS).find(
+      (k) => normalizedId.includes(k) || k.includes(normalizedId)
+    ) || "acm";
+
+    const details = CLUB_MOCKED_EVENTS[key] || {
+      eventName: `${club.name} Event`,
+      eventDescription: `An exclusive event organized by ${club.name} at ChronoNexia, bringing together students and mentors to explore the frontiers of tech.`,
+      learningOutcomes: [
+        "Understanding core concepts and methodologies of the domain",
+        "Collaborating in teams to build innovative solutions",
+        "Developing real-world problem-solving skills under professional guidance"
+      ],
+      location: "ChronoNexia Venue"
+    };
+
     const applyFallback = () => {
       setIsPlaceholder(true);
-      const details = CLUB_MOCKED_EVENTS[club.id] || {
-        eventName: `${club.name} Event`,
-        eventDescription: `An exclusive event organized by the ${club.name} at ChronoNexia, bringing together students and mentors to share knowledge and explore the frontiers of tech.`,
-        learningOutcomes: [
-          "Understanding the core concepts and methodologies of the domain",
-          "Collaborating in teams to build innovative solutions",
-          "Developing real-world problem-solving skills under professional guidance"
-        ],
-        location: "TBD - ChronoNexia Venue"
-      };
-
       setData({
         id: club.id,
         name: club.name,
         eventName: details.eventName,
         eventDescription: details.eventDescription,
         learningOutcomes: details.learningOutcomes,
-        location: details.location
+        location: details.location,
+        logo: matchedSchedule?.logo
       });
       setLoading(false);
     };
@@ -257,26 +262,14 @@ export default function ClubDetailsPage({ club, onBack }: ClubDetailsPageProps) 
       .then((details) => {
         if (isMounted) {
           setIsPlaceholder(false);
-          const fallback = CLUB_MOCKED_EVENTS[club.id] || {
-            eventName: `${club.name} Event`,
-            eventDescription: `An exclusive event organized by the ${club.name} at ChronoNexia, bringing together students and mentors to share knowledge and explore the frontiers of tech.`,
-            learningOutcomes: [
-              "Understanding the core concepts and methodologies of the domain",
-              "Collaborating in teams to build innovative solutions",
-              "Developing real-world problem-solving skills under professional guidance"
-            ],
-            location: "TBD - ChronoNexia Venue"
-          };
-
           setData({
             id: details.id || club.id,
             name: details.name || club.name,
-            eventName: details.eventName || fallback.eventName,
-            eventDescription: details.eventDescription || fallback.eventDescription,
-            learningOutcomes: (details.learningOutcomes && details.learningOutcomes.length > 0)
-              ? details.learningOutcomes
-              : fallback.learningOutcomes,
-            location: details.location || fallback.location
+            eventName: details.eventName || details.eventName,
+            eventDescription: details.eventDescription || details.eventDescription,
+            learningOutcomes: details.learningOutcomes || details.learningOutcomes,
+            location: details.location || details.location,
+            logo: matchedSchedule?.logo
           });
           setLoading(false);
         }
@@ -422,20 +415,31 @@ export default function ClubDetailsPage({ club, onBack }: ClubDetailsPageProps) 
               }`}>
                 <span className="font-bold text-base leading-none select-none">⚠️</span>
                 <div>
-                  <strong className="block mb-0.5">Offline Fallback Mode</strong>
-                  <span>The database server is unreachable or not responding. Displaying pre-loaded placeholder event details.</span>
+                  <strong className="block mb-0.5">Pre-loaded Offline Details</strong>
+                  <span>Displaying event specifications from the ChronoNexia static cache.</span>
                 </div>
               </div>
             )}
 
-            {/* Club Name */}
-            <div>
-              <span className={`text-xs uppercase tracking-widest font-semibold ${style.accentText} block mb-1`}>
-                {club.era === "past" ? "SYS // CLUB_NAME" : "Club Name"}
-              </span>
-              <h1 className={`${style.titleFont}`}>
-                {data?.name}
-              </h1>
+            {/* Club Logo Header */}
+            <div className="flex items-center gap-6">
+              {data?.logo && (
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-slate-900/90 p-3 border border-white/15 shadow-xl flex items-center justify-center shrink-0">
+                  <img
+                    src={data.logo}
+                    alt={`${data.name} logo`}
+                    className="w-full h-full object-contain filter drop-shadow"
+                  />
+                </div>
+              )}
+              <div>
+                <span className={`text-xs uppercase tracking-widest font-semibold ${style.accentText} block mb-1`}>
+                  {club.era === "past" ? "SYS // CLUB_NAME" : "Club Name"}
+                </span>
+                <h1 className={`${style.titleFont}`}>
+                  {data?.name}
+                </h1>
+              </div>
             </div>
 
             {/* Event Name */}
@@ -463,16 +467,12 @@ export default function ClubDetailsPage({ club, onBack }: ClubDetailsPageProps) 
 
             {/* Event Description */}
             <div className={`pt-6 border-t ${style.accentBorder}`}>
-              <h3
-                className={`text-lg font-bold mb-3 ${
-                  club.era === "past" ? "text-term-amber font-vt323 text-xl" : "text-white"
-                }`}
-              >
-                {club.era === "past" ? "SYS // DESCRIPTION" : "Event Description"}
-              </h3>
+              <span className={`text-xs uppercase tracking-widest font-semibold ${style.accentText} block mb-2`}>
+                {club.era === "past" ? "SYS // DESCRIPTION" : "Description"}
+              </span>
               <p
-                className={`leading-relaxed text-base opacity-90 ${
-                  club.era === "past" ? "font-mono text-term-green/90" : "text-slate-300"
+                className={`text-base sm:text-lg leading-relaxed opacity-90 ${
+                  club.era === "past" ? "font-mono text-term-green/90" : club.era === "future" ? "font-rajdhani text-slate-300" : "text-slate-300"
                 }`}
               >
                 {data?.eventDescription}
@@ -481,24 +481,16 @@ export default function ClubDetailsPage({ club, onBack }: ClubDetailsPageProps) 
 
             {/* Learning Outcomes */}
             <div className={`pt-6 border-t ${style.accentBorder}`}>
-              <h3
-                className={`text-lg font-bold mb-4 ${
-                  club.era === "past" ? "text-term-amber font-vt323 text-xl" : "text-white"
-                }`}
-              >
-                {club.era === "past" ? "SYS // LEARNING_OUTCOMES" : "Learning Outcomes"}
-              </h3>
+              <span className={`text-xs uppercase tracking-widest font-semibold ${style.accentText} block mb-3`}>
+                {club.era === "past" ? "SYS // LEARNING_OUTCOMES" : "Key Outcomes"}
+              </span>
               <ul className="space-y-3">
-                {data?.learningOutcomes?.map((outcome, idx) => (
-                  <li key={idx} className="flex items-start gap-3">
-                    <span className={`mt-1 font-bold ${style.accentText}`}>
-                      {club.era === "past" ? "»" : "✓"}
-                    </span>
-                    <span
-                      className={`text-sm sm:text-base opacity-90 ${
-                        club.era === "past" ? "font-mono text-term-green/90" : "text-slate-300"
-                      }`}
-                    >
+                {data?.learningOutcomes.map((outcome, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm sm:text-base opacity-90">
+                    <span className={`inline-block w-2 h-2 rounded-full mt-2 shrink-0 ${
+                      club.era === "past" ? "bg-term-green" : club.era === "present" ? "bg-techblue" : "bg-cyan-400"
+                    }`} />
+                    <span className={club.era === "past" ? "font-mono" : club.era === "future" ? "font-rajdhani text-slate-300" : "text-slate-200"}>
                       {outcome}
                     </span>
                   </li>

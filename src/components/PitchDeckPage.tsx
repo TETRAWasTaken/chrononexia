@@ -38,49 +38,49 @@ const EPOCH_STYLE = {
     accent1: "#00f0ff",
     accent2: "#b026ff",
     gradient: "linear-gradient(90deg, #00f0ff, #b026ff)",
-    eyebrow: "rgba(0,240,255,0.9)",
-    eyebrowBorder: "rgba(0,240,255,0.25)",
-    eyebrowBg: "rgba(0,240,255,0.05)",
+    eyebrow: "rgba(0,240,255,0.95)",
+    eyebrowBorder: "rgba(0,240,255,0.3)",
+    eyebrowBg: "rgba(0,240,255,0.08)",
     divider: "linear-gradient(90deg, #00f0ff, #b026ff)",
-    cardBorder: "rgba(255,255,255,0.08)",
-    cardBg: "rgba(255,255,255,0.02)",
-    sub: "#64748b",
+    cardBorder: "rgba(255,255,255,0.12)",
+    cardBg: "rgba(255,255,255,0.04)",
+    sub: "#cbd5e1", // Bright readable slate-300
   },
   past: {
     accent1: "#33ff00",
     accent2: "#ffb000",
     gradient: "linear-gradient(90deg, #33ff00, #ffb000)",
-    eyebrow: "rgba(51,255,0,0.9)",
-    eyebrowBorder: "rgba(51,255,0,0.25)",
-    eyebrowBg: "rgba(51,255,0,0.05)",
+    eyebrow: "rgba(51,255,0,0.95)",
+    eyebrowBorder: "rgba(51,255,0,0.35)",
+    eyebrowBg: "rgba(51,255,0,0.08)",
     divider: "linear-gradient(90deg, #33ff00, #ffb000)",
-    cardBorder: "rgba(51,255,0,0.12)",
-    cardBg: "rgba(51,255,0,0.025)",
-    sub: "#6b7565",
+    cardBorder: "rgba(51,255,0,0.2)",
+    cardBg: "rgba(51,255,0,0.04)",
+    sub: "#b4d8a8", // Bright terminal green-tinted text
   },
   present: {
     accent1: "#2563eb",
     accent2: "#06b6d4",
-    gradient: "linear-gradient(90deg, #2563eb, #06b6d4)",
-    eyebrow: "rgba(37,99,235,0.95)",
-    eyebrowBorder: "rgba(37,99,235,0.3)",
-    eyebrowBg: "rgba(37,99,235,0.06)",
-    divider: "linear-gradient(90deg, #2563eb, #06b6d4)",
-    cardBorder: "rgba(37,99,235,0.15)",
-    cardBg: "rgba(37,99,235,0.03)",
-    sub: "#475569",
+    gradient: "linear-gradient(90deg, #38bdf8, #06b6d4)",
+    eyebrow: "rgba(56,189,248,0.95)",
+    eyebrowBorder: "rgba(56,189,248,0.35)",
+    eyebrowBg: "rgba(56,189,248,0.08)",
+    divider: "linear-gradient(90deg, #38bdf8, #06b6d4)",
+    cardBorder: "rgba(56,189,248,0.2)",
+    cardBg: "rgba(37,99,235,0.05)",
+    sub: "#cbd5e1", // Bright readable slate-300
   },
   future: {
     accent1: "#b026ff",
     accent2: "#00f0ff",
     gradient: "linear-gradient(90deg, #b026ff, #00f0ff)",
     eyebrow: "rgba(176,38,255,0.95)",
-    eyebrowBorder: "rgba(176,38,255,0.3)",
-    eyebrowBg: "rgba(176,38,255,0.06)",
+    eyebrowBorder: "rgba(176,38,255,0.35)",
+    eyebrowBg: "rgba(176,38,255,0.08)",
     divider: "linear-gradient(90deg, #b026ff, #00f0ff)",
-    cardBorder: "rgba(176,38,255,0.15)",
-    cardBg: "rgba(176,38,255,0.03)",
-    sub: "#5d4a6b",
+    cardBorder: "rgba(176,38,255,0.2)",
+    cardBg: "rgba(176,38,255,0.05)",
+    sub: "#e2e8f0", // Bright readable slate-200
   },
 } as const;
 
@@ -154,7 +154,7 @@ function SectionHeading({ eyebrow, title, accent, sub, epoch }: {
       <div
         className="pd-eyebrow"
         style={{ color: s.eyebrow, borderColor: s.eyebrowBorder, background: s.eyebrowBg,
-                 fontFamily: isPast ? "'VT323', monospace" : undefined, fontSize: isPast ? "0.85rem" : undefined }}
+                 fontFamily: isPast ? "'VT323', monospace" : undefined, fontSize: isPast ? "0.9rem" : undefined }}
       >
         {isPast ? "█ " : "⬡ "}{eyebrow}
       </div>
@@ -172,7 +172,7 @@ function SectionHeading({ eyebrow, title, accent, sub, epoch }: {
       </h2>
       {sub && (
         <p style={{ fontFamily: isPast ? "'Courier New', monospace" : "Rajdhani, sans-serif",
-                    color: s.sub, fontSize: "0.95rem", lineHeight: 1.7, maxWidth: "600px" }}>
+                    color: s.sub, fontSize: "1rem", lineHeight: 1.7, maxWidth: "680px" }}>
           {sub}
         </p>
       )}
@@ -201,7 +201,7 @@ function PillarCard({ num, title, desc, delay, epoch }: {
         fontFamily: isPast ? "'VT323', monospace" : undefined,
         fontSize: isPast ? "3rem" : undefined,
         color: s.accent1,
-        opacity: 0.25,
+        opacity: 0.35,
       }}>{num}</div>
       <div className="pd-pillar-title" style={{ fontFamily: isPast ? "'Courier New', monospace" : undefined }}>{title}</div>
       <div className="pd-pillar-desc" style={{ color: s.sub, fontFamily: isPast ? "'Courier New', monospace" : undefined }}>{desc}</div>
@@ -235,7 +235,7 @@ function TierBarChart({ epoch }: { epoch: Epoch }) {
       { label: "Title", value: 150000, color: s.accent1 },
       { label: "Platinum", value: 50000, color: s.accent2 },
       { label: "Gold", value: 30000, color: epoch === "past" ? "#ffb000" : epoch === "present" ? "#06b6d4" : "#c76bff" },
-      { label: "Silver", value: 20000, color: "#94a3b8" },
+      { label: "Silver", value: 20000, color: "#cbd5e1" },
     ];
 
     const W = canvas.width, H = canvas.height;
@@ -249,7 +249,7 @@ function TierBarChart({ epoch }: { epoch: Epoch }) {
       const eased = 1 - Math.pow(1 - progress, 3);
       ctx!.clearRect(0, 0, W, H);
 
-      ctx!.strokeStyle = "rgba(255,255,255,0.05)";
+      ctx!.strokeStyle = "rgba(255,255,255,0.08)";
       ctx!.lineWidth = 1;
       for (let i = 0; i <= 4; i++) {
         const y = 20 + chartH - (i / 4) * chartH;
@@ -267,13 +267,13 @@ function TierBarChart({ epoch }: { epoch: Epoch }) {
         ctx!.fillStyle = grd;
         ctx!.beginPath(); ctx!.roundRect(x, y, barW, bh, [6, 6, 0, 0]); ctx!.fill();
         ctx!.shadowBlur = 0;
-        ctx!.fillStyle = "rgba(148,163,184,0.8)";
+        ctx!.fillStyle = "rgba(226,232,240,0.9)";
         ctx!.font = "bold 11px 'Rajdhani', sans-serif";
         ctx!.textAlign = "center";
         ctx!.fillText(bar.label, x + barW / 2, H - 30);
         if (progress > 0.7) {
           ctx!.fillStyle = bar.color;
-          ctx!.font = "bold 10px 'Space Grotesk', sans-serif";
+          ctx!.font = "bold 11px 'Space Grotesk', sans-serif";
           ctx!.fillText("₹" + (bar.value / 1000).toFixed(0) + "k", x + barW / 2, y - 6);
         }
       });
@@ -285,7 +285,7 @@ function TierBarChart({ epoch }: { epoch: Epoch }) {
 
   return (
     <div ref={wrapRef} className="pd-canvas-wrap" style={{ borderColor: s.cardBorder, background: s.cardBg }}>
-      <div className="pd-canvas-label">Sponsorship Tiers</div>
+      <div className="pd-canvas-label" style={{ color: s.sub }}>Sponsorship Tiers</div>
       <canvas ref={canvasRef} width={300} height={220} />
     </div>
   );
@@ -345,7 +345,7 @@ function AudienceDonut({ epoch }: { epoch: Epoch }) {
         ctx!.fillStyle = s.accent1;
         ctx!.font = "bold 16px 'Space Grotesk'"; ctx!.textAlign = "center";
         ctx!.fillText("600-700", cx, cy - 2);
-        ctx!.fillStyle = "rgba(148,163,184,0.7)";
+        ctx!.fillStyle = "#cbd5e1";
         ctx!.font = "10px 'Rajdhani'"; ctx!.fillText("FOOTFALL", cx, cy + 14);
       }
 
@@ -353,7 +353,7 @@ function AudienceDonut({ epoch }: { epoch: Epoch }) {
         segments.forEach((seg, i) => {
           const ly = canvas!.height - 64 + i * 14;
           ctx!.fillStyle = seg.color; ctx!.beginPath(); ctx!.arc(12, ly, 4, 0, Math.PI * 2); ctx!.fill();
-          ctx!.fillStyle = "rgba(148,163,184,0.8)"; ctx!.font = "10px 'Rajdhani'"; ctx!.textAlign = "left";
+          ctx!.fillStyle = "#cbd5e1"; ctx!.font = "11px 'Rajdhani'"; ctx!.textAlign = "left";
           ctx!.fillText(`${seg.label} (${seg.pct}%)`, 22, ly + 4);
         });
       }
@@ -365,7 +365,7 @@ function AudienceDonut({ epoch }: { epoch: Epoch }) {
 
   return (
     <div ref={wrapRef} className="pd-canvas-wrap" style={{ borderColor: s.cardBorder, background: s.cardBg }}>
-      <div className="pd-canvas-label">Audience Breakdown</div>
+      <div className="pd-canvas-label" style={{ color: s.sub }}>Audience Breakdown</div>
       <canvas ref={canvasRef} width={300} height={280} />
     </div>
   );
@@ -577,10 +577,10 @@ export default function PitchDeckPage({ onBack }: PitchDeckPageProps) {
           <h1 className="pd-hero-title">
             SYMBI<span style={{ background: "linear-gradient(90deg,#00f0ff,#b026ff)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent" }}>TECH</span>
             <br />
-            <span style={{ fontSize: "0.4em", color: "#94a3b8", fontWeight: 700, WebkitTextFillColor: "#94a3b8" }}>2026</span>
+            <span style={{ fontSize: "0.4em", color: "#cbd5e1", fontWeight: 700, WebkitTextFillColor: "#cbd5e1" }}>2026</span>
           </h1>
 
-          <p className="pd-hero-sub">
+          <p className="pd-hero-sub" style={{ color: "#e2e8f0" }}>
             The Flagship Technical Festival of Symbiosis Institute of Technology, Pune —
             Re-accredited by NAAC with an 'A++' Grade · Category-I by UGC
           </p>
@@ -593,7 +593,7 @@ export default function PitchDeckPage({ onBack }: PitchDeckPageProps) {
             ].map((t) => (
               <div className="pd-hero-tag" key={t.key}>
                 <span className="pd-hero-tag-key" style={{ color: "#00f0ff" }}>{t.key}</span>
-                <span>{t.val}</span>
+                <span style={{ color: "#f1f5f9" }}>{t.val}</span>
               </div>
             ))}
           </div>
@@ -655,7 +655,7 @@ export default function PitchDeckPage({ onBack }: PitchDeckPageProps) {
                 transition={{ duration: 0.4, delay: i * 0.08 }}
               >
                 <div className="pd-dept-icon" style={{ borderColor: EPOCH_STYLE.past.cardBorder, background: EPOCH_STYLE.past.cardBg }}>{d.icon}</div>
-                <div className="pd-dept-name" style={{ fontFamily: "'Courier New',monospace" }}>{d.name}</div>
+                <div className="pd-dept-name" style={{ fontFamily: "'Courier New',monospace", color: "#e2e8f0" }}>{d.name}</div>
               </motion.div>
             ))}
           </div>
@@ -687,8 +687,8 @@ export default function PitchDeckPage({ onBack }: PitchDeckPageProps) {
                     fontFamily: "'VT323',monospace",
                     fontSize: "2.2rem",
                   }}>{item.year}</div>
-                  <div className="pd-timeline-heading" style={{ fontFamily: "'Courier New',monospace" }}>{item.heading}</div>
-                  <div className="pd-timeline-desc" style={{ color: EPOCH_STYLE.past.sub, fontFamily: "'Courier New',monospace", fontSize: "0.8rem" }}>{item.desc}</div>
+                  <div className="pd-timeline-heading" style={{ fontFamily: "'Courier New',monospace", color: "#f1f5f9" }}>{item.heading}</div>
+                  <div className="pd-timeline-desc" style={{ color: EPOCH_STYLE.past.sub, fontFamily: "'Courier New',monospace", fontSize: "0.88rem" }}>{item.desc}</div>
                 </div>
               </motion.div>
             ))}
@@ -715,8 +715,8 @@ export default function PitchDeckPage({ onBack }: PitchDeckPageProps) {
                 whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
               >
-                <div className="pd-pillar-num" style={{ color: s.accent1, opacity: 0.2 }}>{p.num}</div>
-                <div className="pd-pillar-title">{p.title}</div>
+                <div className="pd-pillar-num" style={{ color: s.accent1, opacity: 0.35 }}>{p.num}</div>
+                <div className="pd-pillar-title" style={{ color: "#f8fafc" }}>{p.title}</div>
                 <div className="pd-pillar-desc" style={{ color: s.sub }}>{p.desc}</div>
               </motion.div>
             ))}
@@ -744,7 +744,7 @@ export default function PitchDeckPage({ onBack }: PitchDeckPageProps) {
                 transition={{ duration: 0.7, delay: 0.4 }}
                 style={{ padding: "1.25rem", borderRadius: "12px", border: `1px solid ${s.cardBorder}`, background: s.cardBg, marginTop: "1rem" }}
               >
-                <p style={{ fontFamily: "Rajdhani,sans-serif", fontSize: "0.85rem", color: s.sub, lineHeight: 1.7 }}>
+                <p style={{ fontFamily: "Rajdhani,sans-serif", fontSize: "0.9rem", color: s.sub, lineHeight: 1.7 }}>
                   <span style={{ color: s.accent1 }}>◈</span> Engineering & AI/ML undergraduates from SIT and visiting colleges<br />
                   <span style={{ color: s.accent1 }}>◈</span> Hackathon participants with hands-on project experience<br />
                   <span style={{ color: s.accent1 }}>◈</span> Faculty, mentors, and department heads across six disciplines<br />
@@ -778,7 +778,7 @@ export default function PitchDeckPage({ onBack }: PitchDeckPageProps) {
                 viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }}
               >
                 <div className="pd-event-icon" style={{ borderColor: s.cardBorder, background: s.cardBg }}>{ev.icon}</div>
-                <div className="pd-event-title">{ev.title}</div>
+                <div className="pd-event-title" style={{ color: "#f8fafc" }}>{ev.title}</div>
                 <div className="pd-event-items">
                   {ev.items.map((it) => (
                     <div key={it} className="pd-event-item" style={{ color: s.sub }}>
@@ -905,7 +905,7 @@ export default function PitchDeckPage({ onBack }: PitchDeckPageProps) {
                 viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.1 }}
               >
                 <div style={{ fontSize: "2.5rem" }}>{p.emoji}</div>
-                <div className="pd-pillar-title">{p.name}</div>
+                <div className="pd-pillar-title" style={{ color: "#f8fafc" }}>{p.name}</div>
                 <div style={{ fontFamily: "'VT323',monospace", color: s.accent1, fontSize: "1.3rem" }}>{p.year}</div>
               </motion.div>
             ))}
@@ -978,18 +978,18 @@ export default function PitchDeckPage({ onBack }: PitchDeckPageProps) {
 
           <div className="pd-contact-cards">
             {[
-              { icon: "✉️", label: "Email",     val: "symbitech.sitpune.edu.in" },
+              { icon: "✉️", label: "Email",     val: "symbitech@sitpune.edu.in" },
               { icon: "🌐", label: "Website",   val: "symbitech.sitpune.edu.in" },
               { icon: "📸", label: "Instagram", val: "@symbitech" },
-              { icon: "📞", label: "Phone",     val: "+91 XXXXX XXXXX" },
+              { icon: "📞", label: "Phone",     val: "+91 20 6693 6900" },
             ].map((c) => (
               <div key={c.label} className="pd-contact-card"
                 style={{ borderColor: s.cardBorder, background: s.cardBg, transition: "border-color 0.3s" }}
               >
                 <span className="pd-contact-icon">{c.icon}</span>
                 <div>
-                  <div className="pd-contact-label">{c.label}</div>
-                  <div className="pd-contact-value">{c.val}</div>
+                  <div className="pd-contact-label" style={{ color: "#94a3b8" }}>{c.label}</div>
+                  <div className="pd-contact-value" style={{ color: "#f8fafc" }}>{c.val}</div>
                 </div>
               </div>
             ))}

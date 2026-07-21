@@ -10,6 +10,8 @@ export interface ClubEvent {
   title: string;
   room: string;
   extra?: string; // used for custom tags, speakers, or identifiers
+  logo?: string;  // imported image logo URL
+  clubId?: string;// unique club identifier
 }
 
 export interface ClubInfo {
@@ -34,8 +36,8 @@ export const CLUBS_DATA: ClubInfo[] = [
     id: "past",
     name: "Foundations & Fundamentals",
     codename: "EPOCH-01 // LEGACY",
-    tagline: "Economics, engineering, art & math clubs.",
-    description: "The bedrock of student-led innovation. Six clubs spanning economics, electronics, mathematics, civil engineering, MESA, and creative arts.",
+    tagline: "Economics, engineering, math, entrepreneurship & care clubs.",
+    description: "The bedrock of student-led innovation. Seven foundational clubs spanning civil & electronics engineering, economics, mathematics, mechanical engineering, entrepreneurship, and varsity student care.",
     themeColor: "term-green",
     textStyle: "text-term-green font-mono",
     badgeStyle: "border border-term-green text-term-green font-mono rounded-none",
@@ -49,14 +51,16 @@ export const CLUBS_DATA: ClubInfo[] = [
       title: e.title,
       room: e.room,
       extra: `[${e.code}]`,
+      logo: e.logo,
+      clubId: e.id,
     })),
   },
   {
     id: "present",
     name: "Dev, Tech & Open Source",
     codename: "EPOCH-02 // SILICON",
-    tagline: "ACM, Google DSC, IEEE & software clubs.",
-    description: "The present of student-led software. Seven clubs driving competitive coding, open source, cloud, AI/ML, automation, and industry-standard engineering.",
+    tagline: "ACM, Google DSC, IEEE, CodeX & FOSS clubs.",
+    description: "The present of student-led software. Five tech clubs driving competitive coding, open source, cloud, developer communities, and industry-standard IEEE engineering.",
     themeColor: "techblue",
     textStyle: "text-slate-200 font-inter",
     badgeStyle: "bg-techblue/20 text-techblue font-inter rounded-full px-3 py-1 text-xs border border-techblue/30",
@@ -70,14 +74,16 @@ export const CLUBS_DATA: ClubInfo[] = [
       title: e.title,
       room: e.room,
       extra: `${e.speaker} · ${e.tag}`,
+      logo: e.logo,
+      clubId: e.id,
     })),
   },
   {
     id: "future",
     name: "AI, Robotics & Frontier Tech",
     codename: "EPOCH-03 // QUANTUM",
-    tagline: "AI, AR/VR, space, robotics & quantum clubs.",
-    description: "The convergence of emerging technology. Six frontier clubs across artificial intelligence, augmented reality, robotics, space systems, and quantum computing.",
+    tagline: "AI, AR/VR, Antariksh space, Rotonity & Quantum clubs.",
+    description: "The convergence of emerging technology. Five frontier clubs across artificial intelligence, augmented reality, robotics & automation, space systems, and quantum computing.",
     themeColor: "purple-400",
     textStyle: "text-slate-300 font-rajdhani",
     badgeStyle: "bg-nexus-gradient-soft text-cyan-300 font-rajdhani rounded-lg px-2.5 py-0.5",
@@ -91,6 +97,8 @@ export const CLUBS_DATA: ClubInfo[] = [
       title: e.title,
       room: e.room,
       extra: e.icon,
+      logo: e.logo,
+      clubId: e.id,
     })),
   },
 ];
