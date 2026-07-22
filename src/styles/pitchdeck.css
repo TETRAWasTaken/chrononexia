@@ -589,13 +589,13 @@
 
 .pd-tier-card.title-tier {
   border-color: rgba(0,240,255,0.4);
-  background: linear-gradient(160deg, rgba(0,240,255,0.08), rgba(176,38,255,0.06));
-  box-shadow: 0 0 40px rgba(0,240,255,0.12), 0 0 60px rgba(176,38,255,0.08);
+  background: linear-gradient(160deg, rgba(0,240,255,0.08), rgba(37,99,235,0.08));
+  box-shadow: 0 0 40px rgba(0,240,255,0.12), 0 0 60px rgba(37,99,235,0.1);
 }
 .pd-tier-card.platinum-tier {
-  border-color: rgba(199,107,255,0.4);
-  background: linear-gradient(160deg, rgba(176,38,255,0.08), rgba(0,240,255,0.04));
-  box-shadow: 0 0 30px rgba(176,38,255,0.1);
+  border-color: rgba(37,99,235,0.4);
+  background: linear-gradient(160deg, rgba(37,99,235,0.08), rgba(0,240,255,0.04));
+  box-shadow: 0 0 30px rgba(37,99,235,0.12);
 }
 .pd-tier-card.gold-tier {
   border-color: rgba(255,183,0,0.3);
@@ -620,7 +620,7 @@
   font-weight: 700;
 }
 .title-tier .pd-tier-badge { background: rgba(0,240,255,0.12); color: #00f0ff; border: 1px solid rgba(0,240,255,0.3); }
-.platinum-tier .pd-tier-badge { background: rgba(176,38,255,0.12); color: #c76bff; border: 1px solid rgba(176,38,255,0.3); }
+.platinum-tier .pd-tier-badge { background: rgba(37,99,235,0.12); color: #38bdf8; border: 1px solid rgba(37,99,235,0.3); }
 .gold-tier .pd-tier-badge { background: rgba(255,183,0,0.1); color: #ffb000; border: 1px solid rgba(255,183,0,0.3); }
 .silver-tier .pd-tier-badge { background: rgba(148,163,184,0.1); color: #94a3b8; border: 1px solid rgba(148,163,184,0.2); }
 
@@ -631,7 +631,7 @@
   line-height: 1;
 }
 .title-tier .pd-tier-price { color: #00f0ff; }
-.platinum-tier .pd-tier-price { color: #c76bff; }
+.platinum-tier .pd-tier-price { color: #38bdf8; }
 .gold-tier .pd-tier-price { color: #ffb000; }
 .silver-tier .pd-tier-price { color: #94a3b8; }
 

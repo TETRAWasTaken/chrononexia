@@ -189,17 +189,17 @@ export default function ChronoNexia({ onSelectClub, onWhySponsor }: ChronoNexiaP
           <motion.div
             style={{ 
               top: indicatorTop,
-              boxShadow: era === "past" ? "0 0 10px #33ff00" : era === "present" ? "0 0 10px #2563eb" : era === "future" ? "0 0 10px #b026ff" : era === "symbitech" ? "0 0 10px #b026ff" : "0 0 10px #00f0ff"
+              boxShadow: era === "past" ? "0 0 10px #33ff00" : era === "present" ? "0 0 10px #2563eb" : era === "future" ? "0 0 10px #2563eb" : era === "symbitech" ? "0 0 10px #00f0ff" : "0 0 10px #00f0ff"
             }}
             className={`absolute left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full z-10 transition-all duration-300 ${
-              era === "past" ? "bg-term-green" : era === "present" ? "bg-techblue" : era === "future" || era === "symbitech" ? "bg-purple-400" : "bg-cyan-300"
+              era === "past" ? "bg-term-green" : era === "present" ? "bg-techblue" : era === "future" || era === "symbitech" ? "bg-techblue" : "bg-cyan-300"
             }`}
           />
 
           {/* Label anchors */}
           <div className="absolute right-4 top-[3%] flex items-center gap-2">
             <span className={`text-[10px] tracking-[0.2em] font-rajdhani font-semibold transition-all duration-300 ${
-              era === "symbitech" ? "text-purple-300 scale-105" : "text-slate-500 opacity-60"
+              era === "symbitech" ? "text-cyan-300 scale-105" : "text-slate-500 opacity-60"
             }`}>SYMBI</span>
           </div>
           <div className="absolute right-4 top-[26%] flex items-center gap-2">
@@ -219,7 +219,7 @@ export default function ChronoNexia({ onSelectClub, onWhySponsor }: ChronoNexiaP
           </div>
           <div className="absolute right-4 top-[95%] flex items-center gap-2">
             <span className={`text-[10px] tracking-[0.2em] font-grotesk transition-all duration-300 ${
-              era === "future" ? "text-purple-300 scale-105 font-bold" : "text-slate-500 opacity-60"
+              era === "future" ? "text-cyan-300 scale-105 font-bold" : "text-slate-500 opacity-60"
             }`}>FUTURE</span>
           </div>
         </div>

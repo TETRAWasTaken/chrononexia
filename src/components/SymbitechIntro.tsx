@@ -90,7 +90,7 @@ export default function SymbitechIntro() {
                 strokeDasharray="6 3"
               />
               {/* Inner tech concentric ring */}
-              <circle cx="50" cy="50" r="30" fill="none" stroke="#b026ff" strokeWidth="1.5" strokeOpacity="0.4" />
+              <circle cx="50" cy="50" r="30" fill="none" stroke="#2563eb" strokeWidth="1.5" strokeOpacity="0.4" />
               
               {/* Center 'S' Nexus icon */}
               <path
@@ -105,10 +105,10 @@ export default function SymbitechIntro() {
               <defs>
                 <linearGradient id="symbi-grad" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#00f0ff" />
-                  <stop offset="100%" stopColor="#b026ff" />
+                  <stop offset="100%" stopColor="#2563eb" />
                 </linearGradient>
                 <linearGradient id="symbi-grad-2" x1="0%" y1="100%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#b026ff" />
+                  <stop offset="0%" stopColor="#2563eb" />
                   <stop offset="100%" stopColor="#00f0ff" />
                 </linearGradient>
               </defs>
@@ -118,9 +118,9 @@ export default function SymbitechIntro() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-cyan-400 animate-ping z-20" />
           </div>
 
-          <div className="flex items-center gap-2 px-4 py-1 rounded-full border border-purple-500/30 bg-purple-500/5 mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-purple-300" />
-            <span className="font-rajdhani text-xs tracking-[0.25em] text-purple-200 uppercase">
+          <div className="flex items-center gap-2 px-4 py-1 rounded-full border border-blue-500/30 bg-blue-500/5 mb-4">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+            <span className="font-rajdhani text-xs tracking-[0.25em] text-blue-200 uppercase">
               Symbiosis Institute of Technology
             </span>
           </div>

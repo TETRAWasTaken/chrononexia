@@ -13,8 +13,7 @@ body {
 }
 
 /* ---------------------------------------------------------------------- */
-/* Font family utilities (mapped from Tailwind config fontFamily as well, */
-/* kept here too in case this file is used outside the Tailwind build)   */
+/* Font family utilities                                                  */
 /* ---------------------------------------------------------------------- */
 
 .font-grotesk {
@@ -45,16 +44,16 @@ body {
 }
 
 .bg-grid-purple {
-  background-image: linear-gradient(#b026ff 1px, transparent 1px),
-    linear-gradient(90deg, #b026ff 1px, transparent 1px);
+  background-image: linear-gradient(#2563eb 1px, transparent 1px),
+    linear-gradient(90deg, #2563eb 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
 .bg-hero-glow {
   background: radial-gradient(
     circle,
-    rgba(176, 38, 255, 0.25) 0%,
-    rgba(0, 240, 255, 0.1) 45%,
+    rgba(37, 99, 235, 0.28) 0%,
+    rgba(0, 240, 255, 0.12) 45%,
     transparent 70%
   );
 }
@@ -63,20 +62,20 @@ body {
   background: radial-gradient(
     circle,
     rgba(0, 240, 255, 0.18) 0%,
-    rgba(176, 38, 255, 0.12) 45%,
+    rgba(37, 99, 235, 0.15) 45%,
     transparent 70%
   );
 }
 
 .bg-nexus-gradient {
-  background-image: linear-gradient(90deg, #00f0ff, #b026ff);
+  background-image: linear-gradient(90deg, #00f0ff, #2563eb);
 }
 
 .bg-nexus-gradient-soft {
   background-image: linear-gradient(
     135deg,
     rgba(0, 240, 255, 0.15),
-    rgba(176, 38, 255, 0.15)
+    rgba(37, 99, 235, 0.15)
   );
 }
 
@@ -84,12 +83,12 @@ body {
   background-image: linear-gradient(
     135deg,
     rgba(0, 240, 255, 0.08),
-    rgba(176, 38, 255, 0.08)
+    rgba(37, 99, 235, 0.08)
   );
 }
 
 .shadow-nexus-card {
-  box-shadow: 0 0 60px rgba(0, 240, 255, 0.15), 0 0 100px rgba(176, 38, 255, 0.1),
+  box-shadow: 0 0 60px rgba(0, 240, 255, 0.15), 0 0 100px rgba(37, 99, 235, 0.15),
     inset 0 0 40px rgba(255, 255, 255, 0.03);
 }
 
@@ -100,11 +99,6 @@ body {
 /* ---------------------------------------------------------------------- */
 /* PAST — CRT terminal section                                            */
 /* ---------------------------------------------------------------------- */
-
-/* Note: solid-color backgrounds/text (bg-void, bg-charcoal, bg-offwhite,
-   text-deepslate, text-techblue, bg-techblue, text-term-amber, text-term-green,
-   border-term-amber, border-term-green) are generated automatically by
-   Tailwind from the color tokens in tailwind.config.ts — no manual CSS needed. */
 
 .bg-scanlines {
   background-image: repeating-linear-gradient(
@@ -127,7 +121,6 @@ body {
   box-shadow: 0 0 0 4px #1e1e1e, 0 0 0 6px #33ff00;
 }
 
-/* RSVP button: amber-bordered terminal button that inverts on hover */
 .rsvp-btn:hover {
   background-color: #33ff00;
   color: #000000;
@@ -160,14 +153,14 @@ body {
   background-image: linear-gradient(
     160deg,
     rgba(0, 240, 255, 0.06),
-    rgba(176, 38, 255, 0.06)
+    rgba(37, 99, 235, 0.06)
   );
   border: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px);
 }
 
 .future-card-glow {
-  box-shadow: 0 0 30px rgba(0, 240, 255, 0.15), 0 0 50px rgba(176, 38, 255, 0.1);
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.15), 0 0 50px rgba(37, 99, 235, 0.15);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -186,7 +179,7 @@ body {
 }
 
 /* ---------------------------------------------------------------------- */
-/* Focus visibility (keyboard navigation)                                 */
+/* Focus visibility                                                       */
 /* ---------------------------------------------------------------------- */
 
 button:focus-visible,
@@ -202,23 +195,22 @@ a:focus-visible {
 .future-card-mesh {
   position: relative;
   background: radial-gradient(at 0% 0%, rgba(0, 240, 255, 0.1) 0px, transparent 50%),
-              radial-gradient(at 100% 100%, rgba(176, 38, 255, 0.1) 0px, transparent 50%),
-              linear-gradient(135deg, rgba(16, 8, 38, 0.8), rgba(6, 3, 14, 0.9));
+              radial-gradient(at 100% 100%, rgba(37, 99, 235, 0.12) 0px, transparent 50%),
+              linear-gradient(135deg, rgba(10, 16, 40, 0.8), rgba(4, 8, 24, 0.9));
   border: none !important;
   backdrop-filter: blur(16px);
   box-shadow: 0 10px 40px -15px rgba(0, 240, 255, 0.12),
-              0 15px 55px -10px rgba(176, 38, 255, 0.08);
+              0 15px 55px -10px rgba(37, 99, 235, 0.12);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Premium translucent border gradient mask */
 .future-card-mesh::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(255, 255, 255, 0.02) 50%, rgba(176, 38, 255, 0.15));
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(255, 255, 255, 0.02) 50%, rgba(37, 99, 235, 0.2));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -227,7 +219,7 @@ a:focus-visible {
 
 .future-card-mesh:hover {
   box-shadow: 0 15px 50px -10px rgba(0, 240, 255, 0.22),
-              0 20px 65px -5px rgba(176, 38, 255, 0.18);
+              0 20px 65px -5px rgba(37, 99, 235, 0.25);
 }
 
 /* ---------------------------------------------------------------------- */

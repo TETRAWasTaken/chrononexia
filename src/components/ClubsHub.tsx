@@ -95,9 +95,9 @@ export default function ClubsHub({ onScrollToEra }: ClubsHubProps) {
         >
           {/* Hub Header */}
           <div className="text-center mb-10 sm:mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-4 border border-purple-400/30 bg-purple-400/5">
-              <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-              <span className="font-grotesk text-[10px] sm:text-xs tracking-[0.2em] text-purple-200 uppercase">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-4 border border-cyan-400/30 bg-cyan-400/5">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+              <span className="font-grotesk text-[10px] sm:text-xs tracking-[0.2em] text-cyan-200 uppercase">
                 SYSTEM INTERFACE // SELECT ERA
               </span>
             </div>
@@ -196,10 +196,10 @@ export default function ClubsHub({ onScrollToEra }: ClubsHubProps) {
           style={{ opacity: scrollIndicatorOpacity }}
           className="absolute bottom-6 flex flex-col items-center gap-1.5 pointer-events-none z-10"
         >
-          <span className="font-rajdhani text-[10px] tracking-[0.25em] text-purple-300 uppercase">
+          <span className="font-rajdhani text-[10px] tracking-[0.25em] text-cyan-300 uppercase">
             Scroll for Timeline
           </span>
-          <ChevronDown className="w-4 h-4 text-purple-400 animate-bounce" />
+          <ChevronDown className="w-4 h-4 text-cyan-400 animate-bounce" />
         </motion.div>
 
       </div>

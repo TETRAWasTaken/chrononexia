@@ -36,12 +36,12 @@ const SECTION_EPOCHS: Record<string, Epoch> = {
 const EPOCH_STYLE = {
   nexus: {
     accent1: "#00f0ff",
-    accent2: "#b026ff",
-    gradient: "linear-gradient(90deg, #00f0ff, #b026ff)",
+    accent2: "#2563eb",
+    gradient: "linear-gradient(90deg, #00f0ff, #2563eb)",
     eyebrow: "rgba(0,240,255,0.95)",
     eyebrowBorder: "rgba(0,240,255,0.3)",
     eyebrowBg: "rgba(0,240,255,0.08)",
-    divider: "linear-gradient(90deg, #00f0ff, #b026ff)",
+    divider: "linear-gradient(90deg, #00f0ff, #2563eb)",
     cardBorder: "rgba(255,255,255,0.12)",
     cardBg: "rgba(255,255,255,0.04)",
     sub: "#cbd5e1", // Bright readable slate-300
@@ -71,15 +71,15 @@ const EPOCH_STYLE = {
     sub: "#cbd5e1", // Bright readable slate-300
   },
   future: {
-    accent1: "#b026ff",
+    accent1: "#2563eb",
     accent2: "#00f0ff",
-    gradient: "linear-gradient(90deg, #b026ff, #00f0ff)",
-    eyebrow: "rgba(176,38,255,0.95)",
-    eyebrowBorder: "rgba(176,38,255,0.35)",
-    eyebrowBg: "rgba(176,38,255,0.08)",
-    divider: "linear-gradient(90deg, #b026ff, #00f0ff)",
-    cardBorder: "rgba(176,38,255,0.2)",
-    cardBg: "rgba(176,38,255,0.05)",
+    gradient: "linear-gradient(90deg, #2563eb, #00f0ff)",
+    eyebrow: "rgba(37,99,235,0.95)",
+    eyebrowBorder: "rgba(37,99,235,0.35)",
+    eyebrowBg: "rgba(37,99,235,0.08)",
+    divider: "linear-gradient(90deg, #2563eb, #00f0ff)",
+    cardBorder: "rgba(37,99,235,0.2)",
+    cardBg: "rgba(37,99,235,0.05)",
     sub: "#e2e8f0", // Bright readable slate-200
   },
 } as const;
@@ -411,7 +411,7 @@ function EpochBackdrop({ epoch }: { epoch: Epoch }) {
         <div className="absolute" style={{
           top: "25%", left: "50%", transform: "translate(-50%,-50%)",
           width: 600, height: 600, borderRadius: "50%",
-          background: "radial-gradient(circle,rgba(176,38,255,0.22) 0%,rgba(0,240,255,0.08) 45%,transparent 70%)",
+          background: "radial-gradient(circle,rgba(37,99,235,0.22) 0%,rgba(0,240,255,0.08) 45%,transparent 70%)",
           filter: "blur(40px)",
         }} />
       </motion.div>
@@ -460,7 +460,7 @@ function EpochBackdrop({ epoch }: { epoch: Epoch }) {
         }} />
       </motion.div>
 
-      {/* FUTURE: void + purple dominant + vivid cyan (Tiers, Partners, Steps, CTA) */}
+      {/* FUTURE: void + tech blue dominant + vivid cyan (Tiers, Partners, Steps, CTA) */}
       <motion.div
         className="absolute inset-0"
         animate={{ opacity: epoch === "future" ? 1 : 0 }}
@@ -468,13 +468,13 @@ function EpochBackdrop({ epoch }: { epoch: Epoch }) {
         style={{ background: "#050510" }}
       >
         <div className="absolute inset-0" style={{
-          backgroundImage: "linear-gradient(rgba(176,38,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(176,38,255,0.05) 1px,transparent 1px)",
+          backgroundImage: "linear-gradient(rgba(37,99,235,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,0.05) 1px,transparent 1px)",
           backgroundSize: "48px 48px",
         }} />
         <div className="absolute" style={{
           bottom: 0, left: "50%", transform: "translateX(-50%)",
           width: 700, height: 700, borderRadius: "50%",
-          background: "radial-gradient(circle,rgba(176,38,255,0.22) 0%,rgba(0,240,255,0.1) 50%,transparent 70%)",
+          background: "radial-gradient(circle,rgba(37,99,235,0.22) 0%,rgba(0,240,255,0.1) 50%,transparent 70%)",
           filter: "blur(55px)",
         }} />
         <div className="absolute" style={{
