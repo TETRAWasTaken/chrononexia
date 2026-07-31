@@ -24,191 +24,9 @@ interface ClubDetailsData {
 
 const ALL_SCHEDULE = [...PAST_SCHEDULE, ...PRESENT_SCHEDULE, ...FUTURE_SCHEDULE];
 
-const CLUB_MOCKED_EVENTS: Record<
-  string,
-  { eventName: string; eventDescription: string; learningOutcomes: string[]; location: string }
-> = {
-  // EPOCH 1: Foundations
-  "cess": {
-    eventName: "TrussForce: Structural Integrity & Civil Design Sprint",
-    eventDescription: "A hands-on civil engineering competition where teams calculate force vectors and build eco-friendly bridge trusses subjected to real-time stress testing.",
-    learningOutcomes: [
-      "Analyzing tension, compression, and shear stresses in truss structures",
-      "Optimizing material efficiency under high structural loads",
-      "Applying green building principles to civil infrastructure"
-    ],
-    location: "Civil Block"
-  },
-  "edc": {
-    eventName: "CircuitCraft: IoT Hardware & PCB Design Workshop",
-    eventDescription: "A comprehensive, hands-on workshop focused on designing microchip schematics, simulating analog-to-digital signals, and fabricating printed circuit boards (PCBs).",
-    learningOutcomes: [
-      "Mastering EDA tools for schematic entry and PCB layout",
-      "Understanding signal integrity, routing rules, and noise mitigation",
-      "Hands-on experience with hardware soldering and oscilloscope testing"
-    ],
-    location: "Electronics Lab"
-  },
-  "epic": {
-    eventName: "EcoGenesis: Macroeconomic & Fiscal Policy Summit",
-    eventDescription: "A high-stakes economic simulation game where participants act as central bankers and economic policy makers to navigate simulated financial markets.",
-    learningOutcomes: [
-      "Understanding fiscal and monetary policy transmission mechanisms",
-      "Analyzing economic indicators and market dependencies",
-      "Strategic crisis management and financial decision-making"
-    ],
-    location: "Block A — Room 101"
-  },
-  "mesa": {
-    eventName: "MechShift: 3D CAD Kinematics & Thermal Sprint",
-    eventDescription: "A fast-paced mechanical design sprint where participants model high-performance gearboxes and run kinematic motion and heat transfer simulations.",
-    learningOutcomes: [
-      "Advanced parametric 3D modeling using industrial CAD software",
-      "Analyzing gear ratios, torque transmission, and mechanical stress",
-      "Simulating assembly constraints and kinematics of complex linkages"
-    ],
-    location: "Block B — Seminar Hall"
-  },
-  "matheletes": {
-    eventName: "Mathlete Decathlon: Numeric & Logic Olympiad",
-    eventDescription: "An intensive logic and mathematics tournament challenging participants with advanced problems in discrete structures, game theory, and number theory.",
-    learningOutcomes: [
-      "Applying game theory to strategic competitive scenarios",
-      "Formulating mathematical proofs for complex algorithms",
-      "Solving combinatorics and modular arithmetic puzzles quickly"
-    ],
-    location: "Math Wing"
-  },
-  "sec": {
-    eventName: "VentureVault: Startup Pitch & Incubation Hack",
-    eventDescription: "An entrepreneurial pitching arena where student founders formulate business models, perform unit economics analysis, and present to seed investors.",
-    learningOutcomes: [
-      "Formulating customer acquisition strategies and pitch narratives",
-      "Understanding financial projections, burn rate, and valuation",
-      "Developing lean canvas business models for tech startups"
-    ],
-    location: "Incubation Centre"
-  },
-  "varsity-care": {
-    eventName: "CarePulse: Student Wellness & Community Outreach",
-    eventDescription: "A student-centric welfare and social impact hackathon focused on mental health initiatives, peer mentoring networks, and campus community care.",
-    learningOutcomes: [
-      "Designing empathetic support programs for campus student welfare",
-      "Managing social impact projects and volunteer networks",
-      "Building peer engagement and community health awareness"
-    ],
-    location: "Student Welfare Office"
-  },
-
-  // EPOCH 2: Silicon / Tech
-  "acm": {
-    eventName: "ACM DevHack: 24-Hour Systems & App Hackathon",
-    eventDescription: "The premier annual 24-hour hackathon where student developers build full-stack applications solving modern urban and educational problems.",
-    learningOutcomes: [
-      "Designing robust RESTful and GraphQL API architectures",
-      "Implementing responsive frontend interfaces with React and TailwindCSS",
-      "Deploying scalable serverless applications with database integrations"
-    ],
-    location: "CS Lab 1"
-  },
-  "codex": {
-    eventName: "CodeRush: Extreme Algorithmic Programming Arena",
-    eventDescription: "A highly competitive algorithmic coding contest featuring complex data structures, graph theory, and mathematical optimization problems.",
-    learningOutcomes: [
-      "Optimizing time and space complexity of computational algorithms",
-      "Implementing complex data structures like segment trees and graphs",
-      "Formulating dynamic programming solutions under strict time limits"
-    ],
-    location: "CS Lab 2"
-  },
-  "foss": {
-    eventName: "Git-Init: Open Source Contribution & Linux Workflow",
-    eventDescription: "An interactive workshop introducing students to the Linux command line environment, version control workflows, and submitting pull requests to open-source repositories.",
-    learningOutcomes: [
-      "Navigating the POSIX terminal and automating tasks via shell scripts",
-      "Mastering Git branches, rebasing, and merge conflict resolution",
-      "Contributing code and documentation to production open-source projects"
-    ],
-    location: "Open Source Lounge"
-  },
-  "gdsc": {
-    eventName: "Google Cloud Study Jam & Kubernetes Deployment",
-    eventDescription: "A practical laboratory session diving deep into containerizing applications, setting up CI/CD pipelines, and deploying microservices to Google Kubernetes Engine.",
-    learningOutcomes: [
-      "Containerizing applications using Docker configuration files",
-      "Orchestrating multi-container systems with Kubernetes pods",
-      "Configuring automated cloud load balancing and monitoring"
-    ],
-    location: "Innovation Hub"
-  },
-  "ieee": {
-    eventName: "SignalSphere: Telemetry & Wireless Communication Labs",
-    eventDescription: "Exploring modern telemetry, encoding RF waves, analyzing frequency domains, and setting up localized wireless communication setups.",
-    learningOutcomes: [
-      "Modulating and demodulating analog/digital signals across RF bands",
-      "Using software-defined radio (SDR) platforms for frequency sweeps",
-      "Understanding packet structure and telemetry transmission protocols"
-    ],
-    location: "Electronics Block"
-  },
-
-  // EPOCH 3: Quantum / Frontier Tech
-  "ai-club": {
-    eventName: "NeuralNexus: Finetuning LLMs & Agentic Workflows",
-    eventDescription: "A technical hackathon where students build multi-agent AI systems, run retrieval-augmented generation (RAG) pipelines, and finetune specialized open-source models.",
-    learningOutcomes: [
-      "Implementing RAG vector embeddings and database search indexes",
-      "Constructing autonomous multi-agent task delegation graphs",
-      "Finetuning open-source model parameters for specific domain queries"
-    ],
-    location: "AI Research Lab"
-  },
-  "antariksh": {
-    eventName: "StarLaunch: CanSat & Rocket Telemetry Workshop",
-    eventDescription: "Building and launching miniature CanSat payloads to capture atmospheric pressure, altitude, and GPS coordinates, transmitting data in real time to ground stations.",
-    learningOutcomes: [
-      "Designing compact payload enclosures conforming to weight budgets",
-      "Programming sensor suites to collect telemetry on a micro-controller",
-      "Configuring long-range telemetry modules (LoRa) for real-time tracking"
-    ],
-    location: "Space Systems Lab"
-  },
-  "arvr": {
-    eventName: "ImmersionSpace: Unity 3D Spatial Computing Hackathon",
-    eventDescription: "A design sprint focused on building immersive augmented and virtual reality experiences using modern game engines and spatial headsets.",
-    learningOutcomes: [
-      "Developing interactive 3D spatial scenes using Unity or Unreal Engine",
-      "Programming physics interactions for virtual reality hands",
-      "Optimizing framerates and rendering budgets for mobile headsets"
-    ],
-    location: "Immersion Studio"
-  },
-  "rotonity": {
-    eventName: "RoboFight: Combat Robotics & Automation Arena",
-    eventDescription: "A high-octane engineering competition where student-built combat robots battle in an armored cage, testing mechanical durability and electronic control.",
-    learningOutcomes: [
-      "Designing robust mechanical chassis to withstand shock and impact",
-      "Interfacing high-torque brushed/brushless motors with speed controllers",
-      "Configuring secure radio-frequency telemetry links for real-time control"
-    ],
-    location: "Robotics Workshop"
-  },
-  "sqc": {
-    eventName: "QuantumSphere: Simulating Superposition & Qubit Circuits",
-    eventDescription: "A theoretical and practical lab using Python and Qiskit to construct quantum logic gates, simulate quantum entanglement, and explore quantum key distribution.",
-    learningOutcomes: [
-      "Understanding quantum logic gates (Hadamard, CNOT, Phase)",
-      "Simulating quantum key distribution protocols and superposition states",
-      "Running quantum circuit algorithms on cloud-based quantum simulator backends"
-    ],
-    location: "Quantum Lab"
-  }
-};
-
 export default function ClubDetailsPage({ club, onBack }: ClubDetailsPageProps) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<ClubDetailsData | null>(null);
-  const [isPlaceholder, setIsPlaceholder] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -224,36 +42,6 @@ export default function ClubDetailsPage({ club, onBack }: ClubDetailsPageProps) 
       club.name.toLowerCase().includes(s.title.toLowerCase())
     );
 
-    // Fallback key search
-    const key = Object.keys(CLUB_MOCKED_EVENTS).find(
-      (k) => normalizedId.includes(k) || k.includes(normalizedId)
-    ) || "acm";
-
-    const details = CLUB_MOCKED_EVENTS[key] || {
-      eventName: `${club.name} Event`,
-      eventDescription: `An exclusive event organized by ${club.name} at ChronoNexia, bringing together students and mentors to explore the frontiers of tech.`,
-      learningOutcomes: [
-        "Understanding core concepts and methodologies of the domain",
-        "Collaborating in teams to build innovative solutions",
-        "Developing real-world problem-solving skills under professional guidance"
-      ],
-      location: "ChronoNexia Venue"
-    };
-
-    const applyFallback = () => {
-      setIsPlaceholder(true);
-      setData({
-        id: club.id,
-        name: club.name,
-        eventName: details.eventName,
-        eventDescription: details.eventDescription,
-        learningOutcomes: details.learningOutcomes,
-        location: details.location,
-        logo: matchedSchedule?.logo
-      });
-      setLoading(false);
-    };
-
     fetch(`/api/clubs/${club.id}`)
       .then((r) => {
         if (!r.ok) throw new Error(`Club ${club.id} not found in DB`);
@@ -261,23 +49,31 @@ export default function ClubDetailsPage({ club, onBack }: ClubDetailsPageProps) 
       })
       .then((details) => {
         if (isMounted) {
-          setIsPlaceholder(false);
           setData({
             id: details.id || club.id,
             name: details.name || club.name,
-            eventName: details.eventName || details.eventName,
-            eventDescription: details.eventDescription || details.eventDescription,
-            learningOutcomes: details.learningOutcomes || details.learningOutcomes,
-            location: details.location || details.location,
+            eventName: details.eventName || "",
+            eventDescription: details.eventDescription || "",
+            learningOutcomes: details.learningOutcomes || [],
+            location: details.location || "",
             logo: matchedSchedule?.logo
           });
           setLoading(false);
         }
       })
       .catch((err) => {
-        console.warn("HTTPS API fallback active. Error:", err.message);
+        console.warn("Database API fetch issue:", err.message);
         if (isMounted) {
-          applyFallback();
+          setData({
+            id: club.id,
+            name: club.name,
+            eventName: "",
+            eventDescription: "",
+            learningOutcomes: [],
+            location: "",
+            logo: matchedSchedule?.logo
+          });
+          setLoading(false);
         }
       });
 
@@ -315,10 +111,10 @@ export default function ClubDetailsPage({ club, onBack }: ClubDetailsPageProps) 
       panel: "future-card-mesh rounded-2xl border-none",
       badge: "bg-nexus-gradient-soft text-cyan-300 rounded-lg px-3 py-1 text-xs border border-cyan-400/20",
       btn: "bg-nexus-gradient text-white hover:brightness-110 rounded-xl transition-all duration-150 shadow-nexus-card",
-      accentText: "text-purple-400",
-      accentBorder: "border-purple-500/20",
+      accentText: "text-blue-400",
+      accentBorder: "border-blue-500/20",
       titleFont: "font-grotesk font-extrabold text-4xl sm:text-5xl tracking-tight text-hero-text",
-      glow: "shadow-[0_0_40px_rgba(176,38,255,0.15)]",
+      glow: "shadow-[0_0_40px_rgba(37,99,235,0.15)]",
       grid: "bg-grid-purple opacity-[0.06]"
     }
   };
@@ -337,7 +133,7 @@ export default function ClubDetailsPage({ club, onBack }: ClubDetailsPageProps) 
               ? "border-term-green"
               : club.era === "present"
               ? "border-techblue"
-              : "border-purple-400"
+              : "border-blue-400"
           } border-b-transparent border-l-transparent mb-6`}
         />
         <h2
@@ -358,6 +154,8 @@ export default function ClubDetailsPage({ club, onBack }: ClubDetailsPageProps) 
       </div>
     );
   }
+
+  const hasEventData = Boolean(data?.eventName || data?.eventDescription);
 
   return (
     <div className={`w-full min-h-screen pb-24 relative overflow-hidden ${style.bg}`}>
@@ -405,22 +203,6 @@ export default function ClubDetailsPage({ club, onBack }: ClubDetailsPageProps) 
           )}
 
           <div className="space-y-8">
-            {isPlaceholder && (
-              <div className={`p-4 rounded-xl border text-xs sm:text-sm flex items-start gap-3 leading-relaxed shadow-sm ${
-                club.era === 'past' 
-                  ? 'border-term-green/30 bg-black text-term-green font-mono' 
-                  : club.era === 'present' 
-                  ? 'border-blue-500/20 bg-blue-950/20 text-blue-400 font-inter' 
-                  : 'border-purple-500/20 bg-purple-950/20 text-purple-400 font-rajdhani text-base'
-              }`}>
-                <span className="font-bold text-base leading-none select-none">⚠️</span>
-                <div>
-                  <strong className="block mb-0.5">Pre-loaded Offline Details</strong>
-                  <span>Displaying event specifications from the ChronoNexia static cache.</span>
-                </div>
-              </div>
-            )}
-
             {/* Club Logo Header */}
             <div className="flex items-center gap-6">
               {data?.logo && (
@@ -442,61 +224,77 @@ export default function ClubDetailsPage({ club, onBack }: ClubDetailsPageProps) 
               </div>
             </div>
 
-            {/* Event Name */}
-            <div className={`pt-6 border-t ${style.accentBorder} opacity-90`}>
-              <span className={`text-xs uppercase tracking-widest font-semibold ${style.accentText} block mb-1`}>
-                {club.era === "past" ? "SYS // EVENT_NAME" : "Event Name"}
-              </span>
-              <h2
-                className={`text-2xl sm:text-3xl font-extrabold text-white ${
-                  club.era === "past" ? "font-mono" : club.era === "future" ? "font-grotesk" : "font-inter"
-                }`}
-              >
-                {data?.eventName}
-              </h2>
-            </div>
-
-            {/* Location */}
-            <div className="flex items-center gap-3 text-sm opacity-90">
-              <MapPin className={`w-5 h-5 ${style.accentText}`} />
-              <div>
-                <span className="text-xs uppercase tracking-wider block opacity-50">Location</span>
-                <span className="font-semibold">{data?.location}</span>
-              </div>
-            </div>
-
-            {/* Event Description */}
-            <div className={`pt-6 border-t ${style.accentBorder}`}>
-              <span className={`text-xs uppercase tracking-widest font-semibold ${style.accentText} block mb-2`}>
-                {club.era === "past" ? "SYS // DESCRIPTION" : "Description"}
-              </span>
-              <p
-                className={`text-base sm:text-lg leading-relaxed opacity-90 ${
-                  club.era === "past" ? "font-mono text-term-green/90" : club.era === "future" ? "font-rajdhani text-slate-300" : "text-slate-300"
-                }`}
-              >
-                {data?.eventDescription}
-              </p>
-            </div>
-
-            {/* Learning Outcomes */}
-            <div className={`pt-6 border-t ${style.accentBorder}`}>
-              <span className={`text-xs uppercase tracking-widest font-semibold ${style.accentText} block mb-3`}>
-                {club.era === "past" ? "SYS // LEARNING_OUTCOMES" : "Key Outcomes"}
-              </span>
-              <ul className="space-y-3">
-                {data?.learningOutcomes.map((outcome, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm sm:text-base opacity-90">
-                    <span className={`inline-block w-2 h-2 rounded-full mt-2 shrink-0 ${
-                      club.era === "past" ? "bg-term-green" : club.era === "present" ? "bg-techblue" : "bg-cyan-400"
-                    }`} />
-                    <span className={club.era === "past" ? "font-mono" : club.era === "future" ? "font-rajdhani text-slate-300" : "text-slate-200"}>
-                      {outcome}
+            {hasEventData ? (
+              <>
+                {/* Event Name */}
+                {data?.eventName && (
+                  <div className={`pt-6 border-t ${style.accentBorder} opacity-90`}>
+                    <span className={`text-xs uppercase tracking-widest font-semibold ${style.accentText} block mb-1`}>
+                      {club.era === "past" ? "SYS // EVENT_NAME" : "Event Name"}
                     </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                    <h2
+                      className={`text-2xl sm:text-3xl font-extrabold text-white ${
+                        club.era === "past" ? "font-mono" : club.era === "future" ? "font-grotesk" : "font-inter"
+                      }`}
+                    >
+                      {data.eventName}
+                    </h2>
+                  </div>
+                )}
+
+                {/* Location */}
+                {data?.location && (
+                  <div className="flex items-center gap-3 text-sm opacity-90">
+                    <MapPin className={`w-5 h-5 ${style.accentText}`} />
+                    <div>
+                      <span className="text-xs uppercase tracking-wider block opacity-50">Location</span>
+                      <span className="font-semibold">{data.location}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Event Description */}
+                {data?.eventDescription && (
+                  <div className={`pt-6 border-t ${style.accentBorder}`}>
+                    <span className={`text-xs uppercase tracking-widest font-semibold ${style.accentText} block mb-2`}>
+                      {club.era === "past" ? "SYS // DESCRIPTION" : "Description"}
+                    </span>
+                    <p
+                      className={`text-base sm:text-lg leading-relaxed opacity-90 ${
+                        club.era === "past" ? "font-mono text-term-green/90" : club.era === "future" ? "font-rajdhani text-slate-300" : "text-slate-300"
+                      }`}
+                    >
+                      {data.eventDescription}
+                    </p>
+                  </div>
+                )}
+
+                {/* Learning Outcomes */}
+                {data?.learningOutcomes && data.learningOutcomes.length > 0 && (
+                  <div className={`pt-6 border-t ${style.accentBorder}`}>
+                    <span className={`text-xs uppercase tracking-widest font-semibold ${style.accentText} block mb-3`}>
+                      {club.era === "past" ? "SYS // LEARNING_OUTCOMES" : "Key Outcomes"}
+                    </span>
+                    <ul className="space-y-3">
+                      {data.learningOutcomes.map((outcome, i) => (
+                        <li key={i} className="flex items-start gap-3 text-sm sm:text-base opacity-90">
+                          <span className={`inline-block w-2 h-2 rounded-full mt-2 shrink-0 ${
+                            club.era === "past" ? "bg-term-green" : club.era === "present" ? "bg-techblue" : "bg-cyan-400"
+                          }`} />
+                          <span className={club.era === "past" ? "font-mono" : club.era === "future" ? "font-rajdhani text-slate-300" : "text-slate-200"}>
+                            {outcome}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className={`pt-6 border-t ${style.accentBorder} text-sm opacity-60 italic`}>
+                No event record details found for this club in the database.
+              </div>
+            )}
           </div>
         </motion.div>
       </main>

@@ -1,7 +1,13 @@
--- ==========================================
--- SYMBITECH 2026 EVENT DETAILS SEED SCRIPT
--- ==========================================
+DROP TABLE IF EXISTS symbitech_event_details;
+DROP TABLE IF EXISTS fest_heads;
+DROP TABLE IF EXISTS executives;
+DROP TABLE IF EXISTS heads_and_coheads;
+DROP TABLE IF EXISTS members;
 
+-- -----------------------------------------------------
+-- Table: symbitech_event_details
+-- Stores the actual event & club details for ChronoNexia
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS symbitech_event_details (
     sr_no INT PRIMARY KEY,
     club_name VARCHAR(255) NOT NULL,
@@ -13,6 +19,57 @@ CREATE TABLE IF NOT EXISTS symbitech_event_details (
 
 CREATE INDEX IF NOT EXISTS idx_symbitech_club_name ON symbitech_event_details(club_name);
 
+-- -----------------------------------------------------
+-- Table: fest_heads
+-- Stores Fest Heads
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS fest_heads (
+    name VARCHAR(100) NOT NULL,
+    position VARCHAR(150) NOT NULL,
+    academic_year VARCHAR(100) NOT NULL,
+    comment VARCHAR(300),
+    description VARCHAR(500),
+    image_url VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_fest_heads_name ON fest_heads(name);
+
+-- -----------------------------------------------------
+-- Table: executives
+-- Stores Executive team members
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS executives (
+    name VARCHAR(100) NOT NULL,
+    position VARCHAR(150) NOT NULL,
+    academic_year VARCHAR(100) NOT NULL,
+    comment VARCHAR(300),
+    description VARCHAR(500),
+    image_url VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_executives_name ON executives(name);
+
+-- -----------------------------------------------------
+-- Table: heads_and_coheads
+-- Stores Heads and Co-Heads
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS heads_and_coheads (
+    name VARCHAR(100) NOT NULL,
+    position VARCHAR(150) NOT NULL,
+    academic_year VARCHAR(100) NOT NULL,
+    comment VARCHAR(300),
+    description VARCHAR(500),
+    image_url VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_heads_and_coheads_name ON heads_and_coheads(name);
+
+-- ==========================================
+-- SEED DATA: SYMBITECH 2026 ACTUAL EVENTS
+-- ==========================================
 INSERT INTO symbitech_event_details (sr_no, club_name, event_name, learning_outcome, event_description, preferred_location)
 VALUES
 (1, 'CodeX', 'The Hail Mary Directive', 'Participants will gain practical exposure to:
@@ -129,4 +186,10 @@ built web platform.', 'Computer Lab 5th Floor'),
 
 Just when the model is complete, the challenge evolves. Teams will be presented with a practical engineering problem such as increased loading, changing site conditions, or a new functional requirement. They must analyse their existing design and modify it to meet the new challenge without losing its structural integrity or historical essence. The final models will be evaluated on engineering logic, stability, functionality, historical relevance, and the effectiveness of the proposed modifications.
 
-This event highlights how engineering ideas have evolved through time while demonstrating that the fundamental principles behind good civil engineering remain relevant across generations.', 'Construction Technology Lab');
+This event highlights how engineering ideas have evolved through time while demonstrating that the fundamental principles behind good civil engineering remain relevant across generations.', 'Construction Technology Lab')
+ON CONFLICT (sr_no) DO UPDATE SET
+  club_name = EXCLUDED.club_name,
+  event_name = EXCLUDED.event_name,
+  learning_outcome = EXCLUDED.learning_outcome,
+  event_description = EXCLUDED.event_description,
+  preferred_location = EXCLUDED.preferred_location;
