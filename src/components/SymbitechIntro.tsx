@@ -1,31 +1,23 @@
 // src/components/SymbitechIntro.tsx
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Shield, User, Users } from "lucide-react";
+import { Sparkles, Shield, User, Users, Quote } from "lucide-react";
+import teamFallbackData from "../data/team_fallback.json";
 
-interface TeamMember {
+export interface TeamMember {
   name: string;
-  branch: string;
-  role: string;
-  initials: string;
-  glow: string;
+  position: string;
+  academic_year: string;
+  comment?: string | null;
+  description?: string | null;
+  image_url?: string | null;
 }
 
-const EXECUTIVES: TeamMember[] = [
-  { name: "Aarav Sharma", branch: "Computer Science & Engineering", role: "Executive Committee", initials: "AS", glow: "from-cyan-500 to-blue-500" },
-  { name: "Diya Patel", branch: "Information Technology", role: "Executive Committee", initials: "DP", glow: "from-purple-500 to-pink-500" },
-  { name: "Rohan Verma", branch: "Electronics & Telecommunication", role: "Executive Committee", initials: "RV", glow: "from-emerald-500 to-teal-500" },
-  { name: "Sneha Reddy", branch: "Artificial Intelligence & ML", role: "Executive Committee", initials: "SR", glow: "from-amber-500 to-orange-500" },
-];
-
-const HEADS: TeamMember[] = [
-  { name: "Kabir Malhotra", branch: "Computer Science & Engineering", role: "Fest Head", initials: "KM", glow: "from-cyan-400 to-purple-500" },
-  { name: "Ananya Iyer", branch: "Robotics & Automation", role: "Fest Head", initials: "AI", glow: "from-fuchsia-500 to-pink-500" },
-];
-
-const CO_HEADS: TeamMember[] = [
-  { name: "Vikram Singh", branch: "Information Technology", role: "Fest Co-Head", initials: "VS", glow: "from-blue-500 to-indigo-500" },
-  { name: "Ishita Gupta", branch: "Electronics & Telecommunication", role: "Fest Co-Head", initials: "IG", glow: "from-violet-500 to-purple-500" },
-];
+interface TeamData {
+  festHeads: TeamMember[];
+  headsAndCoheads: TeamMember[];
+  executives: TeamMember[];
+}
 
 const GLIMPSES = [
   {
@@ -54,7 +46,42 @@ const GLIMPSES = [
   },
 ];
 
+function getInitials(name: string): string {
+  if (!name) return "OC";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
 export default function SymbitechIntro() {
+  const [teamData, setTeamData] = useState<TeamData>({
+    festHeads: teamFallbackData.festHeads || [],
+    headsAndCoheads: teamFallbackData.headsAndCoheads || [],
+    executives: teamFallbackData.executives || [],
+  });
+
+  useEffect(() => {
+    fetch("/api/team")
+      .then((res) => res.json())
+      .then((data) => {
+        if (
+          data &&
+          ((data.festHeads && data.festHeads.length > 0) ||
+           (data.executives && data.executives.length > 0) ||
+           (data.headsAndCoheads && data.headsAndCoheads.length > 0))
+        ) {
+          setTeamData({
+            festHeads: data.festHeads || [],
+            headsAndCoheads: data.headsAndCoheads || [],
+            executives: data.executives || [],
+          });
+        }
+      })
+      .catch((err) => {
+        console.warn("Using fallback team dataset due to fetch notice:", err);
+      });
+  }, []);
+
   return (
     <div className="relative w-full overflow-hidden bg-transparent z-10 pt-24 pb-20 px-4 sm:px-6 md:px-8">
       {/* Background radial highlight */}
@@ -71,17 +98,14 @@ export default function SymbitechIntro() {
           transition={{ duration: 0.8 }}
           className="flex flex-col items-center text-center mb-16"
         >
-          {/* Glowing Vector Placeholder Logo */}
+          {/* Glowing Vector Logo */}
           <div className="relative w-28 h-28 mb-6 group cursor-pointer">
-            {/* Spinning/pulsing background glow */}
             <div className="absolute inset-0 rounded-3xl bg-nexus-gradient blur-xl opacity-30 group-hover:opacity-60 group-hover:scale-110 transition-all duration-500" />
             
-            {/* Elegant futuristic SVG frame */}
             <svg
               viewBox="0 0 100 100"
               className="w-full h-full relative z-10 filter drop-shadow-[0_0_8px_rgba(0,240,255,0.4)] animate-[spin_20s_linear_infinite] hover:animate-[spin_4s_linear_infinite] transition-all duration-300"
             >
-              {/* Outer hexagonal border */}
               <polygon
                 points="50,5 90,25 90,75 50,95 10,75 10,25"
                 fill="none"
@@ -89,10 +113,7 @@ export default function SymbitechIntro() {
                 strokeWidth="3.5"
                 strokeDasharray="6 3"
               />
-              {/* Inner tech concentric ring */}
               <circle cx="50" cy="50" r="30" fill="none" stroke="#2563eb" strokeWidth="1.5" strokeOpacity="0.4" />
-              
-              {/* Center 'S' Nexus icon */}
               <path
                 d="M38,38 C42,32 58,32 62,38 C65,42 60,46 50,50 C40,54 35,58 38,62 C42,68 58,68 62,62"
                 fill="none"
@@ -100,8 +121,6 @@ export default function SymbitechIntro() {
                 strokeWidth="4.5"
                 strokeLinecap="round"
               />
-
-              {/* Definitions for Gradients */}
               <defs>
                 <linearGradient id="symbi-grad" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#00f0ff" />
@@ -113,8 +132,6 @@ export default function SymbitechIntro() {
                 </linearGradient>
               </defs>
             </svg>
-            
-            {/* Center dot flashing */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-cyan-400 animate-ping z-20" />
           </div>
 
@@ -211,52 +228,72 @@ export default function SymbitechIntro() {
             <div className="w-16 h-1 bg-nexus-gradient mx-auto mt-3 rounded-full" />
           </motion.div>
 
-          {/* 1. EXECUTIVES SECTION */}
-          <div className="mb-14">
-            <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
-              <Shield className="w-4 h-4 text-cyan-400" />
-              <h4 className="font-grotesk font-semibold text-lg text-slate-200 uppercase tracking-widest text-xs">
-                Executive Committee
-              </h4>
+          {/* 1. FEST HEADS SECTION */}
+          {teamData.festHeads.length > 0 && (
+            <div className="mb-14">
+              <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
+                <User className="w-4 h-4 text-cyan-400" />
+                <h4 className="font-grotesk font-semibold text-sm text-slate-200 uppercase tracking-widest">
+                  Fest Heads
+                </h4>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {teamData.festHeads.map((member, idx) => (
+                  <TeamCard
+                    key={idx}
+                    member={member}
+                    index={idx}
+                    badgeGlow="from-cyan-500 to-blue-600"
+                  />
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {EXECUTIVES.map((member, idx) => (
-                <TeamCard key={idx} member={member} index={idx} />
-              ))}
-            </div>
-          </div>
+          )}
 
-          {/* 2. HEADS SECTION */}
-          <div className="mb-14">
-            <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
-              <User className="w-4 h-4 text-purple-400" />
-              <h4 className="font-grotesk font-semibold text-lg text-slate-200 uppercase tracking-widest text-xs">
-                Fest Heads
-              </h4>
+          {/* 2. HEADS & CO-HEADS SECTION */}
+          {teamData.headsAndCoheads.length > 0 && (
+            <div className="mb-14">
+              <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
+                <Users className="w-4 h-4 text-purple-400" />
+                <h4 className="font-grotesk font-semibold text-sm text-slate-200 uppercase tracking-widest">
+                  Heads & Co-Heads
+                </h4>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {teamData.headsAndCoheads.map((member, idx) => (
+                  <TeamCard
+                    key={idx}
+                    member={member}
+                    index={idx}
+                    badgeGlow="from-purple-500 to-pink-600"
+                  />
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl">
-              {HEADS.map((member, idx) => (
-                <TeamCard key={idx} member={member} index={idx} />
-              ))}
-            </div>
-          </div>
+          )}
 
-          {/* 3. CO-HEADS SECTION */}
-          <div>
-            <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
-              <Users className="w-4 h-4 text-emerald-400" />
-              <h4 className="font-grotesk font-semibold text-lg text-slate-200 uppercase tracking-widest text-xs">
-                Fest Co-Heads
-              </h4>
+          {/* 3. EXECUTIVES SECTION */}
+          {teamData.executives.length > 0 && (
+            <div className="mb-14">
+              <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
+                <Shield className="w-4 h-4 text-emerald-400" />
+                <h4 className="font-grotesk font-semibold text-sm text-slate-200 uppercase tracking-widest">
+                  Executive Committee
+                </h4>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {teamData.executives.map((member, idx) => (
+                  <TeamCard
+                    key={idx}
+                    member={member}
+                    index={idx}
+                    badgeGlow="from-emerald-500 to-teal-600"
+                  />
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl">
-              {CO_HEADS.map((member, idx) => (
-                <TeamCard key={idx} member={member} index={idx} />
-              ))}
-            </div>
-          </div>
+          )}
         </div>
-
       </div>
     </div>
   );
@@ -265,39 +302,67 @@ export default function SymbitechIntro() {
 interface TeamCardProps {
   member: TeamMember;
   index: number;
+  badgeGlow: string;
 }
 
-function TeamCard({ member, index }: TeamCardProps) {
+function TeamCard({ member, index, badgeGlow }: TeamCardProps) {
+  const [imgError, setImgError] = useState(false);
+  const initials = getInitials(member.name);
+  const photoSrc = member.image_url ? `/${member.image_url}` : null;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: index * 0.08 }}
+      transition={{ duration: 0.4, delay: index * 0.04 }}
       whileHover={{ scale: 1.02 }}
-      className="relative p-5 rounded-xl border border-white/10 bg-nexus-card backdrop-blur-md overflow-hidden group flex items-center gap-4 transition-all duration-300"
+      className="relative p-5 rounded-2xl border border-white/10 bg-nexus-card backdrop-blur-md overflow-hidden group flex flex-col justify-between transition-all duration-300 shadow-lg hover:border-cyan-500/30"
     >
-      {/* Glowing avatar container */}
-      <div className="relative w-12 h-12 rounded-full shrink-0 flex items-center justify-center font-bold text-sm tracking-wider text-white overflow-hidden shadow-inner bg-black/40">
-        <div className={`absolute inset-0 bg-gradient-to-tr ${member.glow} opacity-20 group-hover:opacity-40 transition-opacity duration-300`} />
-        <span className="relative z-10 font-grotesk">{member.initials}</span>
-        {/* Glow border ring */}
-        <div className={`absolute inset-0 rounded-full border border-white/20 group-hover:border-white/40 transition-colors duration-300`} />
+      <div className="flex items-start gap-4">
+        {/* Glowing Avatar Container */}
+        <div className="relative w-14 h-14 rounded-full shrink-0 flex items-center justify-center font-bold text-sm tracking-wider text-white overflow-hidden shadow-inner bg-slate-900 border border-white/15 group-hover:border-cyan-400/50 transition-colors duration-300">
+          {photoSrc && !imgError ? (
+            <img
+              src={photoSrc}
+              alt={member.name}
+              className="w-full h-full object-cover object-top transform group-hover:scale-110 transition-transform duration-500"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className={`w-full h-full flex items-center justify-center bg-gradient-to-tr ${badgeGlow}`}>
+              <span className="relative z-10 font-grotesk font-bold text-white text-sm">
+                {initials}
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Member Details */}
+        <div className="flex flex-col min-w-0 flex-1">
+          <span className="text-[10px] tracking-wider text-cyan-400 font-mono uppercase truncate font-semibold">
+            {member.position}
+          </span>
+          <h5 className="font-grotesk font-bold text-slate-100 group-hover:text-cyan-300 transition-colors duration-250 text-base leading-snug truncate">
+            {member.name}
+          </h5>
+          <span className="font-rajdhani text-xs text-slate-400 mt-0.5 font-medium">
+            {member.academic_year}
+          </span>
+        </div>
       </div>
 
-      <div className="flex flex-col min-w-0">
-        <span className="text-[9px] tracking-widest text-slate-500 font-mono uppercase">
-          {member.role}
-        </span>
-        <h5 className="font-grotesk font-bold text-slate-200 group-hover:text-cyan-300 transition-colors duration-250 truncate">
-          {member.name}
-        </h5>
-        <span className="font-rajdhani text-xs text-slate-400 truncate">
-          {member.branch}
-        </span>
-      </div>
+      {/* Yearbook Quote / Comment */}
+      {member.comment && member.comment.trim() !== "" && (
+        <div className="mt-3 pt-3 border-t border-white/5 flex items-start gap-2">
+          <Quote className="w-3.5 h-3.5 text-cyan-400/60 shrink-0 mt-0.5" />
+          <p className="font-rajdhani text-xs italic text-slate-300/80 line-clamp-2 leading-relaxed">
+            "{member.comment}"
+          </p>
+        </div>
+      )}
 
-      {/* Background card highlight */}
+      {/* Subtle Background Glow */}
       <div className="absolute right-0 bottom-0 w-24 h-24 rounded-full bg-cyan-400/5 blur-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     </motion.div>
   );

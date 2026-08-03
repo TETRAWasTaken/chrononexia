@@ -149,11 +149,38 @@ app.get("/api/clubs/:id", async (req, res) => {
   }
 });
 
+// 3. Get Team Members (Fest Heads, Executives, Heads & Co-Heads)
+app.get("/api/team", async (req, res) => {
+  try {
+    const festHeadsRes = await pool.query(
+      "SELECT name, position, academic_year, comment, description, image_url FROM fest_heads ORDER BY name ASC"
+    );
+    const executivesRes = await pool.query(
+      "SELECT name, position, academic_year, comment, description, image_url FROM executives ORDER BY name ASC"
+    );
+    const headsAndCoheadsRes = await pool.query(
+      "SELECT name, position, academic_year, comment, description, image_url FROM heads_and_coheads ORDER BY name ASC"
+    );
+
+    res.json({
+      festHeads: festHeadsRes.rows,
+      executives: executivesRes.rows,
+      headsAndCoheads: headsAndCoheadsRes.rows,
+    });
+  } catch (err) {
+    console.error("Error querying team members from DB:", err);
+    res.status(500).json({ error: "Database error querying team members" });
+  }
+});
+
 // ============================================================================
 // Production Client Hosting (Serving Built Vite Static Assets)
 // ============================================================================
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Serve assets from src/assets (e.g., /src/assets/Photoshoot/...)
+app.use("/src/assets", express.static(path.join(__dirname, "src/assets")));
 
 // Serve the compiled build output from Vite
 app.use(express.static(path.join(__dirname, "dist")));
