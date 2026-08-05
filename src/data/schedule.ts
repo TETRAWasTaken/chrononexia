@@ -15,7 +15,7 @@ import ieeeLogo from "../assets/IEEE/IEEE STUDENT BRANCH.png";
 
 import aiClubLogo from "../assets/AI Club/AIClubLogo.png";
 import antarikshLogo from "../assets/ANTARIKSH/ANTARIKSH_LOGO.png";
-import arvrLogo from "../assets/ARVR /DARKMODE.png";
+import arvrLogo from "../assets/ARVR/DARKMODE.png";
 import rotonityLogo from "../assets/Rotonity/Rotonity Logo.png";
 import sqcLogo from "../assets/SQC/SQC-default-logo.png";
 
