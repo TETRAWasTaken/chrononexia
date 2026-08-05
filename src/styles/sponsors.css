@@ -1,9 +1,9 @@
 /* ================================================================
    Sponsors Section — "Playbook Scroll" effect
-   from craftofui.substack.com/p/scrolling-a-page-out-of-the-playbook
+   Refactored with outward tile offsets to guarantee ZERO overlap
+   between the central Hero card and all 10 surrounding sponsor tiles.
    ================================================================ */
 
-/* ── Custom easing (exactly from the reference source) ── */
 :root {
   --sp-power-1-out: linear(0 0%, 0.0027 3.64%, 0.0106 7.29%, 0.0425 14.58%,
       0.0957 21.87%, 0.1701 29.16%, 0.2477 35.19%,
@@ -18,19 +18,18 @@
   --sp-sine: linear(0 0%, 0.2861 18.47%, 0.4829 32.08%, 0.6437 44.52%,
       0.7712 56.07%, 0.8722 67.47%, 0.9434 78.49%,
       0.9859 89.3%, 1 100%);
-  --sp-gap: clamp(8px, 2vw, 28px);
   --sp-gutter: 2rem;
-  --sp-tile-w: clamp(110px, 14vw, 180px);
-  --sp-tile-h: clamp(130px, 16vw, 210px);
-  --sp-center-w: clamp(220px, 30vw, 420px);
-  --sp-center-h: clamp(220px, 30vw, 380px);
+  --sp-hero-w: min(860px, 88vw);
+  --sp-hero-h: min(420px, 58vh);
+  --sp-center-w: min(380px, 80vw);
+  --sp-center-h: 280px;
 }
 
-/* ── Section: tall enough to give scroll room ── */
+/* ── Section: tall enough to provide smooth scroll room ── */
 .sp-section {
   position: relative;
   z-index: 10;
-  min-height: 240vh;
+  min-height: 220vh;
   view-timeline: --sp-runner;
 }
 
@@ -47,7 +46,7 @@
 }
 
 /* ================================================================
-   SCALER — starts fullscreen, shrinks to a card
+   SCALER — starts as a well-proportioned Hero card, shrinks to center
    ================================================================ */
 .sp-scaler {
   position: absolute;
@@ -56,15 +55,11 @@
   align-items: center;
   justify-content: center;
   z-index: 2;
-  /* Allow pointer-events so the button inside is clickable */
   pointer-events: none;
 }
 
-/* Only the card itself (and its children) should receive pointer events */
-/* sp-scaler-card is the SIZE-animated transparent wrapper */
 .sp-scaler-card {
   pointer-events: auto;
-  /* Size starts at --sp-center-w/h, animation expands to full viewport */
   width: var(--sp-center-w);
   min-height: var(--sp-center-h);
   display: flex;
@@ -72,45 +67,48 @@
   justify-content: center;
 }
 
-/* sp-scaler-card-inner = the actual visible styled card */
 .sp-scaler-card-inner {
   width: 100%;
   height: 100%;
   min-height: var(--sp-center-h);
-  border-radius: 1.25rem;
+  border-radius: 1.75rem;
   background:
-    radial-gradient(at 20% 30%, rgba(0, 240, 255, 0.14) 0, transparent 55%),
-    radial-gradient(at 80% 70%, rgba(176, 38, 255, 0.14) 0, transparent 55%),
-    rgba(5, 5, 20, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+    radial-gradient(at 20% 30%, rgba(0, 240, 255, 0.18) 0, transparent 60%),
+    radial-gradient(at 80% 70%, rgba(176, 38, 255, 0.18) 0, transparent 60%),
+    rgba(8, 10, 28, 0.95);
+  border: 1px solid rgba(0, 240, 255, 0.35);
   box-shadow:
-    0 0 80px -20px rgba(0, 240, 255, 0.25),
-    0 0 120px -20px rgba(176, 38, 255, 0.18),
-    inset 0 0 60px rgba(255, 255, 255, 0.02);
+    0 0 70px -15px rgba(0, 240, 255, 0.3),
+    0 0 100px -15px rgba(176, 38, 255, 0.22),
+    inset 0 0 50px rgba(255, 255, 255, 0.03);
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 2.5rem 2rem;
+  backdrop-filter: blur(20px);
+  box-sizing: border-box;
 }
 
-/* ── Scaler text ── */
+/* ── Scaler Typography ── */
 .sp-scaler-eyebrow {
   font-family: "Rajdhani", sans-serif;
-  font-size: 0.65rem;
-  letter-spacing: 0.28em;
-  color: rgba(0, 240, 255, 0.6);
+  font-size: 0.75rem;
+  letter-spacing: 0.32em;
+  color: rgba(0, 240, 255, 0.85);
   text-transform: uppercase;
+  font-weight: 700;
   margin-bottom: 0.75rem;
 }
 
 .sp-scaler-title {
   font-family: "Space Grotesk", sans-serif;
-  font-weight: 700;
-  font-size: clamp(1.8rem, 5vw, 3.5rem);
+  font-weight: 800;
+  font-size: clamp(2rem, 4.2vw, 3.5rem);
   line-height: 1.1;
-  color: #f1f5f9;
+  color: #f8fafc;
   margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
 }
 
 .sp-scaler-gradient {
@@ -122,116 +120,111 @@
 
 .sp-scaler-sub {
   font-family: "Rajdhani", sans-serif;
-  font-size: clamp(0.8rem, 1.5vw, 1rem);
-  color: rgba(148, 163, 184, 0.75);
-  max-width: 28ch;
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+  color: rgba(203, 213, 225, 0.9);
+  max-width: 32ch;
   margin: 0 auto;
   line-height: 1.5;
+  font-weight: 500;
 }
 
 .sp-scaler-pulse {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: #00f0ff;
-  box-shadow: 0 0 10px #00f0ff;
+  box-shadow: 0 0 14px #00f0ff;
   margin: 1.25rem auto 0;
   animation: sp-pulse 2s ease-in-out infinite;
 }
 
 @keyframes sp-pulse {
-
-  0%,
-  100% {
+  0%, 100% {
     opacity: 1;
     transform: scale(1);
   }
-
   50% {
-    opacity: 0.35;
+    opacity: 0.4;
     transform: scale(1.6);
   }
 }
 
 /* ================================================================
-   SCALE-X / SCALE-Y keyframes — scaler expands to fill screen
-   at the START (entry) and shrinks back on exit.
-   The keyframe starts at full-viewport, ends at --sp-center-w.
+   SCALE KEYFRAMES — Card starts as a rich prominent Hero box,
+   then scales down to the center position during scroll.
    ================================================================ */
 @keyframes sp-scale-x {
-
-  0%,
-  10% {
-    width: 100vw;
+  0%, 12% {
+    width: var(--sp-hero-w);
+  }
+  100% {
+    width: var(--sp-center-w);
   }
 }
 
 @keyframes sp-scale-y {
-
-  0%,
-  10% {
-    min-height: 100vh;
+  0%, 12% {
+    min-height: var(--sp-hero-h);
+  }
+  100% {
+    min-height: var(--sp-center-h);
   }
 }
 
 @keyframes sp-radius {
-
-  0%,
-  10% {
-    border-radius: 0px;
-    border-width: 0px;
+  0%, 12% {
+    border-radius: 2rem;
+    border-color: rgba(0, 240, 255, 0.4);
   }
 }
 
-/* ── Tile reveal keyframes (unchanged from reference) ── */
+/* ── Tile reveal keyframes ── */
 @keyframes sp-fade {
-
-  0%,
-  55% {
+  0%, 40% {
     opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
 
 @keyframes sp-reveal {
-
-  0%,
-  30% {
-    scale: 0;
+  0%, 25% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
 /* ================================================================
-   GRID — 5-column × 3-row CSS subgrid
-   Row sizes are EXPLICIT so row 2 (center) holds its height even
-   with no direct grid children.
+   GRID — Perfectly Symmetrical 5-Column Layout
+   Row 2 holds middle clearance height calc(var(--sp-center-h) + 60px)
    ================================================================ */
 .sp-grid {
-  width: min(1400px, calc(100% - 2 * var(--sp-gutter)));
+  width: min(1480px, calc(100% - 2 * var(--sp-gutter)));
   display: grid;
-  grid-template-columns: var(--sp-tile-w) 1fr var(--sp-center-w) 1fr var(--sp-tile-w);
-  /* Clamp row heights so they never exceed viewport thirds */
-  grid-template-rows:
-    clamp(100px, calc((100vh - var(--sp-center-h)) / 2 - var(--sp-gap)), var(--sp-tile-h)) var(--sp-center-h) clamp(100px, calc((100vh - var(--sp-center-h)) / 2 - var(--sp-gap)), var(--sp-tile-h));
-  column-gap: clamp(24px, 5vw, 80px);
-  row-gap: var(--sp-gap);
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto calc(var(--sp-center-h) + 70px) auto;
+  column-gap: clamp(20px, 3.2vw, 56px);
+  row-gap: 0;
   margin: 0 auto;
-  /* absolute overlay on top of the scaler */
   position: absolute;
   top: 50%;
   left: 50%;
-  translate: -50% -50%;
+  transform: translate(-50%, -50%);
   z-index: 3;
-  /* above .sp-scaler */
   pointer-events: none;
 }
 
-/* Spacer in the center cell so the grid keeps its shape */
 .sp-grid-spacer {
-  grid-column: 3;
+  grid-column: 2 / 5;
   grid-row: 2;
+  height: calc(var(--sp-center-h) + 70px);
 }
 
-/* Each layer spans ALL cells with subgrid */
 .sp-layer {
   display: grid;
   grid-column: 1 / -1;
@@ -241,66 +234,83 @@
   pointer-events: none;
 }
 
-/* ── PLACEMENT — Gold: cols 1 & 5 ── */
+/* ── Symmetrical Placement & Outward Offsets to prevent overlap ── */
+
+/* Layer 1 — Gold (Outer Flank Columns 1 & 5) */
 .sp-layer--1 .sp-item:nth-child(1) {
   grid-column: 1;
   grid-row: 1;
+  transform: translate(-15px, -20px);
 }
-
 .sp-layer--1 .sp-item:nth-child(2) {
   grid-column: 5;
   grid-row: 1;
+  transform: translate(15px, -20px);
 }
-
 .sp-layer--1 .sp-item:nth-child(3) {
   grid-column: 1;
   grid-row: 3;
+  transform: translate(-15px, 20px);
 }
-
 .sp-layer--1 .sp-item:nth-child(4) {
   grid-column: 5;
   grid-row: 3;
+  transform: translate(15px, 20px);
 }
 
-/* ── PLACEMENT — Silver: cols 2 & 4 ── */
+/* Layer 2 — Silver (Inner Flank Columns 2 & 4) */
 .sp-layer--2 .sp-item:nth-child(1) {
   grid-column: 2;
   grid-row: 1;
+  transform: translate(-10px, -25px);
 }
-
 .sp-layer--2 .sp-item:nth-child(2) {
   grid-column: 4;
   grid-row: 1;
+  transform: translate(10px, -25px);
 }
-
 .sp-layer--2 .sp-item:nth-child(3) {
   grid-column: 2;
   grid-row: 3;
+  transform: translate(-10px, 25px);
 }
-
 .sp-layer--2 .sp-item:nth-child(4) {
   grid-column: 4;
   grid-row: 3;
+  transform: translate(10px, 25px);
 }
 
-/* ── PLACEMENT — Bronze: col 3 (above & below center card) ── */
+/* Layer 3 — Bronze (Center Column 3, Outward Vertical Push) */
 .sp-layer--3 .sp-item:nth-child(1) {
   grid-column: 3;
   grid-row: 1;
+  transform: translateY(-40px);
 }
-
 .sp-layer--3 .sp-item:nth-child(2) {
   grid-column: 3;
   grid-row: 3;
+  transform: translateY(40px);
 }
 
+/* Hover effect with offset preservation */
+.sp-layer--1 .sp-item:nth-child(1):hover { transform: translate(-15px, -26px) scale(1.04); }
+.sp-layer--1 .sp-item:nth-child(2):hover { transform: translate(15px, -26px) scale(1.04); }
+.sp-layer--1 .sp-item:nth-child(3):hover { transform: translate(-15px, 26px) scale(1.04); }
+.sp-layer--1 .sp-item:nth-child(4):hover { transform: translate(15px, 26px) scale(1.04); }
+
+.sp-layer--2 .sp-item:nth-child(1):hover { transform: translate(-10px, -31px) scale(1.04); }
+.sp-layer--2 .sp-item:nth-child(2):hover { transform: translate(10px, -31px) scale(1.04); }
+.sp-layer--2 .sp-item:nth-child(3):hover { transform: translate(-10px, 31px) scale(1.04); }
+.sp-layer--2 .sp-item:nth-child(4):hover { transform: translate(10px, 31px) scale(1.04); }
+
+.sp-layer--3 .sp-item:nth-child(1):hover { transform: translateY(-46px) scale(1.04); }
+.sp-layer--3 .sp-item:nth-child(2):hover { transform: translateY(46px) scale(1.04); }
+
 /* ================================================================
-   SCROLL-DRIVEN ANIMATIONS
+   SCROLL-DRIVEN ANIMATION TIMELINE
    ================================================================ */
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: scroll()) and (animation-range: 0 100%) {
-
-    /* scaler card wrapper width & height scale from full-viewport → natural */
     .sp-scaler-card {
       animation-name: sp-scale-x, sp-scale-y;
       animation-fill-mode: both;
@@ -309,7 +319,6 @@
       animation-range: entry 100% exit -20%;
     }
 
-    /* scaler card inner border-radius and border-width scale from 0px/0 border → rounded/1px border */
     .sp-scaler-card-inner {
       animation-name: sp-radius;
       animation-fill-mode: both;
@@ -318,7 +327,6 @@
       animation-range: entry 100% exit -20%;
     }
 
-    /* layers fade+reveal with staggered ranges */
     .sp-layer {
       animation-name: sp-fade, sp-reveal;
       animation-fill-mode: both;
@@ -326,21 +334,13 @@
       animation-timeline: --sp-runner, --sp-runner;
     }
 
-    .sp-layer--1 {
-      animation-range: entry 100% exit 0%;
-    }
-
-    .sp-layer--2 {
-      animation-range: entry 100% exit -10%;
-    }
-
-    .sp-layer--3 {
-      animation-range: entry 100% exit -20%;
-    }
+    .sp-layer--1 { animation-range: entry 100% exit 0%; }
+    .sp-layer--2 { animation-range: entry 100% exit -10%; }
+    .sp-layer--3 { animation-range: entry 100% exit -20%; }
   }
 }
 
-/* ── Fallback (Firefox / Safari / reduced-motion) ── */
+/* ── Fallback for browsers without animation-timeline ── */
 @supports not ((animation-timeline: scroll()) and (animation-range: 0 100%)) {
   .sp-section {
     min-height: auto;
@@ -351,7 +351,7 @@
     position: relative;
     height: auto;
     flex-direction: column;
-    gap: 2rem;
+    gap: 2.5rem;
   }
 
   .sp-scaler {
@@ -360,15 +360,15 @@
   }
 
   .sp-scaler-card {
-    width: min(420px, 90vw);
+    width: min(860px, 90vw);
     min-height: auto;
     animation: none;
   }
 
   .sp-scaler-card-inner {
     width: 100%;
-    min-height: 260px;
-    border-radius: 1.25rem;
+    min-height: 320px;
+    border-radius: 1.75rem;
     border-width: 1px;
     animation: none;
   }
@@ -377,11 +377,11 @@
     position: relative;
     top: auto;
     left: auto;
-    translate: none;
-    grid-template-columns: repeat(3, 1fr);
+    transform: none;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     grid-template-rows: auto;
     z-index: 1;
-    margin-top: 2rem;
+    margin-top: 2.5rem;
   }
 
   .sp-grid-spacer {
@@ -392,134 +392,129 @@
     display: contents;
     animation: none;
     opacity: 1;
-    scale: 1;
+    transform: none;
   }
 
-  /* re-flatten placement */
   .sp-layer .sp-item {
     grid-column: auto !important;
     grid-row: auto !important;
+    transform: none !important;
   }
 }
 
 /* ================================================================
-   ITEM TILE STYLES
+   HIGH-IMPACT SPONSOR TILE STYLES
    ================================================================ */
 .sp-item {
+  width: 100%;
+  min-height: 140px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.55rem;
-  padding: 1rem 0.75rem;
-  border-radius: 0.875rem;
+  gap: 0.6rem;
+  padding: 1.25rem 1rem;
+  border-radius: 1.25rem;
   text-align: center;
-  backdrop-filter: blur(14px);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  backdrop-filter: blur(18px);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
   cursor: pointer;
   pointer-events: auto;
-
-  /* Sizing and alignment to prevent uneven stretching */
-  width: var(--sp-tile-w);
-  height: var(--sp-tile-h);
   justify-self: center;
   align-self: center;
   box-sizing: border-box;
 }
 
-.sp-item:hover {
-  transform: translateY(-5px) scale(1.04);
-}
-
 .sp-item--gold {
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.13), rgba(245, 158, 11, 0.06));
-  border: 1px solid rgba(251, 191, 36, 0.38);
-  box-shadow: 0 0 22px -8px rgba(251, 191, 36, 0.3), inset 0 0 20px rgba(251, 191, 36, 0.03);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.16), rgba(245, 158, 11, 0.07));
+  border: 1px solid rgba(251, 191, 36, 0.45);
+  box-shadow: 0 0 28px -6px rgba(251, 191, 36, 0.32), inset 0 0 24px rgba(251, 191, 36, 0.05);
 }
 
 .sp-item--gold:hover {
-  box-shadow: 0 10px 36px -8px rgba(251, 191, 36, 0.55);
+  border-color: rgba(251, 191, 36, 0.7);
+  box-shadow: 0 12px 40px -6px rgba(251, 191, 36, 0.6);
 }
 
 .sp-item--silver {
-  background: linear-gradient(135deg, rgba(148, 163, 184, 0.11), rgba(100, 116, 139, 0.06));
-  border: 1px solid rgba(148, 163, 184, 0.32);
-  box-shadow: 0 0 18px -8px rgba(148, 163, 184, 0.22);
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.14), rgba(100, 116, 139, 0.07));
+  border: 1px solid rgba(148, 163, 184, 0.38);
+  box-shadow: 0 0 22px -6px rgba(148, 163, 184, 0.25);
 }
 
 .sp-item--silver:hover {
-  box-shadow: 0 10px 30px -8px rgba(148, 163, 184, 0.4);
+  border-color: rgba(148, 163, 184, 0.65);
+  box-shadow: 0 12px 34px -6px rgba(148, 163, 184, 0.45);
 }
 
 .sp-item--bronze {
-  background: linear-gradient(135deg, rgba(180, 120, 60, 0.11), rgba(120, 80, 30, 0.05));
-  border: 1px solid rgba(180, 120, 60, 0.3);
-  box-shadow: 0 0 16px -8px rgba(180, 120, 60, 0.22);
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.14), rgba(180, 83, 9, 0.07));
+  border: 1px solid rgba(217, 119, 6, 0.38);
+  box-shadow: 0 0 20px -6px rgba(217, 119, 6, 0.25);
 }
 
 .sp-item--bronze:hover {
-  box-shadow: 0 10px 28px -8px rgba(180, 120, 60, 0.4);
+  border-color: rgba(217, 119, 6, 0.65);
+  box-shadow: 0 12px 32px -6px rgba(217, 119, 6, 0.45);
 }
 
 .sp-item-logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 0.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
   font-family: "Space Grotesk", sans-serif;
-  font-size: 1.05rem;
-  font-weight: 700;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 1.2rem;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
 }
 
 .sp-item--gold .sp-item-logo {
-  color: #fbbf24;
-  border-color: rgba(251, 191, 36, 0.3);
+  color: #fef08a;
+  border-color: rgba(251, 191, 36, 0.45);
 }
 
 .sp-item--silver .sp-item-logo {
-  color: #94a3b8;
-  border-color: rgba(148, 163, 184, 0.25);
+  color: #e2e8f0;
+  border-color: rgba(148, 163, 184, 0.4);
 }
 
 .sp-item--bronze .sp-item-logo {
-  color: #b4783c;
-  border-color: rgba(180, 120, 60, 0.25);
+  color: #fde68a;
+  border-color: rgba(217, 119, 6, 0.4);
 }
 
 .sp-item-name {
   font-family: "Space Grotesk", sans-serif;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #f1f5f9;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #f8fafc;
   line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
 .sp-item-tag {
   font-family: "Rajdhani", sans-serif;
-  font-size: 0.7rem;
-  color: rgba(148, 163, 184, 0.7);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(203, 213, 225, 0.85);
   line-height: 1.3;
 }
 
-/* ── Responsive collapse ── */
-@media (max-width: 640px) {
-  :root {
-    --sp-tile-w: clamp(80px, 22vw, 120px);
-    --sp-tile-h: clamp(100px, 22vw, 150px);
-    --sp-center-w: clamp(140px, 38vw, 220px);
-    --sp-center-h: clamp(140px, 38vw, 200px);
-  }
-
-  .sp-layer--1 {
-    display: none;
-  }
-
-  /* hide outermost on mobile */
+/* ── Mobile & Tablet Responsiveness ── */
+@media (max-width: 900px) {
   .sp-grid {
-    grid-template-columns: var(--sp-tile-w) 1fr var(--sp-center-w) 1fr var(--sp-tile-w);
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .sp-grid {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 12px;
   }
 }

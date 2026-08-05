@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, MapPin, Sparkles } from "lucide-react";
 import { PAST_SCHEDULE, PRESENT_SCHEDULE, FUTURE_SCHEDULE } from "../data/schedule";
+import { getClubDetailsCached } from "../utils/apiCache";
 
 interface ClubDetailsPageProps {
   club: {
@@ -42,11 +43,7 @@ export default function ClubDetailsPage({ club, onBack }: ClubDetailsPageProps) 
       club.name.toLowerCase().includes(s.title.toLowerCase())
     );
 
-    fetch(`/api/clubs/${club.id}`)
-      .then((r) => {
-        if (!r.ok) throw new Error(`Club ${club.id} not found in DB`);
-        return r.json();
-      })
+    getClubDetailsCached(club.id)
       .then((details) => {
         if (isMounted) {
           setData({

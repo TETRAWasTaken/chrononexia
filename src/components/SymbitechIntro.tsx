@@ -1,8 +1,9 @@
-// src/components/SymbitechIntro.tsx
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, Shield, User, Users, Quote } from "lucide-react";
-import teamFallbackData from "../data/team_fallback.json";
+import { getTeamDataCached } from "../utils/apiCache";
+import MemberModal from "./MemberModal";
+import symbiLogo from "../assets/SYMBITECH/logo.png";
 
 export interface TeamMember {
   name: string;
@@ -55,30 +56,28 @@ function getInitials(name: string): string {
 
 export default function SymbitechIntro() {
   const [teamData, setTeamData] = useState<TeamData>({
-    festHeads: teamFallbackData.festHeads || [],
-    headsAndCoheads: teamFallbackData.headsAndCoheads || [],
-    executives: teamFallbackData.executives || [],
+    festHeads: [],
+    headsAndCoheads: [],
+    executives: [],
   });
+  const [loading, setLoading] = useState(true);
+  const [dbError, setDbError] = useState<string | null>(null);
+  const [selectedMember, setSelectedMember] = useState<{ member: TeamMember; badgeGlow: string } | null>(null);
 
   useEffect(() => {
-    fetch("/api/team")
-      .then((res) => res.json())
+    getTeamDataCached()
       .then((data) => {
-        if (
-          data &&
-          ((data.festHeads && data.festHeads.length > 0) ||
-           (data.executives && data.executives.length > 0) ||
-           (data.headsAndCoheads && data.headsAndCoheads.length > 0))
-        ) {
-          setTeamData({
-            festHeads: data.festHeads || [],
-            headsAndCoheads: data.headsAndCoheads || [],
-            executives: data.executives || [],
-          });
-        }
+        setTeamData({
+          festHeads: data.festHeads || [],
+          headsAndCoheads: data.headsAndCoheads || [],
+          executives: data.executives || [],
+        });
+        setLoading(false);
       })
       .catch((err) => {
-        console.warn("Using fallback team dataset due to fetch notice:", err);
+        console.error("Database fetch error:", err);
+        setDbError("Database connection unavailable. Ensure PostgreSQL database is running.");
+        setLoading(false);
       });
   }, []);
 
@@ -98,41 +97,13 @@ export default function SymbitechIntro() {
           transition={{ duration: 0.8 }}
           className="flex flex-col items-center text-center mb-16"
         >
-          {/* Glowing Vector Logo */}
-          <div className="relative w-28 h-28 mb-6 group cursor-pointer">
-            <div className="absolute inset-0 rounded-3xl bg-nexus-gradient blur-xl opacity-30 group-hover:opacity-60 group-hover:scale-110 transition-all duration-500" />
-            
-            <svg
-              viewBox="0 0 100 100"
-              className="w-full h-full relative z-10 filter drop-shadow-[0_0_8px_rgba(0,240,255,0.4)] animate-[spin_20s_linear_infinite] hover:animate-[spin_4s_linear_infinite] transition-all duration-300"
-            >
-              <polygon
-                points="50,5 90,25 90,75 50,95 10,75 10,25"
-                fill="none"
-                stroke="url(#symbi-grad)"
-                strokeWidth="3.5"
-                strokeDasharray="6 3"
-              />
-              <circle cx="50" cy="50" r="30" fill="none" stroke="#2563eb" strokeWidth="1.5" strokeOpacity="0.4" />
-              <path
-                d="M38,38 C42,32 58,32 62,38 C65,42 60,46 50,50 C40,54 35,58 38,62 C42,68 58,68 62,62"
-                fill="none"
-                stroke="url(#symbi-grad-2)"
-                strokeWidth="4.5"
-                strokeLinecap="round"
-              />
-              <defs>
-                <linearGradient id="symbi-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#00f0ff" />
-                  <stop offset="100%" stopColor="#2563eb" />
-                </linearGradient>
-                <linearGradient id="symbi-grad-2" x1="0%" y1="100%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#2563eb" />
-                  <stop offset="100%" stopColor="#00f0ff" />
-                </linearGradient>
-              </defs>
-            </svg>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-cyan-400 animate-ping z-20" />
+          {/* SymbiTech Official Logo */}
+          <div className="relative w-48 sm:w-56 h-48 sm:h-56 mb-6 group cursor-pointer flex items-center justify-center">
+            <img
+              src={symbiLogo}
+              alt="SymbiTech Official Logo"
+              className="w-full h-full object-cover rounded-full relative z-10 [mask-image:radial-gradient(circle_at_center,black_58%,transparent_95%)] filter drop-shadow-[0_0_20px_rgba(0,240,255,0.4)] transform group-hover:scale-105 transition-transform duration-300"
+            />
           </div>
 
           <div className="flex items-center gap-2 px-4 py-1 rounded-full border border-blue-500/30 bg-blue-500/5 mb-4">
@@ -228,6 +199,20 @@ export default function SymbitechIntro() {
             <div className="w-16 h-1 bg-nexus-gradient mx-auto mt-3 rounded-full" />
           </motion.div>
 
+          {loading && (
+            <div className="text-center py-10">
+              <p className="font-rajdhani text-cyan-300 animate-pulse text-sm">
+                Querying PostgreSQL database...
+              </p>
+            </div>
+          )}
+
+          {dbError && (
+            <div className="max-w-md mx-auto p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-center mb-10">
+              <p className="font-rajdhani text-red-300 text-sm">{dbError}</p>
+            </div>
+          )}
+
           {/* 1. FEST HEADS SECTION */}
           {teamData.festHeads.length > 0 && (
             <div className="mb-14">
@@ -244,6 +229,7 @@ export default function SymbitechIntro() {
                     member={member}
                     index={idx}
                     badgeGlow="from-cyan-500 to-blue-600"
+                    onClick={() => setSelectedMember({ member, badgeGlow: "from-cyan-500 to-blue-600" })}
                   />
                 ))}
               </div>
@@ -266,6 +252,7 @@ export default function SymbitechIntro() {
                     member={member}
                     index={idx}
                     badgeGlow="from-emerald-500 to-teal-600"
+                    onClick={() => setSelectedMember({ member, badgeGlow: "from-emerald-500 to-teal-600" })}
                   />
                 ))}
               </div>
@@ -288,6 +275,7 @@ export default function SymbitechIntro() {
                     member={member}
                     index={idx}
                     badgeGlow="from-purple-500 to-pink-600"
+                    onClick={() => setSelectedMember({ member, badgeGlow: "from-purple-500 to-pink-600" })}
                   />
                 ))}
               </div>
@@ -295,6 +283,13 @@ export default function SymbitechIntro() {
           )}
         </div>
       </div>
+
+      {/* Interactive Member Modal Template */}
+      <MemberModal
+        member={selectedMember?.member || null}
+        badgeGlow={selectedMember?.badgeGlow}
+        onClose={() => setSelectedMember(null)}
+      />
     </div>
   );
 }
@@ -303,9 +298,10 @@ interface TeamCardProps {
   member: TeamMember;
   index: number;
   badgeGlow: string;
+  onClick: () => void;
 }
 
-function TeamCard({ member, index, badgeGlow }: TeamCardProps) {
+function TeamCard({ member, index, badgeGlow, onClick }: TeamCardProps) {
   const [imgError, setImgError] = useState(false);
   const initials = getInitials(member.name);
   const rawSrc = member.image_url
@@ -322,7 +318,8 @@ function TeamCard({ member, index, badgeGlow }: TeamCardProps) {
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: index * 0.04 }}
       whileHover={{ scale: 1.02 }}
-      className="relative p-5 rounded-2xl border border-white/10 bg-nexus-card backdrop-blur-md overflow-hidden group flex flex-col justify-between transition-all duration-300 shadow-lg hover:border-cyan-500/30"
+      onClick={onClick}
+      className="relative p-5 rounded-2xl border border-white/10 bg-nexus-card backdrop-blur-md overflow-hidden group flex flex-col justify-between transition-all duration-300 shadow-lg hover:border-cyan-500/30 cursor-pointer"
     >
       <div className="flex items-start gap-4">
         {/* Glowing Avatar Container */}
