@@ -11,6 +11,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+
 // Enable CORS and JSON parsing
 app.use(cors());
 app.use(express.json());
@@ -34,8 +35,16 @@ pool.connect((err, client, release) => {
 });
 
 // ============================================================================
-// API Endpoints
+// API Endpoints & Health Check
 // ============================================================================
+
+// Health check endpoint for cloud load balancers and container probes
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+});
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+});
 
 // Comprehensive mapping for all short and long slug aliases used in the app
 const SLUG_TO_SR_NO = {
@@ -179,11 +188,11 @@ app.get("/api/team", async (req, res) => {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Serve assets from src/assets (e.g., /src/assets/Photoshoot/...)
-app.use("/src/assets", express.static(path.join(__dirname, "src/assets")));
+// Serve assets from src/assets (e.g., /src/assets/Photoshoot/...) with 1 day browser caching
+app.use("/src/assets", express.static(path.join(__dirname, "src/assets"), { maxAge: "1d" }));
 
-// Serve the compiled build output from Vite
-app.use(express.static(path.join(__dirname, "dist")));
+// Serve the compiled build output from Vite with static caching
+app.use(express.static(path.join(__dirname, "dist"), { maxAge: "1d" }));
 
 // SPA fallback: Route all non-API GET requests to index.html
 app.get(/(.*)/, (req, res, next) => {

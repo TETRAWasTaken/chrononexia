@@ -250,29 +250,7 @@ export default function SymbitechIntro() {
             </div>
           )}
 
-          {/* 2. HEADS & CO-HEADS SECTION */}
-          {teamData.headsAndCoheads.length > 0 && (
-            <div className="mb-14">
-              <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
-                <Users className="w-4 h-4 text-purple-400" />
-                <h4 className="font-grotesk font-semibold text-sm text-slate-200 uppercase tracking-widest">
-                  Heads & Co-Heads
-                </h4>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {teamData.headsAndCoheads.map((member, idx) => (
-                  <TeamCard
-                    key={idx}
-                    member={member}
-                    index={idx}
-                    badgeGlow="from-purple-500 to-pink-600"
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* 3. EXECUTIVES SECTION */}
+          {/* 2. EXECUTIVES SECTION */}
           {teamData.executives.length > 0 && (
             <div className="mb-14">
               <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
@@ -293,6 +271,28 @@ export default function SymbitechIntro() {
               </div>
             </div>
           )}
+
+          {/* 3. HEADS & CO-HEADS SECTION */}
+          {teamData.headsAndCoheads.length > 0 && (
+            <div className="mb-14">
+              <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
+                <Users className="w-4 h-4 text-purple-400" />
+                <h4 className="font-grotesk font-semibold text-sm text-slate-200 uppercase tracking-widest">
+                  Heads & Co-Heads
+                </h4>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {teamData.headsAndCoheads.map((member, idx) => (
+                  <TeamCard
+                    key={idx}
+                    member={member}
+                    index={idx}
+                    badgeGlow="from-purple-500 to-pink-600"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -308,7 +308,12 @@ interface TeamCardProps {
 function TeamCard({ member, index, badgeGlow }: TeamCardProps) {
   const [imgError, setImgError] = useState(false);
   const initials = getInitials(member.name);
-  const photoSrc = member.image_url ? `/${member.image_url}` : null;
+  const rawSrc = member.image_url
+    ? member.image_url.startsWith("/")
+      ? member.image_url
+      : `/${member.image_url}`
+    : null;
+  const photoSrc = rawSrc ? encodeURI(rawSrc) : null;
 
   return (
     <motion.div

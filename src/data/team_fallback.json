@@ -5,41 +5,57 @@
       "position": "Fest Head",
       "academic_year": "Third Year",
       "comment": "We made it. Don't ask how. (OR) Every great idea starts with a \"hear me out\" (OR) I don't find paths. The paths find me.",
-      "description": "Part planner, part problem-solver, full-time chaos coordinator. I somehow ended up here by saying \"yes\" to opportunities, learning along the way, and making things work\u2014don't ask me how.",
-      "image_url": "src/assets/Photoshoot/5114.JPG"
+      "description": "Part planner, part problem-solver, full-time chaos coordinator. I somehow ended up here by saying \"yes\" to opportunities, learning along the way, and making things work—don't ask me how.",
+      "image_url": "src/assets/Photoshoot/IMG_5114.JPG"
     },
     {
       "name": "Arush Kapur",
       "position": "Fest Head",
       "academic_year": "Third Year",
-      "comment": "Ctrl + Z doesn\u2019t work in life. I checked !!",
+      "comment": "Ctrl + Z doesn’t work in life. I checked !!",
       "description": "I lead with initiative, stay calm under pressure, and believe every challenge is an opportunity. I focus on delivering results because behind every successful event is someone who quietly made the impossible look easy.",
-      "image_url": "src/assets/Photoshoot/5113.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5113.JPG"
     },
     {
       "name": "Nilay Bhatia",
       "position": "Fest Head",
       "academic_year": "Third Year",
-      "comment": "You don\u2019t realise you are living in the gold old days until you leave them",
-      "description": "You\u2019ll see for yourself : ))",
-      "image_url": "src/assets/Photoshoot/5107.JPG"
+      "comment": "You don’t realise you are living in the gold old days until you leave them",
+      "description": "You’ll see for yourself : ))",
+      "image_url": "src/assets/Photoshoot/IMG_5107.JPG"
     }
   ],
   "headsAndCoheads": [
+    {
+      "name": "Aditya Shete",
+      "position": "Head of Finance",
+      "academic_year": "Third Year",
+      "comment": "The best memories were never part of the syllabus.",
+      "description": "I'm an enthusiastic and dependable team player with hands-on experience in event management, PR, and campus engagement through Zomaland, Under 25 Campus Crew, Reverb, and MESA. I thrive in fast-paced environments and enjoy creating experiences.",
+      "image_url": "src/assets/Photoshoot/Aditya.Shete.EventsHead.png"
+    },
     {
       "name": "Anirudh Singh",
       "position": "Design Head",
       "academic_year": "Third Year",
       "comment": "Glad to be a part of it!",
-      "description": "Creative, reliable, and proactive, I enjoy working in teams and taking initiative. I\u2019m dedicated to contributing fresh ideas, ensuring smooth execution, and making Symbitech a memorable success.",
-      "image_url": "src/assets/Photoshoot/5511.JPG"
+      "description": "Creative, reliable, and proactive, I enjoy working in teams and taking initiative. I’m dedicated to contributing fresh ideas, ensuring smooth execution, and making Symbitech a memorable success.",
+      "image_url": "src/assets/Photoshoot/IMG_5511.JPG"
+    },
+    {
+      "name": "Anuj Korpakwad",
+      "position": "PR/Media - Head",
+      "academic_year": "Third Year",
+      "comment": "I love to capture 📷",
+      "description": "Im just a normal guy who just loves to shoot and tell stories by visuals",
+      "image_url": "src/assets/Photoshoot/Media Head Anuj Korpakwad.jpg"
     },
     {
       "name": "Anushka Gupta",
       "position": "Co head hospitality",
       "academic_year": "Second Year",
       "comment": "To all the people, the chaos, and the memories.",
-      "description": "I believe I am a great fit as I\u2019m organized, dependable, and ensure every participant has a smooth and comfortable event experience.",
+      "description": "I believe I am a great fit as I’m organized, dependable, and ensure every participant has a smooth and comfortable event experience.",
       "image_url": null
     },
     {
@@ -48,21 +64,21 @@
       "academic_year": "Second Year",
       "comment": "Sleep is temporary. SymbiTech screenshots are forever.",
       "description": "I'm Ishaan, a student of AIML, who thrives on leadership, systems, and execution. I enjoy converting ideas into reality, thus making me a strong fit for the SymbiTech Organizing Committee.",
-      "image_url": "src/assets/Photoshoot/5570.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5570.JPG"
     },
     {
       "name": "Kavya Prashant Ahire",
       "position": "Event Co-Head",
       "academic_year": "Second Year",
       "comment": "Came for the tech, stayed for the chaos, and somehow ended up as Event Co-Head.",
-      "description": "I\u2019m a people person who loves taking charge, bringing energy to everything I do, and being where the action is. I genuinely enjoy leadership roles, and I\u2019m super excited to be an Events Co-Head at SymbiTech!",
-      "image_url": "src/assets/Photoshoot/5552.JPG"
+      "description": "I’m a people person who loves taking charge, bringing energy to everything I do, and being where the action is. I genuinely enjoy leadership roles, and I’m super excited to be an Events Co-Head at SymbiTech!",
+      "image_url": "src/assets/Photoshoot/IMG_5552.JPG"
     },
     {
       "name": "Kush Mittal",
       "position": "Design Head",
       "academic_year": "Second Year",
-      "comment": "Every late night, every challenge, every laugh\u2014it all became part of the SymbiTech story.",
+      "comment": "Every late night, every challenge, every laugh—it all became part of the SymbiTech story.",
       "description": "Im my own toughest critic constantly refining ideas until theyre truly worth pursuing I bring creativity design skills attention to detail teamwork and a commitment to delivering exceptional experiences at SymbiTech",
       "image_url": null
     },
@@ -72,15 +88,15 @@
       "academic_year": "Second Year",
       "comment": "An event where tech and fun collides. Few days where you actually want to be more technical than you are.",
       "description": "I have already volunteered for the event before. And this time, it will be my first-hand leadership experience within an OC. I can be a great fit since I can go through all levels of seriousness (required while tasks), to the highest level of humor (to maintain team balance), switching rapidly.",
-      "image_url": "src/assets/Photoshoot/5503.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5503.JPG"
     },
     {
       "name": "Mahek Mishra",
       "position": "Co-head Hospitality",
       "academic_year": "Third Year",
-      "comment": "\u201cSome experiences become stories, and some stories become a part of who we are.\u201d",
-      "description": "I\u2019m a proactive and dependable leader who enjoys taking responsibility, solving challenges, and bringing people together. My dedication, teamwork, and commitment to excellence make me a valuable part of the SymbiTech OC.",
-      "image_url": "src/assets/Photoshoot/5488.JPG"
+      "comment": "“Some experiences become stories, and some stories become a part of who we are.”",
+      "description": "I’m a proactive and dependable leader who enjoys taking responsibility, solving challenges, and bringing people together. My dedication, teamwork, and commitment to excellence make me a valuable part of the SymbiTech OC.",
+      "image_url": "src/assets/Photoshoot/IMG_5488.JPG"
     },
     {
       "name": "Mehar Jaspal",
@@ -88,7 +104,7 @@
       "academic_year": "Second Year",
       "comment": "1. The only days that make still going to college worth it.\n2. Powered to make this fest unforgettable by overdosing on caffeine.",
       "description": "Im a great fit because I do my job quickly enough and managed to impress the documentation executive and a fest head more than 30 other kids.",
-      "image_url": "src/assets/Photoshoot/5493.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5493.JPG"
     },
     {
       "name": "Mishti Kinker",
@@ -104,7 +120,7 @@
       "academic_year": "Third Year",
       "comment": "Onwards and upwards",
       "description": "A dedicated learner who takes initiative, works well under pressure, and loves creating meaningful experiences through teamwork",
-      "image_url": "src/assets/Photoshoot/HOSPITALITY HEAD PARTH.jpg"
+      "image_url": "src/assets/Photoshoot/HOSPITALITY_HEAD_PARTH.jpg"
     },
     {
       "name": "Rachit Jajoo",
@@ -120,7 +136,7 @@
       "academic_year": "Third Year",
       "comment": "Journey or destination? I choose people coz why not.",
       "description": "Curious, patient, and people-oriented. I enjoy solving problems, learning continuously, and collaborating with teams. I'll bring dedication, creativity, and positive energy to the SymbiTech OC.",
-      "image_url": "src/assets/Photoshoot/5478.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5478.JPG"
     },
     {
       "name": "Samriddhi Chadha",
@@ -128,7 +144,7 @@
       "academic_year": "Second Year",
       "comment": null,
       "description": "I am very eager to interact, communicate, lead and learn from my peers. Also, have the ability to come on terms with my fellow teammates, plan and prepare to organise events successfully",
-      "image_url": "src/assets/Photoshoot/5510.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5510.JPG"
     },
     {
       "name": "Shreyas wani",
@@ -136,31 +152,31 @@
       "academic_year": "Second Year",
       "comment": "Build something worth remembering.",
       "description": "I take ownership, stay dependable under pressure, and enjoy solving problems systematically. I believe those qualities make me a strong fit for the Symbitech Organizing comittee",
-      "image_url": "src/assets/Photoshoot/5469.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5469.JPG"
     },
     {
       "name": "Shruti Hore",
       "position": "Design Co Head",
       "academic_year": "Third Year",
-      "comment": "Core memory unlocked \ud83e\udef6\ud83e\udef6",
+      "comment": "Core memory unlocked 🫶🫶",
       "description": "Organized, creative, and always down to help. I enjoy turning ideas into reality with others and making sure every little detail comes to life.",
-      "image_url": "src/assets/Photoshoot/5483.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5483.JPG"
     },
     {
       "name": "Shubh Vishwanath Pachling",
       "position": "Finance Head",
       "academic_year": "Third Year",
       "comment": null,
-      "description": "Im a mechanical engineering student who likes taking up new challenges and learning. Whether its internships, technical work or volunteering .I enjoy being involved and working with different people. I\u2019d describe myself as curious, and someone who gets things done once I take them up.",
-      "image_url": "src/assets/Photoshoot/5517.JPG"
+      "description": "Im a mechanical engineering student who likes taking up new challenges and learning. Whether its internships, technical work or volunteering .I enjoy being involved and working with different people. I’d describe myself as curious, and someone who gets things done once I take them up.",
+      "image_url": "src/assets/Photoshoot/IMG_5517.JPG"
     },
     {
       "name": "Siya Joshi",
       "position": "Events Co-Head",
       "academic_year": "Third Year",
-      "comment": "You miss 100% of the shots you don\u2019t take.",
-      "description": "I think I\u2019m a good fit for the SymbITech Organizing Committee because I\u2019m responsible, work well with people, and stay calm under pressure. I enjoy working in teams, taking initiative when needed, and making sure things get done. I like being involved in events and giving my best to make them successful.",
-      "image_url": "src/assets/Photoshoot/5514.JPG"
+      "comment": "You miss 100% of the shots you don’t take.",
+      "description": "I think I’m a good fit for the SymbITech Organizing Committee because I’m responsible, work well with people, and stay calm under pressure. I enjoy working in teams, taking initiative when needed, and making sure things get done. I like being involved in events and giving my best to make them successful.",
+      "image_url": "src/assets/Photoshoot/IMG_5514.JPG"
     },
     {
       "name": "Sparsh Srivastava",
@@ -174,9 +190,9 @@
       "name": "Suryansh Singh Rathod",
       "position": "Co-head Logistics",
       "academic_year": "Second Year",
-      "comment": "\"We were the load balancers of Symbitech \u2014 keeping everything running without a crash.\"",
+      "comment": "\"We were the load balancers of Symbitech — keeping everything running without a crash.\"",
       "description": "One of the important character trait about me is that of getting into a leadership role comfortably and then being completely honest and open with my colleagues and team-mates. And for a fest like SymbiTech, complete communication is the key and taking in charge when anything goes wrong. My habit of understanding and trusting my teammates, make me well fit for the symbitech OC that too while satisfying the overall team's need..",
-      "image_url": "src/assets/Photoshoot/5495.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5495.JPG"
     },
     {
       "name": "Uday pratap gupta",
@@ -184,7 +200,7 @@
       "academic_year": "Second Year",
       "comment": null,
       "description": "I am a hardworking and creative person. I like working with team, learning new things and taking responsibilities. I always try to give my best, so I think I am a good fit for the SymbiTech OC.",
-      "image_url": "src/assets/Photoshoot/4955.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_4955.JPG"
     },
     {
       "name": "Uday Pratap Gupta",
@@ -192,15 +208,15 @@
       "academic_year": "Second Year",
       "comment": "Code. Create. Connect. Repeat. See you at SymbiTech!",
       "description": "I am a Computer Science student who enjoys solving problems, creating content, and working with people. I am responsible, creative, and always ready to learn while helping my team succeed.",
-      "image_url": "src/assets/Photoshoot/4955.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_4955.JPG"
     },
     {
       "name": "Vanya Puranik",
       "position": "Finance Co-head",
       "academic_year": "Third Year",
-      "comment": "Great events aren\u2019t remembered for being perfect, they\u2019re remembered for how they made people feel. Here\u2019s to creating memories that last long after the fest ends.",
-      "description": "I\u2019m a responsible, detail oriented, and collaborative person who enjoys solving problems and taking initiative. As Finance Co-Head, I\u2019ll ensure every decision balances creativity with accountability while supporting the entire team.",
-      "image_url": "src/assets/Photoshoot/5473.JPG"
+      "comment": "Great events aren’t remembered for being perfect, they’re remembered for how they made people feel. Here’s to creating memories that last long after the fest ends.",
+      "description": "I’m a responsible, detail oriented, and collaborative person who enjoys solving problems and taking initiative. As Finance Co-Head, I’ll ensure every decision balances creativity with accountability while supporting the entire team.",
+      "image_url": "src/assets/Photoshoot/IMG_5473.JPG"
     },
     {
       "name": "Vardhan Shah",
@@ -208,7 +224,7 @@
       "academic_year": "Third Year",
       "comment": "I don't count memories by days, I count them by the impact I leave behind.",
       "description": "I'm Vardhan Shah, co-head, PR & Sponsors team. I enjoy connecting people, building partnerships, and ensuring every opportunity creates value, making me a dependable contributor to the SymbiTech organising committee.",
-      "image_url": "src/assets/Photoshoot/5461.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5461.JPG"
     },
     {
       "name": "Wani Kolhey",
@@ -216,10 +232,18 @@
       "academic_year": "Third Year",
       "comment": null,
       "description": "Good design isn't just seen, it's experienced. I enjoy creating digital spaces where every interaction feels simple, purposeful, and effortless.",
-      "image_url": "src/assets/Photoshoot/5522.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5522.JPG"
     }
   ],
   "executives": [
+    {
+      "name": "Aditya Singh",
+      "position": "Executive Head - Sponsorship & PR",
+      "academic_year": "Third Year",
+      "comment": "When life gives me a lemon, I'd make it a program from antigravity with claude automation",
+      "description": "Having a prior experience in events and sponsorships from the school time, i'd help with the guidance and formatting of plans for approaching the sponsors and ideation of new PR stratergy.",
+      "image_url": "src/assets/Photoshoot/IMG_5123.JPG"
+    },
     {
       "name": "Atharva Somawanshi",
       "position": "Executive Hospitality",
@@ -234,7 +258,7 @@
       "academic_year": "Third Year",
       "comment": "Where ideas spark, technology inspires, and memories last forever.",
       "description": "Proactive team player who enjoys taking responsibility, solving challenges, and ensuring every event runs smoothly. I believe my leadership, adaptability, and commitment make me a strong fit for the SymbiTech Organizing Committee.",
-      "image_url": "src/assets/Photoshoot/5140.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5140.JPG"
     },
     {
       "name": "Kavish Nag",
@@ -242,15 +266,15 @@
       "academic_year": "Third Year",
       "comment": "The best stories are yet to be written. Excited to be part of this one!!",
       "description": "I am someone who likes to stay involved, help wherever needed, and learn something new along the way. I work well with teams, adapt quickly, and enjoy contributing to successful events.",
-      "image_url": "src/assets/Photoshoot/5122.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5122.JPG"
     },
     {
       "name": "Madhav Menaria",
       "position": "Hospitality executive",
       "academic_year": "Third Year",
       "comment": "Ye dil maange more attendance",
-      "description": "I play chess, run for fun and like making things go according to the \u201cplan\u201d. They never do, so just let it go na",
-      "image_url": "src/assets/Photoshoot/5120.JPG"
+      "description": "I play chess, run for fun and like making things go according to the “plan”. They never do, so just let it go na",
+      "image_url": "src/assets/Photoshoot/IMG_5120.JPG"
     },
     {
       "name": "Mantavya Anand",
@@ -258,15 +282,15 @@
       "academic_year": "Third Year",
       "comment": "Why take the high road when the scenic one has more tea",
       "description": "I say yes first, then spend the next few days wondering why 'this sounded like a good idea when I agreed to it.'",
-      "image_url": "src/assets/Photoshoot/5121.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5121.JPG"
     },
     {
       "name": "Navya Joshi",
       "position": "Finance Executive",
       "academic_year": "Third Year",
-      "comment": "Less \u201cYOLO,\u201d more \u201cROI\u201d.",
+      "comment": "Less “YOLO,” more “ROI”.",
       "description": "I count memories, but I budget in rupees. Reliable, detail-driven, and always ready to make every penny work harder for an unforgettable SymbiTech.",
-      "image_url": "src/assets/Photoshoot/5133.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5133.JPG"
     },
     {
       "name": "Ninad Kulkarni",
@@ -274,15 +298,23 @@
       "academic_year": "Third Year",
       "comment": null,
       "description": "As a third-year student and Executive Head of Logistics, I bring two years of hands-on Symbitech experience. I'm dedicated to streamlining operations and delivering a smooth, flawless event experience.",
-      "image_url": "src/assets/Photoshoot/5136.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5136.JPG"
+    },
+    {
+      "name": "Siddhi Bajpai",
+      "position": "Events Executive",
+      "academic_year": "Third Year",
+      "comment": "“When SymbiTech gives you a stage, make sure they remember the show.”",
+      "description": "Hey! I’m Siddhi Bajpai a professional chaos coordinator, certified overthinker. I love turning wild ideas into unforgettable experiences (and somehow surviving the deadlines)",
+      "image_url": null
     },
     {
       "name": "Yatharth Kaul",
       "position": "Executive member- events",
       "academic_year": "Third Year",
-      "comment": "The event ends. The legacy doesn\u2019t.",
+      "comment": "The event ends. The legacy doesn’t.",
       "description": "I enjoy being involved, taking ownership, and working with people. I stay calm under pressure, adapt quickly, and focus on finding solutions rather than dwelling on problems. I believe my consistency, teamwork, and willingness to step up whenever needed make me a great fit for the SymbiTech core team.",
-      "image_url": "src/assets/Photoshoot/5132.JPG"
+      "image_url": "src/assets/Photoshoot/IMG_5132.JPG"
     }
   ]
 }
