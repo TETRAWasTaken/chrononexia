@@ -9,25 +9,39 @@ import { fileURLToPath } from "url";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
 
+// Server environment configuration
+const PORT = process.env.PORT || 5001;
+const HOST = process.env.HOST || "0.0.0.0";
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "*";
 
 // Enable CORS and JSON parsing
-app.use(cors());
+app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
 
 // Initialize PostgreSQL Connection Pool
 const { Pool } = pg;
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || "postgresql://postgres:postgres@127.0.0.1:5432/chrononexia",
-  ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: false } : false,
-});
+const dbConfig = process.env.DATABASE_URL
+  ? {
+      connectionString: process.env.DATABASE_URL,
+      ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: false } : false,
+    }
+  : {
+      user: process.env.DB_USER || "postgres",
+      password: process.env.DB_PASSWORD || "postgres",
+      host: process.env.DB_HOST || "127.0.0.1",
+      port: parseInt(process.env.DB_PORT || "5432", 10),
+      database: process.env.DB_NAME || "chrononexia",
+      ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: false } : false,
+    };
+
+const pool = new Pool(dbConfig);
 
 // Test Database Connection on startup
 pool.connect((err, client, release) => {
   if (err) {
     console.error("❌ Failed to connect to local PostgreSQL database:", err.message);
-    console.log("⚠️ Running backend in offline/fallback-ready mode. Ensure Postgres is running on 127.0.0.1:5432.");
+    console.log(`⚠️ Running backend in offline/fallback-ready mode. Ensure Postgres is accessible on ${process.env.DB_HOST || "127.0.0.1"}:${process.env.DB_PORT || "5432"}.`);
   } else {
     console.log("✅ Successfully connected to local PostgreSQL database.");
     release();
@@ -127,7 +141,7 @@ app.get("/api/clubs/:id", async (req, res) => {
     `;
     const searchPattern = `%${cleanId.replace(/-/g, "%")}%`;
     const result = await pool.query(query, [srNo, searchPattern]);
-    
+
     if (result.rows.length === 0) {
       return res.status(404).json({ error: `Event for ID '${id}' not found in DB` });
     }
@@ -203,7 +217,7 @@ app.get(/(.*)/, (req, res, next) => {
 });
 
 // Start Express Listener
-app.listen(PORT, () => {
-  console.log(`🚀 ChronoNexia HTTPS API routing online on port ${PORT}`);
-  console.log(`🔗 Proxy dev routes pointing to http://localhost:${PORT}`);
+app.listen(PORT, HOST, () => {
+  console.log(`ChronoNexia API running on http://${HOST === "0.0.0.0" ? "localhost" : HOST}:${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
 });
