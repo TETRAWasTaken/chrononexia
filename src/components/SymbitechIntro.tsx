@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Shield, User, Users, Quote } from "lucide-react";
+import { Sparkles, Shield, User, Users, Quote, Award } from "lucide-react";
 import { getTeamDataCached } from "../utils/apiCache";
 import MemberModal from "./MemberModal";
 import symbiLogo from "../assets/SYMBITECH/logo.png";
+import inaugurationImg from "../assets/symbitech2025/inauguration.png";
+import bikerallyImg from "../assets/symbitech2025/bikerally.png";
+import campusGroupImg from "../assets/symbitech2025/campus_group.png";
+import ktmEngineImg from "../assets/symbitech2025/ktm_engine.png";
+import llmArenaImg from "../assets/symbitech2025/llm_arena.png";
+import supraCarImg from "../assets/symbitech2025/supra_car.png";
 
 export interface TeamMember {
   name: string;
@@ -16,34 +22,48 @@ export interface TeamMember {
 
 interface TeamData {
   festHeads: TeamMember[];
-  headsAndCoheads: TeamMember[];
   executives: TeamMember[];
+  heads: TeamMember[];
+  coHeads: TeamMember[];
+  headsAndCoheads: TeamMember[];
 }
 
 const GLIMPSES = [
   {
-    title: "The ByteArena Hackathon",
+    title: "Grand Inauguration 2025-26",
     year: "Symbitech '25",
-    desc: "48 hours of intense hacking, red bull, and breakthrough ideas.",
-    img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80",
+    desc: "Auspicious lamp lighting ceremony marking the official launch of Symbitech 2025-26.",
+    img: inaugurationImg,
   },
   {
-    title: "Robo-Wars Showdown",
+    title: "Superbike Campus Rally",
     year: "Symbitech '25",
-    desc: "Heavyweight steel gladiators clashing in the arena of destiny.",
-    img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=600&q=80",
+    desc: "Thundering engines and high-octane excitement with the campus superbike motorcade.",
+    img: bikerallyImg,
   },
   {
-    title: "Frontier Tech Keynotes",
+    title: "Organizing Team & Biker Fleet",
     year: "Symbitech '25",
-    desc: "Visions of quantum supremacy, neural mesh, and space expansion.",
-    img: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=600&q=80",
+    desc: "SIT team coming together with rider enthusiasts at the main institute entrance.",
+    img: campusGroupImg,
   },
   {
-    title: "Cosmic Pro Night",
+    title: "SAE SUPRA ICV-26 Racing Team",
     year: "Symbitech '25",
-    desc: "Closing the cybernetic era with lights, bass, and thousands of voices.",
-    img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80",
+    desc: "SIT automotive engineers showcasing the custom-built SUPRA SAE India race car.",
+    img: supraCarImg,
+  },
+  {
+    title: "GDSC LLM Arena & Code Hub",
+    year: "Symbitech '25",
+    desc: "Interactive developer photo booth and AI prompt hacking challenge by GDSC.",
+    img: llmArenaImg,
+  },
+  {
+    title: "High-Octane KTM Powertrain",
+    year: "Symbitech '25",
+    desc: "Close-up engineering view of the high-performance KTM racing car setup.",
+    img: ktmEngineImg,
   },
 ];
 
@@ -57,8 +77,10 @@ function getInitials(name: string): string {
 export default function SymbitechIntro() {
   const [teamData, setTeamData] = useState<TeamData>({
     festHeads: [],
-    headsAndCoheads: [],
     executives: [],
+    heads: [],
+    coHeads: [],
+    headsAndCoheads: [],
   });
   const [loading, setLoading] = useState(true);
   const [dbError, setDbError] = useState<string | null>(null);
@@ -67,10 +89,16 @@ export default function SymbitechIntro() {
   useEffect(() => {
     getTeamDataCached()
       .then((data) => {
+        const rawHeadsAndCoheads: TeamMember[] = data.headsAndCoheads || [];
+        const heads = data.heads || rawHeadsAndCoheads.filter((m) => !/co[- ]?head/i.test(m.position || ""));
+        const coHeads = data.coHeads || rawHeadsAndCoheads.filter((m) => /co[- ]?head/i.test(m.position || ""));
+
         setTeamData({
           festHeads: data.festHeads || [],
-          headsAndCoheads: data.headsAndCoheads || [],
           executives: data.executives || [],
+          heads: heads,
+          coHeads: coHeads,
+          headsAndCoheads: rawHeadsAndCoheads,
         });
         setLoading(false);
       })
@@ -145,7 +173,7 @@ export default function SymbitechIntro() {
             <div className="w-16 h-1 bg-nexus-gradient mx-auto mt-3 rounded-full" />
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
             {GLIMPSES.map((item, idx) => (
               <motion.div
                 key={idx}
@@ -259,23 +287,46 @@ export default function SymbitechIntro() {
             </div>
           )}
 
-          {/* 3. HEADS & CO-HEADS SECTION */}
-          {teamData.headsAndCoheads.length > 0 && (
+          {/* 3. HEADS SECTION */}
+          {teamData.heads.length > 0 && (
             <div className="mb-14">
               <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
                 <Users className="w-4 h-4 text-purple-400" />
                 <h4 className="font-grotesk font-semibold text-sm text-slate-200 uppercase tracking-widest">
-                  Heads & Co-Heads
+                  Department Heads
                 </h4>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {teamData.headsAndCoheads.map((member, idx) => (
+                {teamData.heads.map((member, idx) => (
                   <TeamCard
                     key={idx}
                     member={member}
                     index={idx}
-                    badgeGlow="from-purple-500 to-pink-600"
-                    onClick={() => setSelectedMember({ member, badgeGlow: "from-purple-500 to-pink-600" })}
+                    badgeGlow="from-purple-500 to-indigo-600"
+                    onClick={() => setSelectedMember({ member, badgeGlow: "from-purple-500 to-indigo-600" })}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 4. CO-HEADS SECTION */}
+          {teamData.coHeads.length > 0 && (
+            <div className="mb-14">
+              <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
+                <Award className="w-4 h-4 text-pink-400" />
+                <h4 className="font-grotesk font-semibold text-sm text-slate-200 uppercase tracking-widest">
+                  Department Co-Heads
+                </h4>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {teamData.coHeads.map((member, idx) => (
+                  <TeamCard
+                    key={idx}
+                    member={member}
+                    index={idx}
+                    badgeGlow="from-pink-500 to-rose-600"
+                    onClick={() => setSelectedMember({ member, badgeGlow: "from-pink-500 to-rose-600" })}
                   />
                 ))}
               </div>

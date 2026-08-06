@@ -172,7 +172,7 @@ app.get("/api/clubs/:id", async (req, res) => {
   }
 });
 
-// 3. Get Team Members (Fest Heads, Executives, Heads & Co-Heads)
+// 3. Get Team Members (Fest Heads, Executives, Heads, Co-Heads)
 app.get("/api/team", async (req, res) => {
   try {
     const festHeadsRes = await pool.query(
@@ -181,14 +181,34 @@ app.get("/api/team", async (req, res) => {
     const executivesRes = await pool.query(
       "SELECT name, position, academic_year, comment, description, image_url FROM executives ORDER BY name ASC"
     );
-    const headsAndCoheadsRes = await pool.query(
-      "SELECT name, position, academic_year, comment, description, image_url FROM heads_and_coheads ORDER BY name ASC"
-    );
+
+    let headsRows = [];
+    let coHeadsRows = [];
+
+    try {
+      const headsRes = await pool.query(
+        "SELECT name, position, academic_year, comment, description, image_url FROM heads ORDER BY name ASC"
+      );
+      const coheadsRes = await pool.query(
+        "SELECT name, position, academic_year, comment, description, image_url FROM coheads ORDER BY name ASC"
+      );
+      headsRows = headsRes.rows;
+      coHeadsRows = coheadsRes.rows;
+    } catch (tblErr) {
+      const headsAndCoheadsRes = await pool.query(
+        "SELECT name, position, academic_year, comment, description, image_url FROM heads_and_coheads ORDER BY name ASC"
+      );
+      const allRows = headsAndCoheadsRes.rows || [];
+      headsRows = allRows.filter((m) => !/co[- ]?head/i.test(m.position || ""));
+      coHeadsRows = allRows.filter((m) => /co[- ]?head/i.test(m.position || ""));
+    }
 
     res.json({
       festHeads: festHeadsRes.rows,
       executives: executivesRes.rows,
-      headsAndCoheads: headsAndCoheadsRes.rows,
+      heads: headsRows,
+      coHeads: coHeadsRows,
+      headsAndCoheads: [...headsRows, ...coHeadsRows],
     });
   } catch (err) {
     console.error("Error querying team members from DB:", err);

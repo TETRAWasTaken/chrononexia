@@ -1,6 +1,8 @@
 DROP TABLE IF EXISTS symbitech_event_details;
 DROP TABLE IF EXISTS fest_heads;
 DROP TABLE IF EXISTS executives;
+DROP TABLE IF EXISTS heads;
+DROP TABLE IF EXISTS coheads;
 DROP TABLE IF EXISTS heads_and_coheads;
 DROP TABLE IF EXISTS members;
 
@@ -52,10 +54,10 @@ CREATE TABLE IF NOT EXISTS executives (
 CREATE UNIQUE INDEX IF NOT EXISTS idx_executives_name ON executives(name);
 
 -- -----------------------------------------------------
--- Table: heads_and_coheads
--- Stores Heads and Co-Heads
+-- Table: heads
+-- Stores Department Heads
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS heads_and_coheads (
+CREATE TABLE IF NOT EXISTS heads (
     name VARCHAR(100) NOT NULL,
     position VARCHAR(150) NOT NULL,
     academic_year VARCHAR(100) NOT NULL,
@@ -65,7 +67,23 @@ CREATE TABLE IF NOT EXISTS heads_and_coheads (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS idx_heads_and_coheads_name ON heads_and_coheads(name);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_heads_name ON heads(name);
+
+-- -----------------------------------------------------
+-- Table: coheads
+-- Stores Department Co-Heads
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS coheads (
+    name VARCHAR(100) NOT NULL,
+    position VARCHAR(150) NOT NULL,
+    academic_year VARCHAR(100) NOT NULL,
+    comment VARCHAR(300),
+    description VARCHAR(500),
+    image_url VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_coheads_name ON coheads(name);
 
 -- ==========================================
 -- SEED DATA: SYMBITECH 2026 ACTUAL EVENTS
