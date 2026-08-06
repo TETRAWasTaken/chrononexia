@@ -43,10 +43,6 @@ function App() {
   return (
     <ChronoNexia
       onSelectClub={(club) => setSelectedClub(club)}
-      onWhySponsor={() => {
-        window.scrollTo(0, 0);
-        setView("pitchDeck");
-      }}
     />
   );
 }

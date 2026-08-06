@@ -7,16 +7,14 @@ import Chronometer from "./Chronometer";
 import ClubsHub from "./ClubsHub";
 import ClubPavilionSection from "./ClubPavilionSection";
 import NexusGraphBackground from "./NexusGraphBackground";
-import SponsorsSection from "./SponsorsSection";
 import Footer from "./Footer";
 import SymbitechIntro from "./SymbitechIntro";
 
 interface ChronoNexiaProps {
   onSelectClub: (club: { id: string; name: string; era: "past" | "present" | "future" }) => void;
-  onWhySponsor: () => void;
 }
 
-export default function ChronoNexia({ onSelectClub, onWhySponsor }: ChronoNexiaProps) {
+export default function ChronoNexia({ onSelectClub }: ChronoNexiaProps) {
   const [era, setEra] = useState<Era>("hero");
   const heroHubRef = useRef<HTMLDivElement>(null);
 
@@ -229,7 +227,6 @@ export default function ChronoNexia({ onSelectClub, onWhySponsor }: ChronoNexiaP
 
       <div id="symbitech" className="relative z-10">
         <SymbitechIntro />
-        <SponsorsSection onWhySponsor={onWhySponsor} />
       </div>
       
       <div id="hero-hub" ref={heroHubRef} className="relative z-10">
