@@ -4,12 +4,12 @@ import { Sparkles, Shield, User, Users, Quote, Award } from "lucide-react";
 import { getTeamDataCached } from "../utils/apiCache";
 import MemberModal from "./MemberModal";
 import symbiLogo from "../assets/SYMBITECH/logo.png";
-import inaugurationImg from "../assets/symbitech2025/inauguration.png";
-import bikerallyImg from "../assets/symbitech2025/bikerally.png";
-import campusGroupImg from "../assets/symbitech2025/campus_group.png";
-import ktmEngineImg from "../assets/symbitech2025/ktm_engine.png";
-import llmArenaImg from "../assets/symbitech2025/llm_arena.png";
-import supraCarImg from "../assets/symbitech2025/supra_car.png";
+import inaugurationImg from "../assets/Symbitech2025/inauguration.png";
+import bikerallyImg from "../assets/Symbitech2025/bikerally.png";
+import campusGroupImg from "../assets/Symbitech2025/campus_group.png";
+import ktmEngineImg from "../assets/Symbitech2025/ktm_engine.png";
+import llmArenaImg from "../assets/Symbitech2025/llm_arena.png";
+import supraCarImg from "../assets/Symbitech2025/supra_car.png";
 
 export interface TeamMember {
   name: string;

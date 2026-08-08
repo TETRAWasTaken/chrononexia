@@ -34,7 +34,7 @@ const { Pool } = pg;
 
 const rawDbUrl = process.env.DATABASE_URL;
 const isSSL = process.env.DATABASE_SSL === "true" || (rawDbUrl && (rawDbUrl.includes("supabase.co") || rawDbUrl.includes("sslmode=")));
-// Strip query parameters from connection string to prevent pg-connection-string from overriding SSL config
+// Strip query parameters from connectionString so pg does not enforce strict sslmode validation overriding rejectUnauthorized: false
 const cleanDbUrl = rawDbUrl ? rawDbUrl.split("?")[0] : null;
 
 const dbConfig = cleanDbUrl
