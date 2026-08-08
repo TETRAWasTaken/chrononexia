@@ -6,6 +6,8 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 
+import compression from "compression";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -19,6 +21,9 @@ if (fs.existsSync(envPath)) {
 }
 
 const app = express();
+
+// Enable HTTP Gzip compression
+app.use(compression());
 
 // Server environment configuration
 const PORT = process.env.PORT || 8080;
@@ -236,11 +241,11 @@ app.get("/api/team", async (req, res) => {
 // Production Client Hosting (Serving Built Vite Static Assets)
 // ============================================================================
 
-// Serve assets from src/assets (e.g., /src/assets/Photoshoot/...) with 1 day browser caching
-app.use("/src/assets", express.static(path.join(__dirname, "src/assets"), { maxAge: "1d" }));
+// Serve assets from src/assets (e.g., /src/assets/Photoshoot/...) with 30-day immutable browser caching
+app.use("/src/assets", express.static(path.join(__dirname, "src/assets"), { maxAge: "30d", immutable: true }));
 
 // Serve the compiled build output from Vite with static caching
-app.use(express.static(path.join(__dirname, "dist"), { maxAge: "1d" }));
+app.use(express.static(path.join(__dirname, "dist"), { maxAge: "30d", immutable: true }));
 
 // SPA fallback: Route all non-API GET requests to index.html
 app.get(/(.*)/, (req, res, next) => {

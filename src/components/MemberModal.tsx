@@ -91,6 +91,8 @@ export default function MemberModal({ member, badgeGlow = "from-cyan-500 to-blue
                   <img
                     src={photoSrc}
                     alt={member.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover object-top transform group-hover:scale-105 transition-transform duration-500"
                     onError={() => setImgError(true)}
                   />
