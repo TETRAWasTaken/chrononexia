@@ -4,16 +4,12 @@ import { Sparkles, Shield, User, Users, Quote, Award } from "lucide-react";
 import { getTeamDataCached } from "../utils/apiCache";
 import MemberModal from "./MemberModal";
 import symbiLogo from "../assets/SYMBITECH/logo.png";
-import inaugurationImg from "../assets/Symbitech2025/inauguration.png";
-import bikerallyImg from "../assets/Symbitech2025/bikerally.png";
-import campusGroupImg from "../assets/Symbitech2025/campus_group.png";
-import ktmEngineImg from "../assets/Symbitech2025/ktm_engine.png";
-import llmArenaImg from "../assets/Symbitech2025/llm_arena.png";
-import supraCarImg from "../assets/Symbitech2025/supra_car.png";
-<<<<<<< HEAD
-
-=======
->>>>>>> 9fed0caac53838f19c76172ea08f822c271cf445
+import inaugurationImg from "../assets/Symbitech2025/image.png";
+import bikerallyImg from "../assets/Symbitech2025/image copy.png";
+import campusGroupImg from "../assets/Symbitech2025/image copy 2.png";
+import ktmEngineImg from "../assets/Symbitech2025/image copy 3.png";
+import llmArenaImg from "../assets/Symbitech2025/image copy 4.png";
+import supraCarImg from "../assets/Symbitech2025/image copy 5.png";
 
 export interface TeamMember {
   name: string;
@@ -34,39 +30,39 @@ interface TeamData {
 
 const GLIMPSES = [
   {
-    title: "Grand Inauguration 2025-26",
+    title: "Symbitech 2025-26 Inauguration",
     year: "Symbitech '25",
-    desc: "Auspicious lamp lighting ceremony marking the official launch of Symbitech 2025-26.",
+    desc: "The Symbitech 2025-26 inauguration with the institute community.",
     img: inaugurationImg,
   },
   {
     title: "Superbike Campus Rally",
     year: "Symbitech '25",
-    desc: "Thundering engines and high-octane excitement with the campus superbike motorcade.",
+    desc: "Riders gather for the high-energy campus motorcade.",
     img: bikerallyImg,
   },
   {
-    title: "Organizing Team & Biker Fleet",
+    title: "Riders at the SIT Entrance",
     year: "Symbitech '25",
-    desc: "SIT team coming together with rider enthusiasts at the main institute entrance.",
+    desc: "The rider community outside Symbiosis Institute of Technology.",
     img: campusGroupImg,
   },
   {
-    title: "SAE SUPRA ICV-26 Racing Team",
+    title: "SAE SUPRA ICV-26 Team",
     year: "Symbitech '25",
-    desc: "SIT automotive engineers showcasing the custom-built SUPRA SAE India race car.",
+    desc: "SIT automotive engineers with their SUPRA SAE India race car.",
     img: supraCarImg,
   },
   {
-    title: "GDSC LLM Arena & Code Hub",
+    title: "GDSC LLM Arena",
     year: "Symbitech '25",
-    desc: "Interactive developer photo booth and AI prompt hacking challenge by GDSC.",
+    desc: "A developer showcase from the GDSC LLM Arena.",
     img: llmArenaImg,
   },
   {
-    title: "High-Octane KTM Powertrain",
+    title: "KTM Racing Engineering",
     year: "Symbitech '25",
-    desc: "Close-up engineering view of the high-performance KTM racing car setup.",
+    desc: "A close-up look at the KTM racing machine on display.",
     img: ktmEngineImg,
   },
 ];
