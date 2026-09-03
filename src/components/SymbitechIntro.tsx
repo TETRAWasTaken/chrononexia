@@ -10,7 +10,10 @@ import campusGroupImg from "../assets/Symbitech2025/campus_group.png";
 import ktmEngineImg from "../assets/Symbitech2025/ktm_engine.png";
 import llmArenaImg from "../assets/Symbitech2025/llm_arena.png";
 import supraCarImg from "../assets/Symbitech2025/supra_car.png";
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9fed0caac53838f19c76172ea08f822c271cf445
 
 export interface TeamMember {
   name: string;
@@ -190,6 +193,8 @@ export default function SymbitechIntro() {
                   <img
                     src={item.img}
                     alt={item.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-500"
                   />
                   <span className="absolute top-3 right-3 z-20 text-[9px] tracking-wider px-2 py-0.5 rounded-full border border-cyan-400/30 bg-black/60 font-mono text-cyan-300">

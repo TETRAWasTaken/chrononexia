@@ -3,15 +3,30 @@ import cors from "cors";
 import dotenv from "dotenv";
 import pg from "pg";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 
-// Load environment variables
-dotenv.config();
+import compression from "compression";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load environment variables (.env file if present, fallback to container/system process.env)
+const envPath = path.join(__dirname, ".env");
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+  console.log("📄 Loaded environment variables from local .env file.");
+} else {
+  console.log("ℹ️ No .env file found. Reading environment variables directly from system/container environment (process.env).");
+}
 
 const app = express();
 
+// Enable HTTP Gzip compression
+app.use(compression());
+
 // Server environment configuration
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 8080;
 const HOST = process.env.HOST || "0.0.0.0";
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "*";
 
@@ -21,10 +36,16 @@ app.use(express.json());
 
 // Initialize PostgreSQL Connection Pool
 const { Pool } = pg;
-const dbConfig = process.env.DATABASE_URL
+
+const rawDbUrl = process.env.DATABASE_URL;
+const isSSL = process.env.DATABASE_SSL === "true" || (rawDbUrl && (rawDbUrl.includes("supabase.co") || rawDbUrl.includes("sslmode=")));
+// Strip query parameters from connectionString so pg does not enforce strict sslmode validation overriding rejectUnauthorized: false
+const cleanDbUrl = rawDbUrl ? rawDbUrl.split("?")[0] : null;
+
+const dbConfig = cleanDbUrl
   ? {
-      connectionString: process.env.DATABASE_URL,
-      ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: false } : false,
+      connectionString: cleanDbUrl,
+      ssl: isSSL ? { rejectUnauthorized: false } : false,
     }
   : {
       user: process.env.DB_USER || "postgres",
@@ -32,7 +53,7 @@ const dbConfig = process.env.DATABASE_URL
       host: process.env.DB_HOST || "127.0.0.1",
       port: parseInt(process.env.DB_PORT || "5432", 10),
       database: process.env.DB_NAME || "chrononexia",
-      ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: false } : false,
+      ssl: isSSL ? { rejectUnauthorized: false } : false,
     };
 
 const pool = new Pool(dbConfig);
@@ -219,14 +240,12 @@ app.get("/api/team", async (req, res) => {
 // ============================================================================
 // Production Client Hosting (Serving Built Vite Static Assets)
 // ============================================================================
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
-// Serve assets from src/assets (e.g., /src/assets/Photoshoot/...) with 1 day browser caching
-app.use("/src/assets", express.static(path.join(__dirname, "src/assets"), { maxAge: "1d" }));
+// Serve assets from src/assets (e.g., /src/assets/Photoshoot/...) with 30-day immutable browser caching
+app.use("/src/assets", express.static(path.join(__dirname, "src/assets"), { maxAge: "30d", immutable: true }));
 
 // Serve the compiled build output from Vite with static caching
-app.use(express.static(path.join(__dirname, "dist"), { maxAge: "1d" }));
+app.use(express.static(path.join(__dirname, "dist"), { maxAge: "30d", immutable: true }));
 
 // SPA fallback: Route all non-API GET requests to index.html
 app.get(/(.*)/, (req, res, next) => {
