@@ -1,30 +1,38 @@
-// src/components/SponsorsSection.tsx
-// "Playbook Scroll" — sticky scaler card shrinks from fullscreen while
-// three subgrid layers of sponsor tiles reveal via CSS animation-timeline.
 import "../styles/sponsors.css";
 import "../styles/pitchdeck.css";
+
+import sponsorImg2 from "../assets/sponsors/image2.png";
+import sponsorImg3 from "../assets/sponsors/image3.png";
+import sponsorImg4 from "../assets/sponsors/image4.png";
+import sponsorImg5 from "../assets/sponsors/image5.png";
+import sponsorImg6 from "../assets/sponsors/image6.png";
+import sponsorImg7 from "../assets/sponsors/image7.png";
+import sponsorImg8 from "../assets/sponsors/image8.png";
+import sponsorImg9 from "../assets/sponsors/image9.png";
+import sponsorImg10 from "../assets/sponsors/image10.png";
+import sponsorImg11 from "../assets/sponsors/image11.png";
 
 // ── Data ──────────────────────────────────────────────────────────
 // Layer 1 — GOLD — placed in corners: (col1,row1) (col5,row1) (col1,row3) (col5,row3)
 const GOLD = [
-  { name: "QuantumCorp", logo: "Q", tagline: "Powering the future" },
-  { name: "NeuralAxis", logo: "N", tagline: "AI at the edge" },
-  { name: "HorizonLabs", logo: "H", tagline: "Beyond the frontier" },
-  { name: "FusionTech", logo: "F", tagline: "Energy meets compute" },
+  { name: "Bajaj Finserv Health", logo: sponsorImg7, tagline: "Principal Tech Sponsor" },
+  { name: "DRDO India", logo: sponsorImg9, tagline: "Defence R&D Partner" },
+  { name: "IEEE Systems", logo: sponsorImg2, tagline: "Technical Society Partner" },
+  { name: "SIT AI Research Lab", logo: sponsorImg6, tagline: "AI Innovation Partner" },
 ];
 
 // Layer 2 — SILVER — placed inner: (col2,row1) (col4,row1) (col2,row3) (col4,row3)
 const SILVER = [
-  { name: "ByteForge", logo: "B", tagline: "Build. Ship. Scale." },
-  { name: "SyncStack", logo: "S", tagline: "Cloud-native infra" },
-  { name: "DevPulse", logo: "D", tagline: "Dev tools redefined" },
-  { name: "CorePath", logo: "C", tagline: "OS foundations" },
+  { name: "FixtureLabs CAD", logo: sponsorImg5, tagline: "CAD & Engineering Partner" },
+  { name: "QuantumAxis", logo: sponsorImg8, tagline: "Quantum Computing Infrastructure" },
+  { name: "ByteForge Cloud", logo: sponsorImg10, tagline: "Developer Infra & Cloud" },
+  { name: "NeuralAxis AI", logo: sponsorImg11, tagline: "Edge AI & Intelligence" },
 ];
 
 // Layer 3 — BRONZE — placed centre: (col3,row1) (col3,row3)
 const BRONZE = [
-  { name: "RetroSys", logo: "R", tagline: "Classic meets modern" },
-  { name: "GridMind", logo: "G", tagline: "Distributed computing" },
+  { name: "RetroSys Systems", logo: sponsorImg3, tagline: "Embedded Hardware Partner" },
+  { name: "GridMind Compute", logo: sponsorImg4, tagline: "Distributed Systems Partner" },
 ];
 
 // ── Component ────────────────────────────────────────────────────
@@ -79,7 +87,9 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
           <div className="sp-layer sp-layer--1">
             {GOLD.map((s) => (
               <div key={s.name} className="sp-item sp-item--gold">
-                <span className="sp-item-logo">{s.logo}</span>
+                <span className="sp-item-logo">
+                  <img src={s.logo} alt={s.name} className="w-full h-full object-contain p-1 rounded-lg" />
+                </span>
                 <span className="sp-item-name">{s.name}</span>
                 <span className="sp-item-tag">{s.tagline}</span>
               </div>
@@ -90,7 +100,9 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
           <div className="sp-layer sp-layer--2">
             {SILVER.map((s) => (
               <div key={s.name} className="sp-item sp-item--silver">
-                <span className="sp-item-logo">{s.logo}</span>
+                <span className="sp-item-logo">
+                  <img src={s.logo} alt={s.name} className="w-full h-full object-contain p-1 rounded-lg" />
+                </span>
                 <span className="sp-item-name">{s.name}</span>
                 <span className="sp-item-tag">{s.tagline}</span>
               </div>
@@ -101,7 +113,9 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
           <div className="sp-layer sp-layer--3">
             {BRONZE.map((s) => (
               <div key={s.name} className="sp-item sp-item--bronze">
-                <span className="sp-item-logo">{s.logo}</span>
+                <span className="sp-item-logo">
+                  <img src={s.logo} alt={s.name} className="w-full h-full object-contain p-1 rounded-lg" />
+                </span>
                 <span className="sp-item-name">{s.name}</span>
                 <span className="sp-item-tag">{s.tagline}</span>
               </div>
@@ -113,3 +127,4 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
     </section>
   );
 }
+

@@ -1,4 +1,3 @@
-// src/components/ChronoNexia.tsx
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useSpring, useMotionValueEvent, useTransform } from "framer-motion";
 import type { Era } from "../data/schedule";
@@ -9,12 +8,14 @@ import ClubPavilionSection from "./ClubPavilionSection";
 import NexusGraphBackground from "./NexusGraphBackground";
 import Footer from "./Footer";
 import SymbitechIntro from "./SymbitechIntro";
+import SponsorsSection from "./SponsorsSection";
 
 interface ChronoNexiaProps {
   onSelectClub: (club: { id: string; name: string; era: "past" | "present" | "future" }) => void;
+  onWhySponsor?: () => void;
 }
 
-export default function ChronoNexia({ onSelectClub }: ChronoNexiaProps) {
+export default function ChronoNexia({ onSelectClub, onWhySponsor }: ChronoNexiaProps) {
   const [era, setEra] = useState<Era>("hero");
   const heroHubRef = useRef<HTMLDivElement>(null);
 
@@ -242,7 +243,13 @@ export default function ChronoNexia({ onSelectClub }: ChronoNexiaProps) {
         />
       ))}
 
+      {/* Sponsors Section */}
+      <div id="sponsors" className="relative z-10">
+        <SponsorsSection onWhySponsor={onWhySponsor} />
+      </div>
+
       <Footer />
     </div>
   );
 }
+
