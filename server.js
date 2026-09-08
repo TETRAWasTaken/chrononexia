@@ -59,12 +59,16 @@ const dbConfig = cleanDbUrl
 const pool = new Pool(dbConfig);
 
 // Test Database Connection on startup
+const dbTarget = cleanDbUrl
+  ? (cleanDbUrl.includes("supabase.com") ? "Supabase Cloud PostgreSQL" : "Remote PostgreSQL Database")
+  : `Local PostgreSQL (${process.env.DB_HOST || "127.0.0.1"}:${process.env.DB_PORT || "5432"})`;
+
 pool.connect((err, client, release) => {
   if (err) {
-    console.error("❌ Failed to connect to local PostgreSQL database:", err.message);
-    console.log(`⚠️ Running backend in offline/fallback-ready mode. Ensure Postgres is accessible on ${process.env.DB_HOST || "127.0.0.1"}:${process.env.DB_PORT || "5432"}.`);
+    console.error(`❌ Failed to connect to ${dbTarget}:`, err.message);
+    console.log(`⚠️ Running backend in offline/fallback-ready mode. Ensure database is accessible.`);
   } else {
-    console.log("✅ Successfully connected to local PostgreSQL database.");
+    console.log(`✅ Successfully connected to ${dbTarget}.`);
     release();
   }
 });
@@ -224,16 +228,96 @@ app.get("/api/team", async (req, res) => {
       coHeadsRows = allRows.filter((m) => /co[- ]?head/i.test(m.position || ""));
     }
 
+    let advisoryRows = [];
+    let organizingFacultyRows = [];
+
+    try {
+      const advisoryRes = await pool.query(`
+        SELECT name, position, academic_year, comment, description, image_url 
+        FROM advisory_committee 
+        ORDER BY 
+          CASE 
+            WHEN LOWER(name) LIKE '%director%' AND LOWER(name) NOT LIKE '%deputy%' AND LOWER(name) NOT LIKE '%dd%' THEN 1
+            WHEN LOWER(name) LIKE '%dd mam%' OR LOWER(name) LIKE '%dd ma%' THEN 2
+            WHEN LOWER(name) LIKE '%dd sir%' THEN 3
+            ELSE 4
+          END, 
+          name ASC
+      `);
+      advisoryRows = advisoryRes.rows;
+    } catch (advErr) {
+      console.warn("Could not query advisory_committee from DB, fallback available:", advErr.message);
+    }
+
+    try {
+      const organizingFacultyRes = await pool.query(`
+        SELECT name, position, academic_year, comment, description, image_url 
+        FROM organizing_faculty 
+        ORDER BY 
+          CASE 
+            WHEN LOWER(name) LIKE '%sankit%' THEN 1
+            WHEN LOWER(name) LIKE '%sameer%' THEN 2
+            ELSE 3
+          END, 
+          name ASC
+      `);
+      organizingFacultyRows = organizingFacultyRes.rows;
+    } catch (facErr) {
+      console.warn("Could not query organizing_faculty from DB, fallback available:", facErr.message);
+    }
+
     res.json({
       festHeads: festHeadsRes.rows,
       executives: executivesRes.rows,
       heads: headsRows,
       coHeads: coHeadsRows,
       headsAndCoheads: [...headsRows, ...coHeadsRows],
+      advisoryCommittee: advisoryRows,
+      organizingFaculty: organizingFacultyRows,
     });
   } catch (err) {
     console.error("Error querying team members from DB:", err);
     res.status(500).json({ error: "Database error querying team members" });
+  }
+});
+
+// 4. Standalone Advisory Committee & Organizing Faculty endpoints
+app.get("/api/advisory-committee", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT name, position, academic_year, comment, description, image_url 
+      FROM advisory_committee 
+      ORDER BY 
+        CASE 
+          WHEN LOWER(name) LIKE '%director%' AND LOWER(name) NOT LIKE '%deputy%' AND LOWER(name) NOT LIKE '%dd%' THEN 1
+          WHEN LOWER(name) LIKE '%dd mam%' OR LOWER(name) LIKE '%dd ma%' THEN 2
+          WHEN LOWER(name) LIKE '%dd sir%' THEN 3
+          ELSE 4
+        END, 
+        name ASC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: "Error fetching advisory committee" });
+  }
+});
+
+app.get("/api/organizing-faculty", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT name, position, academic_year, comment, description, image_url 
+      FROM organizing_faculty 
+      ORDER BY 
+        CASE 
+          WHEN LOWER(name) LIKE '%sankit%' THEN 1
+          WHEN LOWER(name) LIKE '%sameer%' THEN 2
+          ELSE 3
+        END, 
+        name ASC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: "Error fetching organizing faculty" });
   }
 });
 

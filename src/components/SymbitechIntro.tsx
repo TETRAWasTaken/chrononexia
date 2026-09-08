@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Shield, User, Users, Quote, Award } from "lucide-react";
+import { Sparkles, Shield, User, Users, Quote, Award, Crown, BookOpen } from "lucide-react";
 import { getTeamDataCached } from "../utils/apiCache";
 import MemberModal from "./MemberModal";
 import symbiLogo from "../assets/SYMBITECH/logo.png";
@@ -26,6 +26,8 @@ interface TeamData {
   heads: TeamMember[];
   coHeads: TeamMember[];
   headsAndCoheads: TeamMember[];
+  advisoryCommittee: TeamMember[];
+  organizingFaculty: TeamMember[];
 }
 
 const GLIMPSES = [
@@ -69,7 +71,8 @@ const GLIMPSES = [
 
 function getInitials(name: string): string {
   if (!name) return "OC";
-  const parts = name.trim().split(/\s+/);
+  const clean = name.replace(/^Dr\.?\s+/i, "");
+  const parts = clean.trim().split(/\s+/);
   if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
@@ -81,6 +84,8 @@ export default function SymbitechIntro() {
     heads: [],
     coHeads: [],
     headsAndCoheads: [],
+    advisoryCommittee: [],
+    organizingFaculty: [],
   });
   const [loading, setLoading] = useState(true);
   const [dbError, setDbError] = useState<string | null>(null);
@@ -99,6 +104,8 @@ export default function SymbitechIntro() {
           heads: heads,
           coHeads: coHeads,
           headsAndCoheads: rawHeadsAndCoheads,
+          advisoryCommittee: data.advisoryCommittee || [],
+          organizingFaculty: data.organizingFaculty || [],
         });
         setLoading(false);
       })
@@ -334,6 +341,62 @@ export default function SymbitechIntro() {
               </div>
             </div>
           )}
+
+          {/* 5. ADVISORY COMMITTEE SECTION */}
+          {teamData.advisoryCommittee.length > 0 && (
+            <div className="mb-14">
+              <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-2">
+                <div className="flex items-center gap-2">
+                  <Crown className="w-4 h-4 text-amber-400" />
+                  <h4 className="font-grotesk font-semibold text-sm text-slate-200 uppercase tracking-widest">
+                    Advisory Committee Members
+                  </h4>
+                </div>
+                <span className="text-[10px] font-mono tracking-wider text-amber-400/90 px-2.5 py-0.5 rounded-full border border-amber-400/20 bg-amber-400/10">
+                  Institutional Leadership
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {teamData.advisoryCommittee.map((member, idx) => (
+                  <TeamCard
+                    key={idx}
+                    member={member}
+                    index={idx}
+                    badgeGlow="from-amber-400 via-orange-500 to-yellow-600"
+                    onClick={() => setSelectedMember({ member, badgeGlow: "from-amber-400 via-orange-500 to-yellow-600" })}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 6. ORGANIZING FACULTY MEMBERS SECTION */}
+          {teamData.organizingFaculty.length > 0 && (
+            <div className="mb-14">
+              <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-2">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-indigo-400" />
+                  <h4 className="font-grotesk font-semibold text-sm text-slate-200 uppercase tracking-widest">
+                    Organizing Faculty Members
+                  </h4>
+                </div>
+                <span className="text-[10px] font-mono tracking-wider text-indigo-400/90 px-2.5 py-0.5 rounded-full border border-indigo-400/20 bg-indigo-400/10">
+                  Faculty Mentors
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                {teamData.organizingFaculty.map((member, idx) => (
+                  <TeamCard
+                    key={idx}
+                    member={member}
+                    index={idx}
+                    badgeGlow="from-indigo-500 via-blue-500 to-cyan-500"
+                    onClick={() => setSelectedMember({ member, badgeGlow: "from-indigo-500 via-blue-500 to-cyan-500" })}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -364,6 +427,15 @@ function TeamCard({ member, index, badgeGlow, onClick }: TeamCardProps) {
     : null;
   const photoSrc = rawSrc ? encodeURI(rawSrc) : null;
 
+  const isAdvisory = /director|advisory/i.test(member.position || "") || /director|dd\s/i.test(member.name || "");
+  const isFaculty = !isAdvisory && (/faculty/i.test(member.position || "") || /^dr\b/i.test(member.name || ""));
+
+  const positionColor = isAdvisory ? "text-amber-400" : isFaculty ? "text-indigo-400" : "text-cyan-400";
+  const hoverBorder = isAdvisory ? "hover:border-amber-400/40" : isFaculty ? "hover:border-indigo-400/40" : "hover:border-cyan-500/30";
+  const hoverTitle = isAdvisory ? "group-hover:text-amber-300" : isFaculty ? "group-hover:text-indigo-300" : "group-hover:text-cyan-300";
+  const quoteColor = isAdvisory ? "text-amber-400/70" : isFaculty ? "text-indigo-400/70" : "text-cyan-400/60";
+  const bgGlow = isAdvisory ? "bg-amber-400/5" : isFaculty ? "bg-indigo-400/5" : "bg-cyan-400/5";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
@@ -372,11 +444,11 @@ function TeamCard({ member, index, badgeGlow, onClick }: TeamCardProps) {
       transition={{ duration: 0.4, delay: index * 0.04 }}
       whileHover={{ scale: 1.02 }}
       onClick={onClick}
-      className="relative p-5 rounded-2xl border border-white/10 bg-nexus-card backdrop-blur-md overflow-hidden group flex flex-col justify-between transition-all duration-300 shadow-lg hover:border-cyan-500/30 cursor-pointer"
+      className={`relative p-5 rounded-2xl border border-white/10 bg-nexus-card backdrop-blur-md overflow-hidden group flex flex-col justify-between transition-all duration-300 shadow-lg ${hoverBorder} cursor-pointer`}
     >
       <div className="flex items-start gap-4">
         {/* Glowing Avatar Container */}
-        <div className="relative w-14 h-14 rounded-full shrink-0 flex items-center justify-center font-bold text-sm tracking-wider text-white overflow-hidden shadow-inner bg-slate-900 border border-white/15 group-hover:border-cyan-400/50 transition-colors duration-300">
+        <div className="relative w-14 h-14 rounded-full shrink-0 flex items-center justify-center font-bold text-sm tracking-wider text-white overflow-hidden shadow-inner bg-slate-900 border border-white/15 group-hover:border-white/40 transition-colors duration-300">
           {photoSrc && !imgError ? (
             <img
               src={photoSrc}
@@ -395,13 +467,13 @@ function TeamCard({ member, index, badgeGlow, onClick }: TeamCardProps) {
 
         {/* Member Details */}
         <div className="flex flex-col min-w-0 flex-1">
-          <span className="text-[10px] tracking-wider text-cyan-400 font-mono uppercase truncate font-semibold">
+          <span className={`text-[10px] tracking-wider font-mono uppercase truncate font-semibold ${positionColor}`}>
             {member.position}
           </span>
-          <h5 className="font-grotesk font-bold text-slate-100 group-hover:text-cyan-300 transition-colors duration-250 text-base leading-snug truncate">
+          <h5 className={`font-grotesk font-bold text-slate-100 ${hoverTitle} transition-colors duration-250 text-base leading-snug truncate`}>
             {member.name}
           </h5>
-          <span className="font-rajdhani text-xs text-slate-400 mt-0.5 font-medium">
+          <span className="font-rajdhani text-xs text-slate-400 mt-0.5 font-medium truncate">
             {member.academic_year}
           </span>
         </div>
@@ -410,7 +482,7 @@ function TeamCard({ member, index, badgeGlow, onClick }: TeamCardProps) {
       {/* Yearbook Quote / Comment */}
       {member.comment && member.comment.trim() !== "" && (
         <div className="mt-3 pt-3 border-t border-white/5 flex items-start gap-2">
-          <Quote className="w-3.5 h-3.5 text-cyan-400/60 shrink-0 mt-0.5" />
+          <Quote className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${quoteColor}`} />
           <p className="font-rajdhani text-xs italic text-slate-300/80 line-clamp-2 leading-relaxed">
             "{member.comment}"
           </p>
@@ -418,7 +490,7 @@ function TeamCard({ member, index, badgeGlow, onClick }: TeamCardProps) {
       )}
 
       {/* Subtle Background Glow */}
-      <div className="absolute right-0 bottom-0 w-24 h-24 rounded-full bg-cyan-400/5 blur-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className={`absolute right-0 bottom-0 w-24 h-24 rounded-full ${bgGlow} blur-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
     </motion.div>
   );
 }

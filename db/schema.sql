@@ -5,6 +5,8 @@ DROP TABLE IF EXISTS heads;
 DROP TABLE IF EXISTS coheads;
 DROP TABLE IF EXISTS heads_and_coheads;
 DROP TABLE IF EXISTS members;
+DROP TABLE IF EXISTS advisory_committee;
+DROP TABLE IF EXISTS organizing_faculty;
 
 -- -----------------------------------------------------
 -- Table: symbitech_event_details
@@ -84,6 +86,34 @@ CREATE TABLE IF NOT EXISTS coheads (
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_coheads_name ON coheads(name);
+
+-- -----------------------------------------------------
+-- Table: advisory_committee
+-- Stores Advisory Committee Members (name as Primary Key)
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS advisory_committee (
+    name VARCHAR(150) PRIMARY KEY,
+    position VARCHAR(150) NOT NULL,
+    academic_year VARCHAR(150) DEFAULT 'Advisory Board',
+    comment VARCHAR(300),
+    description VARCHAR(500),
+    image_url VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- -----------------------------------------------------
+-- Table: organizing_faculty
+-- Stores Organizing Faculty Members (name as Primary Key)
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS organizing_faculty (
+    name VARCHAR(150) PRIMARY KEY,
+    position VARCHAR(150) NOT NULL,
+    academic_year VARCHAR(150) DEFAULT 'Faculty Coordinator',
+    comment VARCHAR(300),
+    description VARCHAR(500),
+    image_url VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- ==========================================
 -- SEED DATA: SYMBITECH 2026 ACTUAL EVENTS
@@ -211,3 +241,30 @@ ON CONFLICT (sr_no) DO UPDATE SET
   learning_outcome = EXCLUDED.learning_outcome,
   event_description = EXCLUDED.event_description,
   preferred_location = EXCLUDED.preferred_location;
+
+-- ==========================================
+-- SEED DATA: ADVISORY COMMITTEE MEMBERS
+-- ==========================================
+INSERT INTO advisory_committee (name, position, academic_year, comment, description, image_url)
+VALUES
+('Director sir', 'Director', 'Symbiosis Institute of Technology', 'Guiding innovation, leadership, and engineering excellence across SymbiTech.', 'Advisory Committee Leader providing strategic vision, institutional direction, and fostering technological leadership across ChronoNexia.', NULL),
+('DD mam', 'Deputy Director', 'Symbiosis Institute of Technology', 'Empowering students to pioneer technological frontiers and collaborative events.', 'Advisory Committee Member overseeing academic excellence, student initiatives, and event coordination.', NULL),
+('DD Sir', 'Deputy Director', 'Symbiosis Institute of Technology', 'Fostering multidisciplinary engineering spirit and campus-wide technical collaboration.', 'Advisory Committee Member guiding operational governance, infrastructure, and technical mentoring.', NULL)
+ON CONFLICT (name) DO UPDATE SET
+  position = EXCLUDED.position,
+  academic_year = EXCLUDED.academic_year,
+  comment = EXCLUDED.comment,
+  description = EXCLUDED.description;
+
+-- ==========================================
+-- SEED DATA: ORGANIZING FACULTY MEMBERS
+-- ==========================================
+INSERT INTO organizing_faculty (name, position, academic_year, comment, description, image_url)
+VALUES
+('Dr Sankit Kassa', 'Organizing Faculty Member', 'Faculty Coordinator', 'Inspiring engineering ingenuity and guiding student teams through technical challenges.', 'Organizing Faculty Member providing faculty supervision, academic insights, and operational guidance.', NULL),
+('Dr Sameer Seyed', 'Organizing Faculty Member', 'Faculty Coordinator', 'Nurturing future innovators and orchestrating seamless collaboration across departments.', 'Organizing Faculty Member facilitating academic mentoring and multi-club coordination.', NULL)
+ON CONFLICT (name) DO UPDATE SET
+  position = EXCLUDED.position,
+  academic_year = EXCLUDED.academic_year,
+  comment = EXCLUDED.comment,
+  description = EXCLUDED.description;
