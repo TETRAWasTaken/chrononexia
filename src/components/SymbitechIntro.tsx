@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Shield, User, Users, Quote, Award, Crown, BookOpen } from "lucide-react";
+import { Sparkles, Shield, User, Users, Quote, Award, Crown, BookOpen, Building2, Trophy, Globe, Cpu } from "lucide-react";
 import { getTeamDataCached } from "../utils/apiCache";
 import MemberModal from "./MemberModal";
 import symbiLogo from "../assets/SYMBITECH/logo.png";
@@ -164,8 +164,143 @@ export default function SymbitechIntro() {
           </p>
         </motion.div>
 
+        {/* ======================================================== */}
+        {/* SECTION 2: HOST INSTITUTE - SIT PUNE                     */}
+        {/* ======================================================== */}
+        <div className="w-full mb-24">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="relative p-7 sm:p-10 rounded-3xl border border-white/10 bg-nexus-card/90 backdrop-blur-xl overflow-hidden shadow-2xl"
+          >
+            {/* Ambient Background Radial Glows */}
+            <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none -ml-20 -mb-20" />
+
+            <div className="relative z-10">
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-6 border-b border-white/10 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-2xl border border-cyan-400/30 bg-cyan-400/10 text-cyan-300 shadow-inner">
+                    <Building2 className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] tracking-[0.25em] font-mono text-cyan-400 uppercase font-bold block">
+                      Host Institute
+                    </span>
+                    <h3 className="font-grotesk font-extrabold text-2xl sm:text-3xl text-white">
+                      Symbiosis Institute of Technology
+                    </h3>
+                  </div>
+                </div>
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-amber-400/30 bg-amber-400/10 text-amber-300 text-xs font-mono font-semibold">
+                  <Trophy className="w-3.5 h-3.5 text-amber-400" />
+                  <span>NAAC A++ Accredited</span>
+                </div>
+              </div>
+
+              <p className="font-rajdhani text-base sm:text-lg text-slate-300 leading-relaxed max-w-4xl mb-8">
+                Established in 2008 as a flagship constituent of <strong className="text-white font-semibold">Symbiosis International (Deemed University)</strong>, 
+                SIT Pune stands at the frontier of engineering education, research, and multidisciplinary innovation. Guided by the motto 
+                <em className="text-cyan-300 not-italic font-medium"> "Vasudhaiva Kutumbakam"</em> (The World is One Family), SIT blends rigorous academic 
+                curricula with high-impact industry collaboration, nurturing engineers equipped to lead global breakthroughs in AI, Quantum Computing, Robotics, and Systems Engineering.
+              </p>
+
+              {/* Major Achievements & Institutional Highlights */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:border-cyan-400/30 transition-all duration-300 group">
+                  <div className="flex items-center gap-2.5 mb-2 text-cyan-400">
+                    <Trophy className="w-4 h-4" />
+                    <h5 className="font-grotesk font-bold text-sm text-slate-100 group-hover:text-cyan-300 transition-colors">
+                      National Standing
+                    </h5>
+                  </div>
+                  <p className="font-rajdhani text-xs text-slate-400 leading-relaxed">
+                    Consistently ranked among the premier private engineering institutions across India in NIRF, India Today, and Times Engineering rankings.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:border-purple-400/30 transition-all duration-300 group">
+                  <div className="flex items-center gap-2.5 mb-2 text-purple-400">
+                    <Cpu className="w-4 h-4" />
+                    <h5 className="font-grotesk font-bold text-sm text-slate-100 group-hover:text-purple-300 transition-colors">
+                      Centres of Excellence
+                    </h5>
+                  </div>
+                  <p className="font-rajdhani text-xs text-slate-400 leading-relaxed">
+                    Home to pioneering research hubs including the Symbiosis Centre for Applied AI (SCAAI), Quantum Computing, and advanced Robotics automation facilities.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:border-blue-400/30 transition-all duration-300 group">
+                  <div className="flex items-center gap-2.5 mb-2 text-blue-400">
+                    <Globe className="w-4 h-4" />
+                    <h5 className="font-grotesk font-bold text-sm text-slate-100 group-hover:text-blue-300 transition-colors">
+                      Global Immersion
+                    </h5>
+                  </div>
+                  <p className="font-rajdhani text-xs text-slate-400 leading-relaxed">
+                    Active international semester exchange programs and research partnerships with renowned universities across the USA, Germany, Singapore, and Australia.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:border-amber-400/30 transition-all duration-300 group">
+                  <div className="flex items-center gap-2.5 mb-2 text-amber-400">
+                    <Award className="w-4 h-4" />
+                    <h5 className="font-grotesk font-bold text-sm text-slate-100 group-hover:text-amber-300 transition-colors">
+                      Student Laurels
+                    </h5>
+                  </div>
+                  <p className="font-rajdhani text-xs text-slate-400 leading-relaxed">
+                    National podium finishes at SAE SUPRA Formula Student Racing, Smart India Hackathon champions, and acclaimed IEEE and ACM student research chapters.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* SECTION 3: ADVISORY COMMITTEE MEMBERS                    */}
+        {/* ======================================================== */}
+        {teamData.advisoryCommittee.length > 0 && (
+          <div className="w-full mb-24">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-10"
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-400/30 bg-amber-400/10 text-amber-300 text-xs font-mono mb-3">
+                <Crown className="w-3.5 h-3.5 text-amber-400" />
+                <span>Institutional Patronage</span>
+              </div>
+              <h3 className="font-grotesk font-bold text-2xl sm:text-3xl text-white">
+                Advisory Committee
+              </h3>
+              <p className="font-rajdhani text-sm text-slate-400 mt-2">
+                Executive leadership guiding innovation, strategic direction, and institutional excellence
+              </p>
+              <div className="w-16 h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-yellow-600 mx-auto mt-3 rounded-full" />
+            </motion.div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {teamData.advisoryCommittee.map((member, idx) => (
+                <TeamCard
+                  key={idx}
+                  member={member}
+                  index={idx}
+                  badgeGlow="from-amber-400 via-orange-500 to-yellow-600"
+                  onClick={() => setSelectedMember({ member, badgeGlow: "from-amber-400 via-orange-500 to-yellow-600" })}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ========================================== */}
-        {/* SECTION 2: GLIMPSES OF SYMBI TECH         */}
+        {/* SECTION 4: GLIMPSES OF SYMBI TECH         */}
         {/* ========================================== */}
         <div className="w-full mb-24">
           <motion.div
@@ -218,7 +353,7 @@ export default function SymbitechIntro() {
         </div>
 
         {/* ========================================== */}
-        {/* SECTION 3: ORGANIZING TEAM                */}
+        {/* SECTION 5: ORGANIZING TEAM                */}
         {/* ========================================== */}
         <div className="w-full">
           <motion.div
@@ -342,35 +477,7 @@ export default function SymbitechIntro() {
             </div>
           )}
 
-          {/* 5. ADVISORY COMMITTEE SECTION */}
-          {teamData.advisoryCommittee.length > 0 && (
-            <div className="mb-14">
-              <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-2">
-                <div className="flex items-center gap-2">
-                  <Crown className="w-4 h-4 text-amber-400" />
-                  <h4 className="font-grotesk font-semibold text-sm text-slate-200 uppercase tracking-widest">
-                    Advisory Committee Members
-                  </h4>
-                </div>
-                <span className="text-[10px] font-mono tracking-wider text-amber-400/90 px-2.5 py-0.5 rounded-full border border-amber-400/20 bg-amber-400/10">
-                  Institutional Leadership
-                </span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {teamData.advisoryCommittee.map((member, idx) => (
-                  <TeamCard
-                    key={idx}
-                    member={member}
-                    index={idx}
-                    badgeGlow="from-amber-400 via-orange-500 to-yellow-600"
-                    onClick={() => setSelectedMember({ member, badgeGlow: "from-amber-400 via-orange-500 to-yellow-600" })}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* 6. ORGANIZING FACULTY MEMBERS SECTION */}
+          {/* 5. ORGANIZING FACULTY MEMBERS SECTION */}
           {teamData.organizingFaculty.length > 0 && (
             <div className="mb-14">
               <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-2">
