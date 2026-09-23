@@ -44,17 +44,17 @@ const cleanDbUrl = rawDbUrl ? rawDbUrl.split("?")[0] : null;
 
 const dbConfig = cleanDbUrl
   ? {
-      connectionString: cleanDbUrl,
-      ssl: isSSL ? { rejectUnauthorized: false } : false,
-    }
+    connectionString: cleanDbUrl,
+    ssl: isSSL ? { rejectUnauthorized: false } : false,
+  }
   : {
-      user: process.env.DB_USER || "postgres",
-      password: process.env.DB_PASSWORD || "postgres",
-      host: process.env.DB_HOST || "127.0.0.1",
-      port: parseInt(process.env.DB_PORT || "5432", 10),
-      database: process.env.DB_NAME || "chrononexia",
-      ssl: isSSL ? { rejectUnauthorized: false } : false,
-    };
+    user: process.env.DB_USER || "postgres",
+    password: process.env.DB_PASSWORD || "postgres",
+    host: process.env.DB_HOST || "127.0.0.1",
+    port: parseInt(process.env.DB_PORT || "5432", 10),
+    database: process.env.DB_NAME || "chrononexia",
+    ssl: isSSL ? { rejectUnauthorized: false } : false,
+  };
 
 const pool = new Pool(dbConfig);
 
