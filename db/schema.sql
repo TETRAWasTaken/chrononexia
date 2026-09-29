@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS heads_and_coheads;
 DROP TABLE IF EXISTS members;
 DROP TABLE IF EXISTS advisory_committee;
 DROP TABLE IF EXISTS organizing_faculty;
+DROP TABLE IF EXISTS sponsors;
 
 -- -----------------------------------------------------
 -- Table: symbitech_event_details
@@ -114,6 +115,32 @@ CREATE TABLE IF NOT EXISTS organizing_faculty (
     image_url VARCHAR(500),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- -----------------------------------------------------
+-- Table: sponsors
+-- Stores Event Sponsors & Partners (image URL, metadata, and textual content)
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS sponsors (
+    id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    role VARCHAR(200) NOT NULL,
+    domain VARCHAR(200),
+    description TEXT,
+    image_url VARCHAR(500) NOT NULL,
+    telemetry_status VARCHAR(150) DEFAULT 'ACTIVE // VERIFIED',
+    node_ref VARCHAR(100),
+    accent VARCHAR(50) DEFAULT 'cyan',
+    icon VARCHAR(50) DEFAULT 'code',
+    stats JSONB DEFAULT '[]'::jsonb,
+    intel_overview TEXT,
+    intel_tracks JSONB DEFAULT '[]'::jsonb,
+    intel_perks JSONB DEFAULT '[]'::jsonb,
+    website_url VARCHAR(500),
+    display_order INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_sponsors_display_order ON sponsors(display_order);
 
 -- ==========================================
 -- SEED DATA: SYMBITECH 2026 ACTUAL EVENTS
@@ -268,3 +295,96 @@ ON CONFLICT (name) DO UPDATE SET
   academic_year = EXCLUDED.academic_year,
   comment = EXCLUDED.comment,
   description = EXCLUDED.description;
+
+-- ==========================================
+-- SEED DATA: SPONSORS & PARTNERS
+-- ==========================================
+INSERT INTO sponsors (
+    id,
+    name,
+    role,
+    domain,
+    description,
+    image_url,
+    telemetry_status,
+    node_ref,
+    accent,
+    icon,
+    stats,
+    intel_overview,
+    intel_tracks,
+    intel_perks,
+    website_url,
+    display_order
+)
+VALUES
+(
+    'gfg',
+    'GeeksforGeeks',
+    'Official Coding & Education Partner',
+    'ALGORITHM CORE & INTERVIEW PREP',
+    'Powering coding challenges, developer learning tracks, and technical skills assessment across campus nodes.',
+    '/src/assets/sponsors/GFG.png',
+    'CORE LEARNING PROTOCOL // VERIFIED',
+    '// NODE_REF: GFG-CORE-01',
+    'emerald',
+    'code',
+    '[{"label": "Coders Impacted", "value": "25M+"}, {"label": "DSA & Dev Tracks", "value": "150+"}, {"label": "Hiring Gateway", "value": "Direct"}]'::jsonb,
+    'India''s premier computer science platform offering contest hosting infrastructure, curated problem sets for ChronoNexia hackathon rounds, and premium course access.',
+    '["Competitive Programming & DSA Arena", "Full-Stack System Design Sprint", "AI & Algorithmic Problem Solving"]'::jsonb,
+    '["Premium GFG Subscriptions & Course Vouchers for Winners", "Direct Job & Internship Fast-Track Profiles", "Official Globally Verified Technical Certificates"]'::jsonb,
+    'https://www.geeksforgeeks.org',
+    1
+),
+(
+    'qlab',
+    'QLab',
+    'Quantum Research & Innovation Partner',
+    'QUANTUM COMPUTE & EXPERIMENTAL LABS',
+    'Fueling deep-tech experiments, quantum computing frameworks, and next-generation research clusters.',
+    '/src/assets/sponsors/Qlab.jpeg',
+    'QUANTUM LATTICE // ACTIVE',
+    '// NODE_REF: QLAB-EXP-Q8',
+    'amber',
+    'atom',
+    '[{"label": "Qubit Simulation", "value": "50+"}, {"label": "DeepTech Labs", "value": "12"}, {"label": "Research Grants", "value": "Tier-1"}]'::jsonb,
+    'Pioneering quantum algorithms, cryogenic hardware simulation, and quantum error mitigation frameworks for advanced research teams.',
+    '["Quantum Cryptography & Key Distribution", "Variational Quantum Eigensolver (VQE) Protocols", "Quantum-Classical Hybrid Architectures"]'::jsonb,
+    '["Cloud Quantum Simulator Compute Allocations", "Direct Lab Scientist Mentorship & Prototype Grants", "Fast-Track Summer Research Fellowships"]'::jsonb,
+    'https://qlab.org',
+    2
+),
+(
+    'unstop',
+    'Unstop',
+    'Official Platform & Opportunity Partner',
+    'TALENT ECOSYSTEM & COMPETITIONS',
+    'Driving student engagement, hackathon registration pipelines, and pan-India student reach.',
+    '/src/assets/sponsors/unstop.jpg',
+    'TALENT GRID // LINKED',
+    '// NODE_REF: UNSTOP-PIPE-09',
+    'cyan',
+    'rocket',
+    '[{"label": "Early Talent", "value": "16M+"}, {"label": "Registrations", "value": "100K+"}, {"label": "Campus Reach", "value": "Pan-India"}]'::jsonb,
+    'Global community and competitive platform connecting talent with opportunities, powering the registration ecosystem and real-time leaderboards for ChronoNexia 2026.',
+    '["Hackathon Lifecycle Management & Evaluation", "Pan-India College Leaderboards", "Exclusive Talent Pool Showcases"]'::jsonb,
+    '["Unstop Pro Access & Verified Skill Badges", "Direct Profile Highlighting to Fortune 500 Recruiters", "Exclusive Swag Kits & Mentorship Vouchers"]'::jsonb,
+    'https://unstop.com',
+    3
+)
+ON CONFLICT (id) DO UPDATE SET
+  name = EXCLUDED.name,
+  role = EXCLUDED.role,
+  domain = EXCLUDED.domain,
+  description = EXCLUDED.description,
+  image_url = EXCLUDED.image_url,
+  telemetry_status = EXCLUDED.telemetry_status,
+  node_ref = EXCLUDED.node_ref,
+  accent = EXCLUDED.accent,
+  icon = EXCLUDED.icon,
+  stats = EXCLUDED.stats,
+  intel_overview = EXCLUDED.intel_overview,
+  intel_tracks = EXCLUDED.intel_tracks,
+  intel_perks = EXCLUDED.intel_perks,
+  website_url = EXCLUDED.website_url,
+  display_order = EXCLUDED.display_order;

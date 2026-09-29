@@ -321,6 +321,37 @@ app.get("/api/organizing-faculty", async (req, res) => {
   }
 });
 
+// 5. Standalone Sponsors endpoint
+app.get("/api/sponsors", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT 
+        id,
+        name,
+        role,
+        domain,
+        description,
+        image_url,
+        telemetry_status,
+        node_ref,
+        accent,
+        icon,
+        stats,
+        intel_overview,
+        intel_tracks,
+        intel_perks,
+        website_url,
+        display_order
+      FROM sponsors
+      ORDER BY display_order ASC, name ASC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error querying sponsors from DB:", err.message);
+    res.status(500).json({ error: "Error fetching sponsors from database" });
+  }
+});
+
 // ============================================================================
 // Production Client Hosting (Serving Built Vite Static Assets)
 // ============================================================================

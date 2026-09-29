@@ -23,7 +23,7 @@ function App() {
           setView("main");
           // Restore scroll position to sponsors section after returning
           setTimeout(() => {
-            const el = document.getElementById("symbitech");
+            const el = document.getElementById("sponsors");
             if (el) el.scrollIntoView({ behavior: "smooth" });
           }, 100);
         }}
