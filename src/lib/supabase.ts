@@ -1,18 +1,21 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl: string =
-  import.meta.env.VITE_SUPABASE_URL || "https://eralwgjyyjdzokshkssn.supabase.co";
+// Production defaults (used if .env is missing in root or not injected via CI/CD build)
+const DEFAULT_SUPABASE_URL = "https://eralwgjyyjdzokshkssn.supabase.co";
+const DEFAULT_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_YKtyKJcqCsBsiVGA1j3jDw_BmjDiuZu";
 
-// Supports both the new Supabase "Publishable" key convention and the legacy "anon" key convention
+const supabaseUrl: string =
+  import.meta.env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL;
+
+// Supports modern publishable key, legacy anon key, or project fallback default
 const supabasePublishableKey: string =
   import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
   import.meta.env.VITE_SUPABASE_ANON_KEY ||
-  "";
+  DEFAULT_SUPABASE_PUBLISHABLE_KEY;
 
-if (!supabasePublishableKey) {
-  console.warn(
-    "⚠️ [Supabase BaaS]: Neither VITE_SUPABASE_PUBLISHABLE_KEY nor VITE_SUPABASE_ANON_KEY is defined in .env.\n" +
-      "Direct Supabase REST API requests require a publishable key to authenticate."
+if (!import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY && !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+  console.info(
+    "ℹ️ [Supabase BaaS]: No .env key detected; using default project credentials."
   );
 }
 
@@ -22,13 +25,9 @@ if (!supabasePublishableKey) {
  */
 export const supabase: SupabaseClient = createClient(
   supabaseUrl,
-  supabasePublishableKey || "dummy-publishable-key-placeholder"
+  supabasePublishableKey
 );
 
 export const isSupabaseConfigured = (): boolean => {
-  return Boolean(
-    supabaseUrl &&
-      supabasePublishableKey &&
-      supabasePublishableKey !== "dummy-publishable-key-placeholder"
-  );
+  return Boolean(supabaseUrl && supabasePublishableKey);
 };
