@@ -23,7 +23,7 @@ function App() {
           setView("main");
           // Restore scroll position to sponsors section after returning
           setTimeout(() => {
-            const el = document.getElementById("symbitech");
+            const el = document.getElementById("sponsors");
             if (el) el.scrollIntoView({ behavior: "smooth" });
           }, 100);
         }}
@@ -43,10 +43,7 @@ function App() {
   return (
     <ChronoNexia
       onSelectClub={(club) => setSelectedClub(club)}
-      onWhySponsor={() => {
-        window.scrollTo(0, 0);
-        setView("pitchDeck");
-      }}
+      onWhySponsor={() => setView("pitchDeck")}
     />
   );
 }

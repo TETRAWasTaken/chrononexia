@@ -6,6 +6,8 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 
+import compression from "compression";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -19,6 +21,9 @@ if (fs.existsSync(envPath)) {
 }
 
 const app = express();
+
+// Enable HTTP Gzip compression
+app.use(compression());
 
 // Server environment configuration
 const PORT = process.env.PORT || 8080;
@@ -34,32 +39,36 @@ const { Pool } = pg;
 
 const rawDbUrl = process.env.DATABASE_URL;
 const isSSL = process.env.DATABASE_SSL === "true" || (rawDbUrl && (rawDbUrl.includes("supabase.co") || rawDbUrl.includes("sslmode=")));
-// Strip query parameters from connection string to prevent pg-connection-string from overriding SSL config
+// Strip query parameters from connectionString so pg does not enforce strict sslmode validation overriding rejectUnauthorized: false
 const cleanDbUrl = rawDbUrl ? rawDbUrl.split("?")[0] : null;
 
 const dbConfig = cleanDbUrl
   ? {
-      connectionString: cleanDbUrl,
-      ssl: isSSL ? { rejectUnauthorized: false } : false,
-    }
+    connectionString: cleanDbUrl,
+    ssl: isSSL ? { rejectUnauthorized: false } : false,
+  }
   : {
-      user: process.env.DB_USER || "postgres",
-      password: process.env.DB_PASSWORD || "postgres",
-      host: process.env.DB_HOST || "127.0.0.1",
-      port: parseInt(process.env.DB_PORT || "5432", 10),
-      database: process.env.DB_NAME || "chrononexia",
-      ssl: isSSL ? { rejectUnauthorized: false } : false,
-    };
+    user: process.env.DB_USER || "postgres",
+    password: process.env.DB_PASSWORD || "postgres",
+    host: process.env.DB_HOST || "127.0.0.1",
+    port: parseInt(process.env.DB_PORT || "5432", 10),
+    database: process.env.DB_NAME || "chrononexia",
+    ssl: isSSL ? { rejectUnauthorized: false } : false,
+  };
 
 const pool = new Pool(dbConfig);
 
 // Test Database Connection on startup
+const dbTarget = cleanDbUrl
+  ? (cleanDbUrl.includes("supabase.com") ? "Supabase Cloud PostgreSQL" : "Remote PostgreSQL Database")
+  : `Local PostgreSQL (${process.env.DB_HOST || "127.0.0.1"}:${process.env.DB_PORT || "5432"})`;
+
 pool.connect((err, client, release) => {
   if (err) {
-    console.error("❌ Failed to connect to local PostgreSQL database:", err.message);
-    console.log(`⚠️ Running backend in offline/fallback-ready mode. Ensure Postgres is accessible on ${process.env.DB_HOST || "127.0.0.1"}:${process.env.DB_PORT || "5432"}.`);
+    console.error(`❌ Failed to connect to ${dbTarget}:`, err.message);
+    console.log(`⚠️ Running backend in offline/fallback-ready mode. Ensure database is accessible.`);
   } else {
-    console.log("✅ Successfully connected to local PostgreSQL database.");
+    console.log(`✅ Successfully connected to ${dbTarget}.`);
     release();
   }
 });
@@ -188,7 +197,7 @@ app.get("/api/clubs/:id", async (req, res) => {
   }
 });
 
-// 3. Get Team Members (Fest Heads, Executives, Heads & Co-Heads)
+// 3. Get Team Members (Fest Heads, Executives, Heads, Co-Heads)
 app.get("/api/team", async (req, res) => {
   try {
     const festHeadsRes = await pool.query(
@@ -197,14 +206,74 @@ app.get("/api/team", async (req, res) => {
     const executivesRes = await pool.query(
       "SELECT name, position, academic_year, comment, description, image_url FROM executives ORDER BY name ASC"
     );
-    const headsAndCoheadsRes = await pool.query(
-      "SELECT name, position, academic_year, comment, description, image_url FROM heads_and_coheads ORDER BY name ASC"
-    );
+
+    let headsRows = [];
+    let coHeadsRows = [];
+
+    try {
+      const headsRes = await pool.query(
+        "SELECT name, position, academic_year, comment, description, image_url FROM heads ORDER BY name ASC"
+      );
+      const coheadsRes = await pool.query(
+        "SELECT name, position, academic_year, comment, description, image_url FROM coheads ORDER BY name ASC"
+      );
+      headsRows = headsRes.rows;
+      coHeadsRows = coheadsRes.rows;
+    } catch (tblErr) {
+      const headsAndCoheadsRes = await pool.query(
+        "SELECT name, position, academic_year, comment, description, image_url FROM heads_and_coheads ORDER BY name ASC"
+      );
+      const allRows = headsAndCoheadsRes.rows || [];
+      headsRows = allRows.filter((m) => !/co[- ]?head/i.test(m.position || ""));
+      coHeadsRows = allRows.filter((m) => /co[- ]?head/i.test(m.position || ""));
+    }
+
+    let advisoryRows = [];
+    let organizingFacultyRows = [];
+
+    try {
+      const advisoryRes = await pool.query(`
+        SELECT name, position, academic_year, comment, description, image_url 
+        FROM advisory_committee 
+        ORDER BY 
+          CASE 
+            WHEN LOWER(name) LIKE '%director%' AND LOWER(name) NOT LIKE '%deputy%' AND LOWER(name) NOT LIKE '%dd%' THEN 1
+            WHEN LOWER(name) LIKE '%dd mam%' OR LOWER(name) LIKE '%dd ma%' THEN 2
+            WHEN LOWER(name) LIKE '%dd sir%' THEN 3
+            ELSE 4
+          END, 
+          name ASC
+      `);
+      advisoryRows = advisoryRes.rows;
+    } catch (advErr) {
+      console.warn("Could not query advisory_committee from DB, fallback available:", advErr.message);
+    }
+
+    try {
+      const organizingFacultyRes = await pool.query(`
+        SELECT name, position, academic_year, comment, description, image_url 
+        FROM organizing_faculty 
+        ORDER BY 
+          CASE 
+            WHEN LOWER(name) LIKE '%sankit%' THEN 1
+            WHEN LOWER(name) LIKE '%sameer%' THEN 2
+            ELSE 3
+          END, 
+          name ASC
+      `);
+      organizingFacultyRows = organizingFacultyRes.rows;
+    } catch (facErr) {
+      console.warn("Could not query organizing_faculty from DB, fallback available:", facErr.message);
+    }
 
     res.json({
       festHeads: festHeadsRes.rows,
       executives: executivesRes.rows,
-      headsAndCoheads: headsAndCoheadsRes.rows,
+      heads: headsRows,
+      coHeads: coHeadsRows,
+      headsAndCoheads: [...headsRows, ...coHeadsRows],
+      advisoryCommittee: advisoryRows,
+      organizingFaculty: organizingFacultyRows,
     });
   } catch (err) {
     console.error("Error querying team members from DB:", err);
@@ -212,15 +281,86 @@ app.get("/api/team", async (req, res) => {
   }
 });
 
+// 4. Standalone Advisory Committee & Organizing Faculty endpoints
+app.get("/api/advisory-committee", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT name, position, academic_year, comment, description, image_url 
+      FROM advisory_committee 
+      ORDER BY 
+        CASE 
+          WHEN LOWER(name) LIKE '%director%' AND LOWER(name) NOT LIKE '%deputy%' AND LOWER(name) NOT LIKE '%dd%' THEN 1
+          WHEN LOWER(name) LIKE '%dd mam%' OR LOWER(name) LIKE '%dd ma%' THEN 2
+          WHEN LOWER(name) LIKE '%dd sir%' THEN 3
+          ELSE 4
+        END, 
+        name ASC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: "Error fetching advisory committee" });
+  }
+});
+
+app.get("/api/organizing-faculty", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT name, position, academic_year, comment, description, image_url 
+      FROM organizing_faculty 
+      ORDER BY 
+        CASE 
+          WHEN LOWER(name) LIKE '%sankit%' THEN 1
+          WHEN LOWER(name) LIKE '%sameer%' THEN 2
+          ELSE 3
+        END, 
+        name ASC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: "Error fetching organizing faculty" });
+  }
+});
+
+// 5. Standalone Sponsors endpoint
+app.get("/api/sponsors", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT 
+        id,
+        name,
+        role,
+        domain,
+        description,
+        image_url,
+        telemetry_status,
+        node_ref,
+        accent,
+        icon,
+        stats,
+        intel_overview,
+        intel_tracks,
+        intel_perks,
+        website_url,
+        display_order
+      FROM sponsors
+      ORDER BY display_order ASC, name ASC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error querying sponsors from DB:", err.message);
+    res.status(500).json({ error: "Error fetching sponsors from database" });
+  }
+});
+
 // ============================================================================
 // Production Client Hosting (Serving Built Vite Static Assets)
 // ============================================================================
 
-// Serve assets from src/assets (e.g., /src/assets/Photoshoot/...) with 1 day browser caching
-app.use("/src/assets", express.static(path.join(__dirname, "src/assets"), { maxAge: "1d" }));
+// Serve assets from src/assets (e.g., /src/assets/Photoshoot/...) with 30-day immutable browser caching
+app.use("/src/assets", express.static(path.join(__dirname, "src/assets"), { maxAge: "30d", immutable: true }));
 
 // Serve the compiled build output from Vite with static caching
-app.use(express.static(path.join(__dirname, "dist"), { maxAge: "1d" }));
+app.use(express.static(path.join(__dirname, "dist"), { maxAge: "30d", immutable: true }));
 
 // SPA fallback: Route all non-API GET requests to index.html
 app.get(/(.*)/, (req, res, next) => {

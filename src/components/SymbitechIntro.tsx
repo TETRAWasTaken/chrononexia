@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Shield, User, Users, Quote } from "lucide-react";
+import { Sparkles, Shield, User, Users, Quote, Award, Crown, BookOpen, Building2, Trophy, Globe, Cpu } from "lucide-react";
 import { getTeamDataCached } from "../utils/apiCache";
 import MemberModal from "./MemberModal";
 import symbiLogo from "../assets/SYMBITECH/logo.png";
+import inaugurationImg from "../assets/Symbitech2025/image.png";
+import bikerallyImg from "../assets/Symbitech2025/image copy.png";
+import campusGroupImg from "../assets/Symbitech2025/image copy 2.png";
+import ktmEngineImg from "../assets/Symbitech2025/image copy 3.png";
+import llmArenaImg from "../assets/Symbitech2025/image copy 4.png";
+import supraCarImg from "../assets/Symbitech2025/image copy 5.png";
 
 export interface TeamMember {
   name: string;
@@ -16,40 +22,57 @@ export interface TeamMember {
 
 interface TeamData {
   festHeads: TeamMember[];
-  headsAndCoheads: TeamMember[];
   executives: TeamMember[];
+  heads: TeamMember[];
+  coHeads: TeamMember[];
+  headsAndCoheads: TeamMember[];
+  advisoryCommittee: TeamMember[];
+  organizingFaculty: TeamMember[];
 }
 
 const GLIMPSES = [
   {
-    title: "The ByteArena Hackathon",
+    title: "Symbitech 2025-26 Inauguration",
     year: "Symbitech '25",
-    desc: "48 hours of intense hacking, red bull, and breakthrough ideas.",
-    img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80",
+    desc: "The Symbitech 2025-26 inauguration with the institute community.",
+    img: inaugurationImg,
   },
   {
-    title: "Robo-Wars Showdown",
+    title: "Superbike Campus Rally",
     year: "Symbitech '25",
-    desc: "Heavyweight steel gladiators clashing in the arena of destiny.",
-    img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=600&q=80",
+    desc: "Riders gather for the high-energy campus motorcade.",
+    img: bikerallyImg,
   },
   {
-    title: "Frontier Tech Keynotes",
+    title: "Riders at the SIT Entrance",
     year: "Symbitech '25",
-    desc: "Visions of quantum supremacy, neural mesh, and space expansion.",
-    img: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=600&q=80",
+    desc: "The rider community outside Symbiosis Institute of Technology.",
+    img: campusGroupImg,
   },
   {
-    title: "Cosmic Pro Night",
+    title: "SAE SUPRA ICV-26 Team",
     year: "Symbitech '25",
-    desc: "Closing the cybernetic era with lights, bass, and thousands of voices.",
-    img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80",
+    desc: "SIT automotive engineers with their SUPRA SAE India race car.",
+    img: supraCarImg,
+  },
+  {
+    title: "GDSC LLM Arena",
+    year: "Symbitech '25",
+    desc: "A developer showcase from the GDSC LLM Arena.",
+    img: llmArenaImg,
+  },
+  {
+    title: "KTM Racing Engineering",
+    year: "Symbitech '25",
+    desc: "A close-up look at the KTM racing machine on display.",
+    img: ktmEngineImg,
   },
 ];
 
 function getInitials(name: string): string {
   if (!name) return "OC";
-  const parts = name.trim().split(/\s+/);
+  const clean = name.replace(/^Dr\.?\s+/i, "");
+  const parts = clean.trim().split(/\s+/);
   if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
@@ -57,8 +80,12 @@ function getInitials(name: string): string {
 export default function SymbitechIntro() {
   const [teamData, setTeamData] = useState<TeamData>({
     festHeads: [],
-    headsAndCoheads: [],
     executives: [],
+    heads: [],
+    coHeads: [],
+    headsAndCoheads: [],
+    advisoryCommittee: [],
+    organizingFaculty: [],
   });
   const [loading, setLoading] = useState(true);
   const [dbError, setDbError] = useState<string | null>(null);
@@ -67,16 +94,24 @@ export default function SymbitechIntro() {
   useEffect(() => {
     getTeamDataCached()
       .then((data) => {
+        const rawHeadsAndCoheads: TeamMember[] = data.headsAndCoheads || [];
+        const heads = data.heads || rawHeadsAndCoheads.filter((m) => !/co[- ]?head/i.test(m.position || ""));
+        const coHeads = data.coHeads || rawHeadsAndCoheads.filter((m) => /co[- ]?head/i.test(m.position || ""));
+
         setTeamData({
           festHeads: data.festHeads || [],
-          headsAndCoheads: data.headsAndCoheads || [],
           executives: data.executives || [],
+          heads: heads,
+          coHeads: coHeads,
+          headsAndCoheads: rawHeadsAndCoheads,
+          advisoryCommittee: data.advisoryCommittee || [],
+          organizingFaculty: data.organizingFaculty || [],
         });
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Database fetch error:", err);
-        setDbError("Database connection unavailable. Ensure PostgreSQL database is running.");
+        console.error("Supabase BaaS fetch error:", err);
+        setDbError("Supabase connection unavailable. Verify VITE_SUPABASE_ANON_KEY in .env.");
         setLoading(false);
       });
   }, []);
@@ -129,8 +164,143 @@ export default function SymbitechIntro() {
           </p>
         </motion.div>
 
+        {/* ======================================================== */}
+        {/* SECTION 2: HOST INSTITUTE - SIT PUNE                     */}
+        {/* ======================================================== */}
+        <div className="w-full mb-24">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="relative p-7 sm:p-10 rounded-3xl border border-white/10 bg-nexus-card/90 backdrop-blur-xl overflow-hidden shadow-2xl"
+          >
+            {/* Ambient Background Radial Glows */}
+            <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none -ml-20 -mb-20" />
+
+            <div className="relative z-10">
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-6 border-b border-white/10 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-2xl border border-cyan-400/30 bg-cyan-400/10 text-cyan-300 shadow-inner">
+                    <Building2 className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] tracking-[0.25em] font-mono text-cyan-400 uppercase font-bold block">
+                      Host Institute
+                    </span>
+                    <h3 className="font-grotesk font-extrabold text-2xl sm:text-3xl text-white">
+                      Symbiosis Institute of Technology
+                    </h3>
+                  </div>
+                </div>
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-amber-400/30 bg-amber-400/10 text-amber-300 text-xs font-mono font-semibold">
+                  <Trophy className="w-3.5 h-3.5 text-amber-400" />
+                  <span>NAAC A++ Accredited</span>
+                </div>
+              </div>
+
+              <p className="font-rajdhani text-base sm:text-lg text-slate-300 leading-relaxed max-w-4xl mb-8">
+                Established in 2008 as a flagship constituent of <strong className="text-white font-semibold">Symbiosis International (Deemed University)</strong>, 
+                SIT Pune stands at the frontier of engineering education, research, and multidisciplinary innovation. Guided by the motto 
+                <em className="text-cyan-300 not-italic font-medium"> "Vasudhaiva Kutumbakam"</em> (The World is One Family), SIT blends rigorous academic 
+                curricula with high-impact industry collaboration, nurturing engineers equipped to lead global breakthroughs in AI, Quantum Computing, Robotics, and Systems Engineering.
+              </p>
+
+              {/* Major Achievements & Institutional Highlights */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:border-cyan-400/30 transition-all duration-300 group">
+                  <div className="flex items-center gap-2.5 mb-2 text-cyan-400">
+                    <Trophy className="w-4 h-4" />
+                    <h5 className="font-grotesk font-bold text-sm text-slate-100 group-hover:text-cyan-300 transition-colors">
+                      National Standing
+                    </h5>
+                  </div>
+                  <p className="font-rajdhani text-xs text-slate-400 leading-relaxed">
+                    Consistently ranked among the premier private engineering institutions across India in NIRF, India Today, and Times Engineering rankings.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:border-purple-400/30 transition-all duration-300 group">
+                  <div className="flex items-center gap-2.5 mb-2 text-purple-400">
+                    <Cpu className="w-4 h-4" />
+                    <h5 className="font-grotesk font-bold text-sm text-slate-100 group-hover:text-purple-300 transition-colors">
+                      Centres of Excellence
+                    </h5>
+                  </div>
+                  <p className="font-rajdhani text-xs text-slate-400 leading-relaxed">
+                    Home to pioneering research hubs including the Symbiosis Centre for Applied AI (SCAAI), Quantum Computing, and advanced Robotics automation facilities.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:border-blue-400/30 transition-all duration-300 group">
+                  <div className="flex items-center gap-2.5 mb-2 text-blue-400">
+                    <Globe className="w-4 h-4" />
+                    <h5 className="font-grotesk font-bold text-sm text-slate-100 group-hover:text-blue-300 transition-colors">
+                      Global Immersion
+                    </h5>
+                  </div>
+                  <p className="font-rajdhani text-xs text-slate-400 leading-relaxed">
+                    Active international semester exchange programs and research partnerships with renowned universities across the USA, Germany, Singapore, and Australia.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:border-amber-400/30 transition-all duration-300 group">
+                  <div className="flex items-center gap-2.5 mb-2 text-amber-400">
+                    <Award className="w-4 h-4" />
+                    <h5 className="font-grotesk font-bold text-sm text-slate-100 group-hover:text-amber-300 transition-colors">
+                      Student Laurels
+                    </h5>
+                  </div>
+                  <p className="font-rajdhani text-xs text-slate-400 leading-relaxed">
+                    National podium finishes at SAE SUPRA Formula Student Racing, Smart India Hackathon champions, and acclaimed IEEE and ACM student research chapters.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* ======================================================== */}
+        {/* SECTION 3: ADVISORY COMMITTEE MEMBERS                    */}
+        {/* ======================================================== */}
+        {teamData.advisoryCommittee.length > 0 && (
+          <div className="w-full mb-24">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-10"
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-400/30 bg-amber-400/10 text-amber-300 text-xs font-mono mb-3">
+                <Crown className="w-3.5 h-3.5 text-amber-400" />
+                <span>Institutional Patronage</span>
+              </div>
+              <h3 className="font-grotesk font-bold text-2xl sm:text-3xl text-white">
+                Advisory Committee
+              </h3>
+              <p className="font-rajdhani text-sm text-slate-400 mt-2">
+                Executive leadership guiding innovation, strategic direction, and institutional excellence
+              </p>
+              <div className="w-16 h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-yellow-600 mx-auto mt-3 rounded-full" />
+            </motion.div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {teamData.advisoryCommittee.map((member, idx) => (
+                <TeamCard
+                  key={idx}
+                  member={member}
+                  index={idx}
+                  badgeGlow="from-amber-400 via-orange-500 to-yellow-600"
+                  onClick={() => setSelectedMember({ member, badgeGlow: "from-amber-400 via-orange-500 to-yellow-600" })}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ========================================== */}
-        {/* SECTION 2: GLIMPSES OF SYMBI TECH         */}
+        {/* SECTION 4: GLIMPSES OF SYMBI TECH         */}
         {/* ========================================== */}
         <div className="w-full mb-24">
           <motion.div
@@ -145,7 +315,7 @@ export default function SymbitechIntro() {
             <div className="w-16 h-1 bg-nexus-gradient mx-auto mt-3 rounded-full" />
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
             {GLIMPSES.map((item, idx) => (
               <motion.div
                 key={idx}
@@ -161,6 +331,8 @@ export default function SymbitechIntro() {
                   <img
                     src={item.img}
                     alt={item.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-500"
                   />
                   <span className="absolute top-3 right-3 z-20 text-[9px] tracking-wider px-2 py-0.5 rounded-full border border-cyan-400/30 bg-black/60 font-mono text-cyan-300">
@@ -181,7 +353,7 @@ export default function SymbitechIntro() {
         </div>
 
         {/* ========================================== */}
-        {/* SECTION 3: ORGANIZING TEAM                */}
+        {/* SECTION 5: ORGANIZING TEAM                */}
         {/* ========================================== */}
         <div className="w-full">
           <motion.div
@@ -259,23 +431,74 @@ export default function SymbitechIntro() {
             </div>
           )}
 
-          {/* 3. HEADS & CO-HEADS SECTION */}
-          {teamData.headsAndCoheads.length > 0 && (
+          {/* 3. HEADS SECTION */}
+          {teamData.heads.length > 0 && (
             <div className="mb-14">
               <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
                 <Users className="w-4 h-4 text-purple-400" />
                 <h4 className="font-grotesk font-semibold text-sm text-slate-200 uppercase tracking-widest">
-                  Heads & Co-Heads
+                  Department Heads
                 </h4>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {teamData.headsAndCoheads.map((member, idx) => (
+                {teamData.heads.map((member, idx) => (
                   <TeamCard
                     key={idx}
                     member={member}
                     index={idx}
-                    badgeGlow="from-purple-500 to-pink-600"
-                    onClick={() => setSelectedMember({ member, badgeGlow: "from-purple-500 to-pink-600" })}
+                    badgeGlow="from-purple-500 to-indigo-600"
+                    onClick={() => setSelectedMember({ member, badgeGlow: "from-purple-500 to-indigo-600" })}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 4. CO-HEADS SECTION */}
+          {teamData.coHeads.length > 0 && (
+            <div className="mb-14">
+              <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-2">
+                <Award className="w-4 h-4 text-pink-400" />
+                <h4 className="font-grotesk font-semibold text-sm text-slate-200 uppercase tracking-widest">
+                  Department Co-Heads
+                </h4>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {teamData.coHeads.map((member, idx) => (
+                  <TeamCard
+                    key={idx}
+                    member={member}
+                    index={idx}
+                    badgeGlow="from-pink-500 to-rose-600"
+                    onClick={() => setSelectedMember({ member, badgeGlow: "from-pink-500 to-rose-600" })}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 5. ORGANIZING FACULTY MEMBERS SECTION */}
+          {teamData.organizingFaculty.length > 0 && (
+            <div className="mb-14">
+              <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-2">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-indigo-400" />
+                  <h4 className="font-grotesk font-semibold text-sm text-slate-200 uppercase tracking-widest">
+                    Organizing Faculty Members
+                  </h4>
+                </div>
+                <span className="text-[10px] font-mono tracking-wider text-indigo-400/90 px-2.5 py-0.5 rounded-full border border-indigo-400/20 bg-indigo-400/10">
+                  Faculty Mentors
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                {teamData.organizingFaculty.map((member, idx) => (
+                  <TeamCard
+                    key={idx}
+                    member={member}
+                    index={idx}
+                    badgeGlow="from-indigo-500 via-blue-500 to-cyan-500"
+                    onClick={() => setSelectedMember({ member, badgeGlow: "from-indigo-500 via-blue-500 to-cyan-500" })}
                   />
                 ))}
               </div>
@@ -311,6 +534,15 @@ function TeamCard({ member, index, badgeGlow, onClick }: TeamCardProps) {
     : null;
   const photoSrc = rawSrc ? encodeURI(rawSrc) : null;
 
+  const isAdvisory = /director|advisory/i.test(member.position || "") || /director|dd\s/i.test(member.name || "");
+  const isFaculty = !isAdvisory && (/faculty/i.test(member.position || "") || /^dr\b/i.test(member.name || ""));
+
+  const positionColor = isAdvisory ? "text-amber-400" : isFaculty ? "text-indigo-400" : "text-cyan-400";
+  const hoverBorder = isAdvisory ? "hover:border-amber-400/40" : isFaculty ? "hover:border-indigo-400/40" : "hover:border-cyan-500/30";
+  const hoverTitle = isAdvisory ? "group-hover:text-amber-300" : isFaculty ? "group-hover:text-indigo-300" : "group-hover:text-cyan-300";
+  const quoteColor = isAdvisory ? "text-amber-400/70" : isFaculty ? "text-indigo-400/70" : "text-cyan-400/60";
+  const bgGlow = isAdvisory ? "bg-amber-400/5" : isFaculty ? "bg-indigo-400/5" : "bg-cyan-400/5";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
@@ -319,11 +551,11 @@ function TeamCard({ member, index, badgeGlow, onClick }: TeamCardProps) {
       transition={{ duration: 0.4, delay: index * 0.04 }}
       whileHover={{ scale: 1.02 }}
       onClick={onClick}
-      className="relative p-5 rounded-2xl border border-white/10 bg-nexus-card backdrop-blur-md overflow-hidden group flex flex-col justify-between transition-all duration-300 shadow-lg hover:border-cyan-500/30 cursor-pointer"
+      className={`relative p-5 rounded-2xl border border-white/10 bg-nexus-card backdrop-blur-md overflow-hidden group flex flex-col justify-between transition-all duration-300 shadow-lg ${hoverBorder} cursor-pointer`}
     >
       <div className="flex items-start gap-4">
         {/* Glowing Avatar Container */}
-        <div className="relative w-14 h-14 rounded-full shrink-0 flex items-center justify-center font-bold text-sm tracking-wider text-white overflow-hidden shadow-inner bg-slate-900 border border-white/15 group-hover:border-cyan-400/50 transition-colors duration-300">
+        <div className="relative w-14 h-14 rounded-full shrink-0 flex items-center justify-center font-bold text-sm tracking-wider text-white overflow-hidden shadow-inner bg-slate-900 border border-white/15 group-hover:border-white/40 transition-colors duration-300">
           {photoSrc && !imgError ? (
             <img
               src={photoSrc}
@@ -342,13 +574,13 @@ function TeamCard({ member, index, badgeGlow, onClick }: TeamCardProps) {
 
         {/* Member Details */}
         <div className="flex flex-col min-w-0 flex-1">
-          <span className="text-[10px] tracking-wider text-cyan-400 font-mono uppercase truncate font-semibold">
+          <span className={`text-[10px] tracking-wider font-mono uppercase truncate font-semibold ${positionColor}`}>
             {member.position}
           </span>
-          <h5 className="font-grotesk font-bold text-slate-100 group-hover:text-cyan-300 transition-colors duration-250 text-base leading-snug truncate">
+          <h5 className={`font-grotesk font-bold text-slate-100 ${hoverTitle} transition-colors duration-250 text-base leading-snug truncate`}>
             {member.name}
           </h5>
-          <span className="font-rajdhani text-xs text-slate-400 mt-0.5 font-medium">
+          <span className="font-rajdhani text-xs text-slate-400 mt-0.5 font-medium truncate">
             {member.academic_year}
           </span>
         </div>
@@ -357,7 +589,7 @@ function TeamCard({ member, index, badgeGlow, onClick }: TeamCardProps) {
       {/* Yearbook Quote / Comment */}
       {member.comment && member.comment.trim() !== "" && (
         <div className="mt-3 pt-3 border-t border-white/5 flex items-start gap-2">
-          <Quote className="w-3.5 h-3.5 text-cyan-400/60 shrink-0 mt-0.5" />
+          <Quote className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${quoteColor}`} />
           <p className="font-rajdhani text-xs italic text-slate-300/80 line-clamp-2 leading-relaxed">
             "{member.comment}"
           </p>
@@ -365,7 +597,7 @@ function TeamCard({ member, index, badgeGlow, onClick }: TeamCardProps) {
       )}
 
       {/* Subtle Background Glow */}
-      <div className="absolute right-0 bottom-0 w-24 h-24 rounded-full bg-cyan-400/5 blur-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className={`absolute right-0 bottom-0 w-24 h-24 rounded-full ${bgGlow} blur-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
     </motion.div>
   );
 }

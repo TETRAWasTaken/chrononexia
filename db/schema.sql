@@ -1,8 +1,13 @@
 DROP TABLE IF EXISTS symbitech_event_details;
 DROP TABLE IF EXISTS fest_heads;
 DROP TABLE IF EXISTS executives;
+DROP TABLE IF EXISTS heads;
+DROP TABLE IF EXISTS coheads;
 DROP TABLE IF EXISTS heads_and_coheads;
 DROP TABLE IF EXISTS members;
+DROP TABLE IF EXISTS advisory_committee;
+DROP TABLE IF EXISTS organizing_faculty;
+DROP TABLE IF EXISTS sponsors;
 
 -- -----------------------------------------------------
 -- Table: symbitech_event_details
@@ -52,10 +57,10 @@ CREATE TABLE IF NOT EXISTS executives (
 CREATE UNIQUE INDEX IF NOT EXISTS idx_executives_name ON executives(name);
 
 -- -----------------------------------------------------
--- Table: heads_and_coheads
--- Stores Heads and Co-Heads
+-- Table: heads
+-- Stores Department Heads
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS heads_and_coheads (
+CREATE TABLE IF NOT EXISTS heads (
     name VARCHAR(100) NOT NULL,
     position VARCHAR(150) NOT NULL,
     academic_year VARCHAR(100) NOT NULL,
@@ -65,7 +70,77 @@ CREATE TABLE IF NOT EXISTS heads_and_coheads (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS idx_heads_and_coheads_name ON heads_and_coheads(name);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_heads_name ON heads(name);
+
+-- -----------------------------------------------------
+-- Table: coheads
+-- Stores Department Co-Heads
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS coheads (
+    name VARCHAR(100) NOT NULL,
+    position VARCHAR(150) NOT NULL,
+    academic_year VARCHAR(100) NOT NULL,
+    comment VARCHAR(300),
+    description VARCHAR(500),
+    image_url VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_coheads_name ON coheads(name);
+
+-- -----------------------------------------------------
+-- Table: advisory_committee
+-- Stores Advisory Committee Members (name as Primary Key)
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS advisory_committee (
+    name VARCHAR(150) PRIMARY KEY,
+    position VARCHAR(150) NOT NULL,
+    academic_year VARCHAR(150) DEFAULT 'Advisory Board',
+    comment VARCHAR(300),
+    description VARCHAR(500),
+    image_url VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- -----------------------------------------------------
+-- Table: organizing_faculty
+-- Stores Organizing Faculty Members (name as Primary Key)
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS organizing_faculty (
+    name VARCHAR(150) PRIMARY KEY,
+    position VARCHAR(150) NOT NULL,
+    academic_year VARCHAR(150) DEFAULT 'Faculty Coordinator',
+    comment VARCHAR(300),
+    description VARCHAR(500),
+    image_url VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- -----------------------------------------------------
+-- Table: sponsors
+-- Stores Event Sponsors & Partners (image URL, metadata, and textual content)
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS sponsors (
+    id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    role VARCHAR(200) NOT NULL,
+    domain VARCHAR(200),
+    description TEXT,
+    image_url VARCHAR(500) NOT NULL,
+    telemetry_status VARCHAR(150) DEFAULT 'ACTIVE // VERIFIED',
+    node_ref VARCHAR(100),
+    accent VARCHAR(50) DEFAULT 'cyan',
+    icon VARCHAR(50) DEFAULT 'code',
+    stats JSONB DEFAULT '[]'::jsonb,
+    intel_overview TEXT,
+    intel_tracks JSONB DEFAULT '[]'::jsonb,
+    intel_perks JSONB DEFAULT '[]'::jsonb,
+    website_url VARCHAR(500),
+    display_order INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_sponsors_display_order ON sponsors(display_order);
 
 -- ==========================================
 -- SEED DATA: SYMBITECH 2026 ACTUAL EVENTS
@@ -193,3 +268,123 @@ ON CONFLICT (sr_no) DO UPDATE SET
   learning_outcome = EXCLUDED.learning_outcome,
   event_description = EXCLUDED.event_description,
   preferred_location = EXCLUDED.preferred_location;
+
+-- ==========================================
+-- SEED DATA: ADVISORY COMMITTEE MEMBERS
+-- ==========================================
+INSERT INTO advisory_committee (name, position, academic_year, comment, description, image_url)
+VALUES
+('Director sir', 'Director', 'Symbiosis Institute of Technology', 'Guiding innovation, leadership, and engineering excellence across SymbiTech.', 'Advisory Committee Leader providing strategic vision, institutional direction, and fostering technological leadership across ChronoNexia.', NULL),
+('DD mam', 'Deputy Director', 'Symbiosis Institute of Technology', 'Empowering students to pioneer technological frontiers and collaborative events.', 'Advisory Committee Member overseeing academic excellence, student initiatives, and event coordination.', NULL),
+('DD Sir', 'Deputy Director', 'Symbiosis Institute of Technology', 'Fostering multidisciplinary engineering spirit and campus-wide technical collaboration.', 'Advisory Committee Member guiding operational governance, infrastructure, and technical mentoring.', NULL)
+ON CONFLICT (name) DO UPDATE SET
+  position = EXCLUDED.position,
+  academic_year = EXCLUDED.academic_year,
+  comment = EXCLUDED.comment,
+  description = EXCLUDED.description;
+
+-- ==========================================
+-- SEED DATA: ORGANIZING FACULTY MEMBERS
+-- ==========================================
+INSERT INTO organizing_faculty (name, position, academic_year, comment, description, image_url)
+VALUES
+('Dr Sankit Kassa', 'Organizing Faculty Member', 'Faculty Coordinator', 'Inspiring engineering ingenuity and guiding student teams through technical challenges.', 'Organizing Faculty Member providing faculty supervision, academic insights, and operational guidance.', NULL),
+('Dr Sameer Seyed', 'Organizing Faculty Member', 'Faculty Coordinator', 'Nurturing future innovators and orchestrating seamless collaboration across departments.', 'Organizing Faculty Member facilitating academic mentoring and multi-club coordination.', NULL)
+ON CONFLICT (name) DO UPDATE SET
+  position = EXCLUDED.position,
+  academic_year = EXCLUDED.academic_year,
+  comment = EXCLUDED.comment,
+  description = EXCLUDED.description;
+
+-- ==========================================
+-- SEED DATA: SPONSORS & PARTNERS
+-- ==========================================
+INSERT INTO sponsors (
+    id,
+    name,
+    role,
+    domain,
+    description,
+    image_url,
+    telemetry_status,
+    node_ref,
+    accent,
+    icon,
+    stats,
+    intel_overview,
+    intel_tracks,
+    intel_perks,
+    website_url,
+    display_order
+)
+VALUES
+(
+    'gfg',
+    'GeeksforGeeks',
+    'Official Coding & Education Partner',
+    'ALGORITHM CORE & INTERVIEW PREP',
+    'Powering coding challenges, developer learning tracks, and technical skills assessment across campus nodes.',
+    '/src/assets/sponsors/GFG.png',
+    'CORE LEARNING PROTOCOL // VERIFIED',
+    '// NODE_REF: GFG-CORE-01',
+    'emerald',
+    'code',
+    '[{"label": "Coders Impacted", "value": "25M+"}, {"label": "DSA & Dev Tracks", "value": "150+"}, {"label": "Hiring Gateway", "value": "Direct"}]'::jsonb,
+    'India''s premier computer science platform offering contest hosting infrastructure, curated problem sets for ChronoNexia hackathon rounds, and premium course access.',
+    '["Competitive Programming & DSA Arena", "Full-Stack System Design Sprint", "AI & Algorithmic Problem Solving"]'::jsonb,
+    '["Premium GFG Subscriptions & Course Vouchers for Winners", "Direct Job & Internship Fast-Track Profiles", "Official Globally Verified Technical Certificates"]'::jsonb,
+    'https://www.geeksforgeeks.org',
+    1
+),
+(
+    'qlab',
+    'QLab',
+    'Quantum Research & Innovation Partner',
+    'QUANTUM COMPUTE & EXPERIMENTAL LABS',
+    'Fueling deep-tech experiments, quantum computing frameworks, and next-generation research clusters.',
+    '/src/assets/sponsors/Qlab.jpeg',
+    'QUANTUM LATTICE // ACTIVE',
+    '// NODE_REF: QLAB-EXP-Q8',
+    'amber',
+    'atom',
+    '[{"label": "Qubit Simulation", "value": "50+"}, {"label": "DeepTech Labs", "value": "12"}, {"label": "Research Grants", "value": "Tier-1"}]'::jsonb,
+    'Pioneering quantum algorithms, cryogenic hardware simulation, and quantum error mitigation frameworks for advanced research teams.',
+    '["Quantum Cryptography & Key Distribution", "Variational Quantum Eigensolver (VQE) Protocols", "Quantum-Classical Hybrid Architectures"]'::jsonb,
+    '["Cloud Quantum Simulator Compute Allocations", "Direct Lab Scientist Mentorship & Prototype Grants", "Fast-Track Summer Research Fellowships"]'::jsonb,
+    'https://qlab.org',
+    2
+),
+(
+    'unstop',
+    'Unstop',
+    'Official Platform & Opportunity Partner',
+    'TALENT ECOSYSTEM & COMPETITIONS',
+    'Driving student engagement, hackathon registration pipelines, and pan-India student reach.',
+    '/src/assets/sponsors/unstop.jpg',
+    'TALENT GRID // LINKED',
+    '// NODE_REF: UNSTOP-PIPE-09',
+    'cyan',
+    'rocket',
+    '[{"label": "Early Talent", "value": "16M+"}, {"label": "Registrations", "value": "100K+"}, {"label": "Campus Reach", "value": "Pan-India"}]'::jsonb,
+    'Global community and competitive platform connecting talent with opportunities, powering the registration ecosystem and real-time leaderboards for ChronoNexia 2026.',
+    '["Hackathon Lifecycle Management & Evaluation", "Pan-India College Leaderboards", "Exclusive Talent Pool Showcases"]'::jsonb,
+    '["Unstop Pro Access & Verified Skill Badges", "Direct Profile Highlighting to Fortune 500 Recruiters", "Exclusive Swag Kits & Mentorship Vouchers"]'::jsonb,
+    'https://unstop.com',
+    3
+)
+ON CONFLICT (id) DO UPDATE SET
+  name = EXCLUDED.name,
+  role = EXCLUDED.role,
+  domain = EXCLUDED.domain,
+  description = EXCLUDED.description,
+  image_url = EXCLUDED.image_url,
+  telemetry_status = EXCLUDED.telemetry_status,
+  node_ref = EXCLUDED.node_ref,
+  accent = EXCLUDED.accent,
+  icon = EXCLUDED.icon,
+  stats = EXCLUDED.stats,
+  intel_overview = EXCLUDED.intel_overview,
+  intel_tracks = EXCLUDED.intel_tracks,
+  intel_perks = EXCLUDED.intel_perks,
+  website_url = EXCLUDED.website_url,
+  display_order = EXCLUDED.display_order;
