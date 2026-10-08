@@ -1,17 +1,6 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": [
-      "/src/assets/*",
-      "/assets/*",
-      "*.{png,jpg,jpeg,JPG,JPEG,svg,ico,css,js,PNG,webp,gif}"
-    ]
-  },
-  "mimeTypes": {
-    ".json": "application/json",
-    ".JPG": "image/jpeg",
-    ".jpg": "image/jpeg",
-    ".PNG": "image/png",
-    ".png": "image/png"
+    "exclude": ["/assets/*", "/src/*"]
   }
 }
