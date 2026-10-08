@@ -5,9 +5,9 @@ import fs from "fs";
 import path from "path";
 
 /**
- * Custom Vite plugin to copy src/assets to dist/src/assets during production build.
- * Ensures dynamically-referenced database URLs (e.g. /src/assets/Photoshoot/IMG_5114.JPG)
- * are present in the final deployment distribution folder.
+ * Custom Vite plugin to copy web-ready assets to dist/src/assets during production build.
+ * Filters out unused multi-megabyte DSLR raw camera dumps in Photoshoot to keep the
+ * total deployment bundle well under Azure Static Web Apps' 250 MB size threshold.
  */
 function copySrcAssetsPlugin() {
   return {
@@ -15,19 +15,21 @@ function copySrcAssetsPlugin() {
     closeBundle() {
       const srcAssets = path.resolve(process.cwd(), "src/assets");
       const distSrcAssets = path.resolve(process.cwd(), "dist/src/assets");
-      const distAssetsPhotoshoot = path.resolve(process.cwd(), "dist/assets/Photoshoot");
 
       if (fs.existsSync(srcAssets)) {
-        // Copy to dist/src/assets (matching /src/assets/... URLs from DB)
-        fs.cpSync(srcAssets, distSrcAssets, { recursive: true });
-
-        // Also ensure dist/assets/Photoshoot exists for /assets/Photoshoot/... URLs
-        const photoshootSrc = path.join(srcAssets, "Photoshoot");
-        if (fs.existsSync(photoshootSrc)) {
-          fs.cpSync(photoshootSrc, distAssetsPhotoshoot, { recursive: true });
-        }
-
-        console.log("✅ Successfully copied src/assets to dist/src/assets for static deployment.");
+        fs.cpSync(srcAssets, distSrcAssets, {
+          recursive: true,
+          filter: (src) => {
+            // If it's a file inside Photoshoot, only include web-ready photos (<= 1MB)
+            // This includes all 35 team member images while skipping 130+ unused 6MB raw camera files
+            if (src.includes("Photoshoot") && !fs.statSync(src).isDirectory()) {
+              const size = fs.statSync(src).size;
+              return size <= 1024 * 1024;
+            }
+            return true;
+          },
+        });
+        console.log("✅ Successfully copied web-ready assets to dist/src/assets.");
       }
     },
   };
