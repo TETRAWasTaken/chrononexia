@@ -110,8 +110,8 @@ export default function SymbitechIntro() {
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Database fetch error:", err);
-        setDbError("Database connection unavailable. Ensure PostgreSQL database is running.");
+        console.error("Supabase BaaS fetch error:", err);
+        setDbError("Supabase connection unavailable. Verify VITE_SUPABASE_ANON_KEY in .env.");
         setLoading(false);
       });
   }, []);

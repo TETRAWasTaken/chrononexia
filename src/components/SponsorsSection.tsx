@@ -14,6 +14,7 @@ import {
   RefreshCw,
   WifiOff
 } from "lucide-react";
+import { getSponsorsDataCached } from "../utils/apiCache";
 import "../styles/sponsors.css";
 
 export interface SponsorItem {
@@ -63,11 +64,7 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/sponsors");
-      if (!res.ok) {
-        throw new Error(`HTTP Error ${res.status}: ${res.statusText || "Failed to query database"}`);
-      }
-      const data = await res.json();
+      const data = await getSponsorsDataCached();
       if (!Array.isArray(data) || data.length === 0) {
         throw new Error("No sponsor records found in the database.");
       }
@@ -235,7 +232,7 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
               // TELEMETRY HANDSHAKE IN PROGRESS...
             </span>
             <p className="font-rajdhani text-slate-300 text-sm">
-              Querying PostgreSQL cluster at <code className="text-cyan-300 font-mono">/api/sponsors</code>
+              Querying Supabase Cloud BaaS at <code className="text-cyan-300 font-mono">sponsors</code>
             </p>
           </div>
         )}
@@ -259,7 +256,7 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
 
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-red-950/80 border border-red-500/40 text-red-300 text-xs font-mono mb-4">
               <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
-              <span>ERR_CONNECTION_REFUSED // 503 DATABASE OFFLINE</span>
+              <span>ERR_SUPABASE_COMMUNICATION // BAAS TELEMETRY OFFLINE</span>
             </div>
 
             <h3 className="font-grotesk font-bold text-2xl text-white mb-2">
@@ -267,7 +264,7 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
             </h3>
 
             <p className="font-rajdhani text-slate-300 text-sm sm:text-base max-w-xl mx-auto mb-4">
-              Unable to establish a socket connection with the database endpoint at <code className="text-cyan-300 font-mono bg-slate-900 px-2 py-0.5 rounded">/api/sponsors</code>.
+              Direct connection to Supabase REST API could not be completed. Check <code className="text-cyan-300 font-mono bg-slate-900 px-2 py-0.5 rounded">.env</code> for <code className="text-cyan-300 font-mono">VITE_SUPABASE_ANON_KEY</code> and network connectivity.
             </p>
 
             <div className="font-mono text-xs text-red-400/90 bg-slate-950/90 border border-red-950 p-3 rounded-lg max-w-lg mx-auto mb-6 break-all">
