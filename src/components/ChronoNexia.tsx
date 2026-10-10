@@ -12,10 +12,9 @@ import SponsorsSection from "./SponsorsSection";
 
 interface ChronoNexiaProps {
   onSelectClub: (club: { id: string; name: string; era: "past" | "present" | "future" }) => void;
-  onWhySponsor?: () => void;
 }
 
-export default function ChronoNexia({ onSelectClub, onWhySponsor }: ChronoNexiaProps) {
+export default function ChronoNexia({ onSelectClub }: ChronoNexiaProps) {
   const [era, setEra] = useState<Era>("hero");
   const heroHubRef = useRef<HTMLDivElement>(null);
 
@@ -229,6 +228,11 @@ export default function ChronoNexia({ onSelectClub, onWhySponsor }: ChronoNexiaP
       <div id="symbitech" className="relative z-10">
         <SymbitechIntro />
       </div>
+
+      {/* Sponsors Section */}
+      <div id="sponsors" className="relative z-10">
+        <SponsorsSection />
+      </div>
       
       <div id="hero-hub" ref={heroHubRef} className="relative z-10">
         <ClubsHub onScrollToEra={scrollToEra} />
@@ -242,11 +246,6 @@ export default function ChronoNexia({ onSelectClub, onWhySponsor }: ChronoNexiaP
           onSelectClub={onSelectClub}
         />
       ))}
-
-      {/* Sponsors Section */}
-      <div id="sponsors" className="relative z-10">
-        <SponsorsSection onWhySponsor={onWhySponsor} />
-      </div>
 
       <Footer />
     </div>

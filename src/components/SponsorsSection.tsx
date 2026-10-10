@@ -1,11 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Zap,
-  ExternalLink,
-  Download,
   X,
-  Sparkles,
   ChevronRight,
   Code2,
   Atom,
@@ -28,19 +24,13 @@ export interface SponsorItem {
   nodeRef: string;
   accent: "emerald" | "amber" | "cyan";
   icon: "code" | "atom" | "rocket";
-  stats: { label: string; value: string }[];
   intelDetails: {
     overview: string;
-    tracks: string[];
     perks: string[];
   };
 }
 
-interface SponsorsSectionProps {
-  onWhySponsor?: () => void;
-}
-
-export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) {
+export default function SponsorsSection() {
   const [sponsorsList, setSponsorsList] = useState<SponsorItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,28 +60,6 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
       }
 
       const mapped: SponsorItem[] = data.map((item) => {
-        let parsedStats: { label: string; value: string }[] = [];
-        try {
-          parsedStats = Array.isArray(item.stats)
-            ? item.stats
-            : typeof item.stats === "string"
-            ? JSON.parse(item.stats)
-            : [];
-        } catch {
-          parsedStats = [];
-        }
-
-        let parsedTracks: string[] = [];
-        try {
-          parsedTracks = Array.isArray(item.intel_tracks)
-            ? item.intel_tracks
-            : typeof item.intel_tracks === "string"
-            ? JSON.parse(item.intel_tracks)
-            : [];
-        } catch {
-          parsedTracks = [];
-        }
-
         let parsedPerks: string[] = [];
         try {
           parsedPerks = Array.isArray(item.intel_perks)
@@ -114,10 +82,8 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
           nodeRef: item.node_ref || `// NODE_REF: ${(item.id || "SYS").toUpperCase()}`,
           accent: (item.accent || "cyan") as "emerald" | "amber" | "cyan",
           icon: (item.icon || "code") as "code" | "atom" | "rocket",
-          stats: parsedStats,
           intelDetails: {
             overview: item.intel_overview || item.description || "",
-            tracks: parsedTracks,
             perks: parsedPerks,
           },
         };
@@ -195,19 +161,8 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
             The trailblazing institutions and industry leaders powering ChronoNexia across past, present, and future eras.
           </p>
 
-          {/* Action Button & Micro-Stats */}
+          {/* Micro-Stats */}
           <div className="flex flex-wrap items-center justify-center gap-4">
-            {onWhySponsor && (
-              <button
-                onClick={onWhySponsor}
-                className="sp-chamfer-rb inline-flex items-center gap-2.5 px-7 py-3.5 bg-cyan-500/10 border border-cyan-400/60 text-cyan-300 hover:bg-cyan-400 hover:text-slate-950 font-mono text-xs sm:text-sm font-bold tracking-widest hover:shadow-[0_0_30px_rgba(0,240,255,0.6)] transition-all duration-200 active:scale-95 cursor-pointer"
-                aria-label="Open Why Sponsor Us Pitch Deck"
-              >
-                <Sparkles className="w-4 h-4 text-amber-300" />
-                <span>✦ WHY SPONSOR US? (PITCH DECK)</span>
-                <ExternalLink className="w-4 h-4" />
-              </button>
-            )}
             <div className="inline-flex items-center gap-2 px-4 py-3 rounded bg-slate-900/60 border border-slate-700/60 text-xs font-mono text-slate-300">
               <span className={error ? "text-red-400 font-bold" : "text-cyan-400 font-bold"}>
                 {error ? "NODE STATUS: FAILED" : `${sponsorsList.length} SPONSORS ACTIVE`}
@@ -279,15 +234,6 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
                 <RefreshCw className="w-4 h-4" />
                 <span>RETRY CONNECTION</span>
               </button>
-
-              {onWhySponsor && (
-                <button
-                  onClick={onWhySponsor}
-                  className="sp-chamfer-rb px-6 py-3 bg-slate-900 border border-slate-700 text-slate-300 hover:text-white font-mono text-xs tracking-wider transition-all duration-200 cursor-pointer"
-                >
-                  <span>VIEW PITCH DECK DIRECTLY</span>
-                </button>
-              )}
             </div>
           </motion.div>
         )}
@@ -328,12 +274,6 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
                 : isAmber
                 ? "bg-amber-400 sp-beacon-amber"
                 : "bg-cyan-400 sp-beacon-cyan";
-
-              const statValueColor = isEmerald
-                ? "text-emerald-400"
-                : isAmber
-                ? "text-amber-300"
-                : "text-cyan-300";
 
               return (
                 <div
@@ -396,27 +336,6 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
                   </div>
 
                   <div>
-                    {/* Stats Strip */}
-                    {sponsor.stats && sponsor.stats.length > 0 && (
-                      <div className="grid grid-cols-3 gap-2 py-3 px-3 rounded bg-slate-950/80 border border-slate-800 mb-6 text-center font-mono">
-                        {sponsor.stats.map((stat, idx) => (
-                          <div
-                            key={stat.label}
-                            className={`${
-                              idx < sponsor.stats.length - 1 ? "border-r border-slate-800 pr-2" : "pl-2"
-                            }`}
-                          >
-                            <span className={`${statValueColor} font-bold text-sm sm:text-base block`}>
-                              {stat.value}
-                            </span>
-                            <span className="text-[9px] text-slate-400 uppercase tracking-wider block truncate">
-                              {stat.label}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
                     {/* Card Footer: Telemetry Code & Action Link */}
                     <div className="flex items-center justify-between pt-4 border-t border-slate-800 font-mono text-xs">
                       <span className="text-slate-500 tracking-wide text-[11px]">
@@ -434,94 +353,7 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
           </div>
         )}
 
-        {/* ==================== 4. Telemetry Ticker & Integrated CTA Strip ==================== */}
-        <section className="relative sp-glass-panel-elevated border border-cyan-400/30 rounded-xl overflow-hidden shadow-[0_0_40px_rgba(0,240,255,0.12)]">
-          {/* Ambient Laser Scan Shimmer */}
-          <div className="absolute inset-0 sp-scanline-effect pointer-events-none opacity-30" />
 
-          {/* Reticle corner brackets */}
-          <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-cyan-400" />
-          <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-cyan-400" />
-          <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyan-400" />
-          <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-cyan-400" />
-
-          {/* Metrics Ticker Strip */}
-          <div className="border-b border-cyan-500/20 py-6 px-6 sm:px-12 grid grid-cols-2 md:grid-cols-4 gap-6 text-center font-mono">
-            <div className="flex flex-col items-center justify-center p-2 border-r border-slate-800 last:border-r-0">
-              <span className="text-2xl sm:text-3xl font-extrabold text-cyan-300 mb-1">
-                {sponsorsList.length > 0 ? `${sponsorsList.length}+` : "3+"}
-              </span>
-              <span className="text-xs text-slate-400 uppercase tracking-wider">Tech Partners</span>
-            </div>
-            <div className="flex flex-col items-center justify-center p-2 border-r border-slate-800 last:border-r-0">
-              <span className="text-2xl sm:text-3xl font-extrabold text-amber-400 mb-1">₹15L+</span>
-              <span className="text-xs text-slate-400 uppercase tracking-wider">Prize Pool Backed</span>
-            </div>
-            <div className="flex flex-col items-center justify-center p-2 border-r border-slate-800 last:border-r-0">
-              <span className="text-2xl sm:text-3xl font-extrabold text-purple-400 mb-1">15,000+</span>
-              <span className="text-xs text-slate-400 uppercase tracking-wider">Footfall Exposure</span>
-            </div>
-            <div className="flex flex-col items-center justify-center p-2">
-              <span className="text-2xl sm:text-3xl font-extrabold text-cyan-400 mb-1">100%</span>
-              <span className="text-xs text-slate-400 uppercase tracking-wider">Verified IP Retainment</span>
-            </div>
-          </div>
-
-          {/* Integrated Action Strip */}
-          <div className="p-8 sm:p-12 text-center max-w-3xl mx-auto">
-            <span className="text-xs font-mono text-cyan-400 tracking-widest uppercase block mb-3 font-semibold">
-              // CONSORTIUM INTAKE OPEN // CYBERNETIC COHORT 2026
-            </span>
-            <h3 className="font-grotesk font-bold text-2xl sm:text-3xl text-white mb-4">
-              Fuel the Next Multiverse Cycle // Join ChronoNexia 2026 as a Partner
-            </h3>
-            <p className="font-rajdhani text-sm sm:text-base text-slate-300 mb-8 max-w-xl mx-auto">
-              Gain direct protocol integration, recruit high-caliber engineers, and deploy your developer tooling to over 15,000 global participants.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              {onWhySponsor ? (
-                <button
-                  onClick={onWhySponsor}
-                  className="sp-chamfer-rb px-8 py-3.5 bg-cyan-400 text-slate-950 font-mono text-xs sm:text-sm font-bold tracking-widest hover:shadow-[0_0_30px_rgba(0,240,255,0.7)] transition-all duration-200 active:scale-95 flex items-center gap-2 cursor-pointer"
-                >
-                  <Zap className="w-4 h-4 text-slate-950 fill-current" />
-                  <span>BECOME A SPONSOR</span>
-                </button>
-              ) : (
-                <a
-                  href="mailto:consortium@chrononexia.network?subject=ChronoNexia%202026%20Sponsorship%20Inquiry"
-                  className="sp-chamfer-rb px-8 py-3.5 bg-cyan-400 text-slate-950 font-mono text-xs sm:text-sm font-bold tracking-widest hover:shadow-[0_0_30px_rgba(0,240,255,0.7)] transition-all duration-200 active:scale-95 flex items-center gap-2 cursor-pointer"
-                >
-                  <Zap className="w-4 h-4 text-slate-950 fill-current" />
-                  <span>BECOME A SPONSOR</span>
-                </a>
-              )}
-
-              {onWhySponsor && (
-                <button
-                  onClick={onWhySponsor}
-                  className="sp-chamfer-rb px-6 py-3.5 bg-slate-950/90 border border-slate-600 text-slate-200 hover:text-cyan-300 hover:border-cyan-400 font-mono text-xs sm:text-sm tracking-widest transition-all duration-200 active:scale-95 flex items-center gap-2 cursor-pointer"
-                >
-                  <Download className="w-4 h-4" />
-                  <span>VIEW SPONSORSHIP MATRIX</span>
-                </button>
-              )}
-            </div>
-
-            <div className="mt-6 text-xs font-mono text-slate-500">
-              Direct Inquiries:{" "}
-              <a
-                href="mailto:consortium@chrononexia.network"
-                className="text-cyan-400 hover:underline"
-              >
-                consortium@chrononexia.network
-              </a>{" "}
-              // Response Latency &lt; 2hr
-            </div>
-          </div>
-        </section>
       </div>
 
       {/* ==================== 5. Interactive Partner Intel Modal ==================== */}
@@ -586,32 +418,18 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
                       </div>
                     )}
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {selectedSponsor.intelDetails.tracks.length > 0 && (
-                        <div className="bg-slate-900/60 p-3 rounded border border-slate-800">
-                          <span className="text-xs font-mono text-cyan-300 block mb-1 font-semibold">
-                            Supported Tracks
-                          </span>
-                          <ul className="text-xs space-y-1 list-disc list-inside text-slate-400">
-                            {selectedSponsor.intelDetails.tracks.map((t) => (
-                              <li key={t}>{t}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                      {selectedSponsor.intelDetails.perks.length > 0 && (
-                        <div className="bg-slate-900/60 p-3 rounded border border-slate-800">
-                          <span className="text-xs font-mono text-purple-300 block mb-1 font-semibold">
-                            Participant Perks &amp; Grants
-                          </span>
-                          <ul className="text-xs space-y-1 list-disc list-inside text-slate-400">
-                            {selectedSponsor.intelDetails.perks.map((p) => (
-                              <li key={p}>{p}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
+                    {selectedSponsor.intelDetails.perks.length > 0 && (
+                      <div className="bg-slate-900/60 p-4 rounded-lg border border-slate-800">
+                        <span className="text-xs font-mono text-purple-300 block mb-2 font-semibold">
+                          Participant Perks &amp; Grants
+                        </span>
+                        <ul className="text-xs space-y-1.5 list-disc list-inside text-slate-400">
+                          {selectedSponsor.intelDetails.perks.map((p) => (
+                            <li key={p}>{p}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
@@ -619,18 +437,12 @@ export default function SponsorsSection({ onWhySponsor }: SponsorsSectionProps) 
               {/* Modal Footer */}
               <div className="flex items-center justify-between pt-4 border-t border-slate-800 font-mono text-xs">
                 <span className="text-slate-500">{selectedSponsor.nodeRef}</span>
-                {onWhySponsor && (
-                  <button
-                    onClick={() => {
-                      setSelectedSponsor(null);
-                      onWhySponsor();
-                    }}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded bg-cyan-400 text-slate-950 font-bold hover:bg-cyan-300 transition-colors cursor-pointer"
-                  >
-                    <span>View Full Pitch Deck</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </button>
-                )}
+                <button
+                  onClick={() => setSelectedSponsor(null)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 font-semibold transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
               </div>
             </motion.div>
           </div>
