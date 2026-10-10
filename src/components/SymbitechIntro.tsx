@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Sparkles, Shield, User, Users, Quote, Award, Crown, BookOpen, Building2, Trophy, Globe, Cpu } from "lucide-react";
 import { getTeamDataCached } from "../utils/apiCache";
 import MemberModal from "./MemberModal";
+import RegistrationPaymentSection from "./RegistrationPaymentSection";
 import symbiLogo from "../assets/SYMBITECH/logo.png";
 import inaugurationImg from "../assets/Symbitech2025/image.png";
 import bikerallyImg from "../assets/Symbitech2025/image copy.png";
@@ -353,6 +354,11 @@ export default function SymbitechIntro() {
         </div>
 
         {/* ========================================== */}
+        {/* SECTION 4.5: REGISTRATION & PAYMENT       */}
+        {/* ========================================== */}
+        <RegistrationPaymentSection />
+
+        {/* ========================================== */}
         {/* SECTION 5: ORGANIZING TEAM                */}
         {/* ========================================== */}
         <div className="w-full">
@@ -528,9 +534,11 @@ function TeamCard({ member, index, badgeGlow, onClick }: TeamCardProps) {
   const [imgError, setImgError] = useState(false);
   const initials = getInitials(member.name);
   const rawSrc = member.image_url
-    ? member.image_url.startsWith("/")
+    ? /^https?:\/\//i.test(member.image_url)
       ? member.image_url
-      : `/${member.image_url}`
+      : member.image_url.startsWith("/")
+        ? member.image_url
+        : `/${member.image_url}`
     : null;
   const photoSrc = rawSrc ? encodeURI(rawSrc) : null;
 

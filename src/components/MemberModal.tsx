@@ -35,9 +35,11 @@ export default function MemberModal({ member, badgeGlow = "from-cyan-500 to-blue
 
   const initials = member ? getInitials(member.name) : "OC";
   const rawSrc = member?.image_url
-    ? member.image_url.startsWith("/")
+    ? /^https?:\/\//i.test(member.image_url)
       ? member.image_url
-      : `/${member.image_url}`
+      : member.image_url.startsWith("/")
+        ? member.image_url
+        : `/${member.image_url}`
     : null;
   const photoSrc = rawSrc ? encodeURI(rawSrc) : null;
 
