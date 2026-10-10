@@ -111,6 +111,8 @@ const SLUG_TO_SR_NO = {
   "sec": 12,
   "epic": 12,
   "symbiosis-economic-club": 12,
+  "symbiosis-economics-club": 12,
+  "symbiosis-economics-club-(sec)": 12,
   "arvr": 13,
   "arvr-club": 13,
   "ar-vr-club": 13,
@@ -336,9 +338,7 @@ app.get("/api/sponsors", async (req, res) => {
         node_ref,
         accent,
         icon,
-        stats,
         intel_overview,
-        intel_tracks,
         intel_perks,
         website_url,
         display_order

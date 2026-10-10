@@ -41,9 +41,7 @@ export interface SponsorRecord {
   node_ref?: string | null;
   accent?: string | null;
   icon?: string | null;
-  stats?: any;
   intel_overview?: string | null;
-  intel_tracks?: any;
   intel_perks?: any;
   website_url?: string | null;
   display_order?: number | null;
@@ -89,6 +87,8 @@ export const SLUG_TO_SR_NO: Record<string, number> = {
   "sec": 12,
   "epic": 12,
   "symbiosis-economic-club": 12,
+  "symbiosis-economics-club": 12,
+  "symbiosis-economics-club-(sec)": 12,
   "arvr": 13,
   "arvr-club": 13,
   "ar-vr-club": 13,
@@ -330,7 +330,7 @@ export async function getSponsorsDataCached(forceRefresh = false): Promise<Spons
   const { data, error } = await supabase
     .from("sponsors")
     .select(
-      "id, name, role, domain, description, image_url, telemetry_status, node_ref, accent, icon, stats, intel_overview, intel_tracks, intel_perks, website_url, display_order"
+      "id, name, role, domain, description, image_url, telemetry_status, node_ref, accent, icon, intel_overview, intel_perks, website_url, display_order"
     )
     .order("display_order", { ascending: true })
     .order("name", { ascending: true });

@@ -95,7 +95,7 @@ export const PAST_SCHEDULE: PastEvent[] = [
   },
   {
     time: "EPOCH-01",
-    title: "Symbiosis Entrepreneurship Club (SEC)",
+    title: "Symbiosis Economics Club (SEC)",
     room: "Incubation Centre",
     code: "0x06",
     logo: secLogo,
