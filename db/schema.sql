@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS symbitech_event_details;
+DROP TABLE IF EXISTS chief_guests;
 DROP TABLE IF EXISTS fest_heads;
 DROP TABLE IF EXISTS executives;
 DROP TABLE IF EXISTS heads;
@@ -115,6 +116,24 @@ CREATE TABLE IF NOT EXISTS organizing_faculty (
     image_url VARCHAR(500),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- -----------------------------------------------------
+-- Table: chief_guests
+-- Stores Dignitaries, Chief Guests, and Keynote Speakers
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS chief_guests (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    designation VARCHAR(200) NOT NULL,
+    description TEXT,
+    organization VARCHAR(200),
+    image_url VARCHAR(500),
+    badge VARCHAR(100) DEFAULT 'Chief Guest',
+    display_order INT DEFAULT 1,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_chief_guests_display_order ON chief_guests(display_order);
 
 -- -----------------------------------------------------
 -- Table: sponsors

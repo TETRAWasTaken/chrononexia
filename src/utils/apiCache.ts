@@ -11,6 +11,17 @@ export interface TeamMember {
   image_url?: string | null;
 }
 
+export interface ChiefGuest {
+  id?: string;
+  name: string;
+  designation: string;
+  description?: string | null;
+  organization?: string | null;
+  image_url?: string | null;
+  badge?: string | null;
+  display_order?: number | null;
+}
+
 export interface TeamDataResponse {
   festHeads: TeamMember[];
   executives: TeamMember[];
@@ -19,6 +30,7 @@ export interface TeamDataResponse {
   headsAndCoheads: TeamMember[];
   advisoryCommittee: TeamMember[];
   organizingFaculty: TeamMember[];
+  chiefGuests: ChiefGuest[];
 }
 
 export interface ClubDetailsResponse {
@@ -158,6 +170,7 @@ export async function getTeamDataCached(forceRefresh = false): Promise<TeamDataR
     headsAndCoheadsRes,
     advisoryRes,
     organizingFacultyRes,
+    chiefGuestsRes,
   ] = await Promise.all([
     supabase
       .from("fest_heads")
@@ -185,6 +198,10 @@ export async function getTeamDataCached(forceRefresh = false): Promise<TeamDataR
     supabase
       .from("organizing_faculty")
       .select("name, position, academic_year, comment, description, image_url"),
+    supabase
+      .from("chief_guests")
+      .select("id, name, designation, description, organization, image_url, badge, display_order")
+      .order("display_order", { ascending: true }),
   ]);
 
   if (festHeadsRes.error && executivesRes.error) {
@@ -205,6 +222,12 @@ export async function getTeamDataCached(forceRefresh = false): Promise<TeamDataR
     coHeadsRows = all.filter((m) => /co[- ]?head/i.test(m.position || ""));
   }
 
+  // Safely extract chief guests without failing if table is yet to be populated
+  const chiefGuestsRows: ChiefGuest[] =
+    chiefGuestsRes && !chiefGuestsRes.error && chiefGuestsRes.data
+      ? (chiefGuestsRes.data as ChiefGuest[])
+      : [];
+
   // Apply custom ordering
   const advisorySorted: TeamMember[] = ((advisoryRes.data as TeamMember[]) || []).sort(sortAdvisory);
   const facultySorted: TeamMember[] = ((organizingFacultyRes.data as TeamMember[]) || []).sort(sortFaculty);
@@ -217,6 +240,7 @@ export async function getTeamDataCached(forceRefresh = false): Promise<TeamDataR
     headsAndCoheads: [...headsRows, ...coHeadsRows],
     advisoryCommittee: advisorySorted,
     organizingFaculty: facultySorted,
+    chiefGuests: chiefGuestsRows,
   };
 
   cacheStore.teamData = teamData;
@@ -342,3 +366,12 @@ export async function getSponsorsDataCached(forceRefresh = false): Promise<Spons
   cacheStore.sponsorsData = (data as SponsorRecord[]) || [];
   return cacheStore.sponsorsData;
 }
+
+/**
+ * Fetches chief guests directly from Supabase BaaS REST API with in-memory caching.
+ */
+export async function getChiefGuestsCached(forceRefresh = false): Promise<ChiefGuest[]> {
+  const team = await getTeamDataCached(forceRefresh);
+  return team.chiefGuests;
+}
+

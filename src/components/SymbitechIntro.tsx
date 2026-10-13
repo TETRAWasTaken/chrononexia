@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, Shield, User, Users, Quote, Award, Crown, BookOpen, Building2, Trophy, Globe, Cpu } from "lucide-react";
-import { getTeamDataCached } from "../utils/apiCache";
+import { getTeamDataCached, ChiefGuest } from "../utils/apiCache";
 import MemberModal from "./MemberModal";
 import RegistrationPaymentSection from "./RegistrationPaymentSection";
 import symbiLogo from "../assets/SYMBITECH/logo.png";
@@ -29,6 +29,7 @@ interface TeamData {
   headsAndCoheads: TeamMember[];
   advisoryCommittee: TeamMember[];
   organizingFaculty: TeamMember[];
+  chiefGuests: ChiefGuest[];
 }
 
 const GLIMPSES = [
@@ -78,6 +79,18 @@ function getInitials(name: string): string {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
+export const DEFAULT_CHIEF_GUESTS: ChiefGuest[] = [
+  {
+    id: "default-cg-1",
+    name: "Dr. Shailendra Gade",
+    designation: "Distinguished Scientist & Technology Director",
+    organization: "Defence Research & Development Organisation (DRDO)",
+    description: "Eminent defense scientist and technology strategist with groundbreaking contributions to aerospace avionics, systems architecture, and indigenous deep-tech engineering.",
+    badge: "Chief Guest of Honor",
+    image_url: null,
+  },
+];
+
 export default function SymbitechIntro() {
   const [teamData, setTeamData] = useState<TeamData>({
     festHeads: [],
@@ -87,6 +100,7 @@ export default function SymbitechIntro() {
     headsAndCoheads: [],
     advisoryCommittee: [],
     organizingFaculty: [],
+    chiefGuests: [],
   });
   const [loading, setLoading] = useState(true);
   const [dbError, setDbError] = useState<string | null>(null);
@@ -107,6 +121,7 @@ export default function SymbitechIntro() {
           headsAndCoheads: rawHeadsAndCoheads,
           advisoryCommittee: data.advisoryCommittee || [],
           organizingFaculty: data.organizingFaculty || [],
+          chiefGuests: data.chiefGuests || [],
         });
         setLoading(false);
       })
@@ -116,6 +131,11 @@ export default function SymbitechIntro() {
         setLoading(false);
       });
   }, []);
+
+  const displayChiefGuests =
+    teamData.chiefGuests && teamData.chiefGuests.length > 0
+      ? teamData.chiefGuests
+      : DEFAULT_CHIEF_GUESTS;
 
   return (
     <div className="relative w-full overflow-hidden bg-transparent z-10 pt-24 pb-20 px-4 sm:px-6 md:px-8">
@@ -261,6 +281,136 @@ export default function SymbitechIntro() {
             </div>
           </motion.div>
         </div>
+
+        {/* ======================================================== */}
+        {/* SECTION 2.5: CHIEF GUEST SECTION                         */}
+        {/* ======================================================== */}
+        {displayChiefGuests.length > 0 && (
+          <div className="w-full mb-24">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-10"
+            >
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-amber-400/30 bg-amber-400/10 text-amber-300 text-xs font-mono mb-3 shadow-[0_0_15px_rgba(251,191,36,0.12)]">
+                <Crown className="w-3.5 h-3.5 text-amber-400" />
+                <span>Distinguished Dignitary // Keynote Speaker</span>
+              </div>
+              <h3 className="font-grotesk font-extrabold text-2xl sm:text-3xl md:text-4xl text-white tracking-tight">
+                Honorable <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-300 via-orange-400 to-yellow-500">Chief Guest</span>
+              </h3>
+              <p className="font-rajdhani text-sm sm:text-base text-slate-300 mt-2 max-w-2xl mx-auto">
+                Eminent industry visionary and pioneer gracing ChronoNexia & Symbitech
+              </p>
+              <div className="w-20 h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-yellow-600 mx-auto mt-4 rounded-full shadow-[0_0_12px_rgba(251,191,36,0.4)]" />
+            </motion.div>
+
+            <div className="max-w-4xl mx-auto w-full">
+              {displayChiefGuests.map((guest, idx) => {
+                const guestInitials = getInitials(guest.name);
+                return (
+                  <motion.div
+                    key={guest.id || idx}
+                    initial={{ opacity: 0, y: 25 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: idx * 0.1 }}
+                    whileHover={{ scale: 1.01 }}
+                    onClick={() =>
+                      setSelectedMember({
+                        member: {
+                          name: guest.name,
+                          position: guest.designation,
+                          academic_year: guest.organization || "Chief Guest of Honor",
+                          description: guest.description,
+                          comment: guest.description,
+                          image_url: guest.image_url,
+                        },
+                        badgeGlow: "from-amber-400 via-orange-500 to-yellow-600",
+                      })
+                    }
+                    className="relative p-6 sm:p-8 md:p-10 rounded-3xl border border-amber-400/30 bg-nexus-card/95 backdrop-blur-xl overflow-hidden shadow-2xl hover:border-amber-400/60 transition-all duration-300 group cursor-pointer"
+                  >
+                    {/* Ambient Glows */}
+                    <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+                    <div className="absolute bottom-0 left-0 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl pointer-events-none -ml-20 -mb-20" />
+
+                    <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8">
+                      {/* Dignitary Avatar / Portrait */}
+                      <div className="relative w-32 h-32 sm:w-40 sm:h-40 shrink-0 rounded-2xl sm:rounded-3xl border-2 border-amber-400/40 bg-slate-950 overflow-hidden shadow-[0_0_25px_rgba(251,191,36,0.2)] group-hover:border-amber-400/70 transition-colors flex items-center justify-center">
+                        {guest.image_url ? (
+                          <img
+                            src={guest.image_url}
+                            alt={guest.name}
+                            className="w-full h-full object-cover object-top transform group-hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-tr from-amber-500 via-orange-500 to-yellow-600 p-2 text-center">
+                            <Crown className="w-8 h-8 text-white/80 mb-1" />
+                            <span className="font-grotesk font-black text-2xl text-white tracking-wider">
+                              {guestInitials}
+                            </span>
+                          </div>
+                        )}
+                        <span className="absolute bottom-2 px-2.5 py-0.5 rounded-full border border-amber-300/40 bg-black/80 font-mono text-[9px] uppercase tracking-wider text-amber-300 font-bold backdrop-blur-md">
+                          {guest.badge || "Chief Guest"}
+                        </span>
+                      </div>
+
+                      {/* Dignitary Details */}
+                      <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left min-w-0">
+                        <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-2">
+                          <span className="px-2.5 py-0.5 rounded-full border border-amber-400/30 bg-amber-400/10 text-amber-300 font-mono text-[10px] uppercase font-bold tracking-wider">
+                            Keynote Address
+                          </span>
+                          <span className="px-2.5 py-0.5 rounded-full border border-cyan-400/30 bg-cyan-400/10 text-cyan-300 font-mono text-[10px] uppercase font-semibold">
+                            Symbitech 2026
+                          </span>
+                        </div>
+
+                        <h4 className="font-grotesk font-extrabold text-2xl sm:text-3xl text-white group-hover:text-amber-300 transition-colors">
+                          {guest.name}
+                        </h4>
+
+                        <p className="font-mono text-sm sm:text-base text-amber-400 font-semibold tracking-wide uppercase mt-1">
+                          {guest.designation}
+                        </p>
+
+                        {guest.organization && (
+                          <div className="flex items-center gap-1.5 text-xs sm:text-sm font-rajdhani text-slate-300 mt-1.5 font-medium">
+                            <Building2 className="w-3.5 h-3.5 text-amber-400/80 shrink-0" />
+                            <span>{guest.organization}</span>
+                          </div>
+                        )}
+
+                        {guest.description && (
+                          <div className="mt-4 p-4 rounded-2xl border border-white/5 bg-white/[0.03] backdrop-blur-sm relative w-full text-left">
+                            <div className="flex items-start gap-2">
+                              <Quote className="w-4 h-4 text-amber-400/70 shrink-0 mt-0.5" />
+                              <p className="font-rajdhani text-sm sm:text-base text-slate-200 leading-relaxed italic">
+                                "{guest.description}"
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between w-full mt-4 pt-3 border-t border-white/5">
+                          <span className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
+                            <Sparkles className="w-3 h-3 text-amber-400" /> Click to view dignitary profile
+                          </span>
+                          <span className="text-xs font-grotesk font-semibold text-amber-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                            View Profile ➔
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* ======================================================== */}
         {/* SECTION 3: ADVISORY COMMITTEE MEMBERS                    */}

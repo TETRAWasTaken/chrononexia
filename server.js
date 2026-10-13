@@ -268,6 +268,18 @@ app.get("/api/team", async (req, res) => {
       console.warn("Could not query organizing_faculty from DB, fallback available:", facErr.message);
     }
 
+    let chiefGuestsRows = [];
+    try {
+      const chiefGuestsRes = await pool.query(`
+        SELECT id, name, designation, description, organization, image_url, badge, display_order 
+        FROM chief_guests 
+        ORDER BY display_order ASC, name ASC
+      `);
+      chiefGuestsRows = chiefGuestsRes.rows;
+    } catch (cgErr) {
+      console.warn("Could not query chief_guests from DB, fallback available:", cgErr.message);
+    }
+
     res.json({
       festHeads: festHeadsRes.rows,
       executives: executivesRes.rows,
@@ -276,10 +288,25 @@ app.get("/api/team", async (req, res) => {
       headsAndCoheads: [...headsRows, ...coHeadsRows],
       advisoryCommittee: advisoryRows,
       organizingFaculty: organizingFacultyRows,
+      chiefGuests: chiefGuestsRows,
     });
   } catch (err) {
     console.error("Error querying team members from DB:", err);
     res.status(500).json({ error: "Database error querying team members" });
+  }
+});
+
+// Standalone Chief Guests endpoint
+app.get("/api/chief-guests", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT id, name, designation, description, organization, image_url, badge, display_order 
+      FROM chief_guests 
+      ORDER BY display_order ASC, name ASC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: "Error fetching chief guests from database" });
   }
 });
 

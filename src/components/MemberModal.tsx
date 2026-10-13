@@ -44,19 +44,38 @@ export default function MemberModal({ member, badgeGlow = "from-cyan-500 to-blue
   const photoSrc = rawSrc ? encodeURI(rawSrc) : null;
 
   // Detect Member Category
-  const isAdvisory = member
+  const isChiefGuest = member
+    ? /chief\s*guest|keynote|dignitary|honorable/i.test(member.position || "") ||
+      /chief\s*guest|keynote|dignitary/i.test(member.academic_year || "")
+    : false;
+
+  const isAdvisory = member && !isChiefGuest
     ? /director|advisory/i.test(member.position || "") ||
       /advisory/i.test(member.academic_year || "") ||
       /director|dd\s/i.test(member.name || "")
     : false;
 
-  const isFaculty = member && !isAdvisory
+  const isFaculty = member && !isAdvisory && !isChiefGuest
     ? /faculty/i.test(member.position || "") ||
       /faculty/i.test(member.academic_year || "") ||
       /^dr\b/i.test(member.name || "")
     : false;
 
-  const roleTheme = isAdvisory
+  const roleTheme = isChiefGuest
+    ? {
+        badgeText: "Chief Guest",
+        statusText: "Dignitary of Honor",
+        statusBorder: "border-amber-400/40 bg-amber-400/15 text-amber-300",
+        footerText: "ChronoNexia Keynote & Chief Guest",
+        footerIcon: Crown,
+        pillBorder: "border-amber-400/40 bg-amber-400/15 text-amber-300",
+        pillIcon: Award,
+        metaIcon: Building2,
+        accentBorder: "border-amber-500/40",
+        accentGlow: "bg-amber-500/15",
+        accentText: "text-amber-400",
+      }
+    : isAdvisory
     ? {
         badgeText: "Advisory Board",
         statusText: "Institutional Advisory",
@@ -98,7 +117,7 @@ export default function MemberModal({ member, badgeGlow = "from-cyan-500 to-blue
         accentText: "text-cyan-400",
       };
 
-  const StatusIcon = isAdvisory ? Award : isFaculty ? GraduationCap : UserCheck;
+  const StatusIcon = isChiefGuest ? Crown : isAdvisory ? Award : isFaculty ? GraduationCap : UserCheck;
   const FooterIcon = roleTheme.footerIcon;
   const PillIcon = roleTheme.pillIcon;
   const MetaIcon = roleTheme.metaIcon;
