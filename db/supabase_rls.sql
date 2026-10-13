@@ -76,6 +76,14 @@ CREATE POLICY "Allow public read access on sponsors"
   TO anon, authenticated
   USING (true);
 
+-- 10. chief_guests
+ALTER TABLE IF EXISTS chief_guests ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public read access on chief_guests" ON chief_guests;
+CREATE POLICY "Allow public read access on chief_guests"
+  ON chief_guests FOR SELECT
+  TO anon, authenticated
+  USING (true);
+
 -- Grant schema usage to anon role
 GRANT USAGE ON SCHEMA public TO anon, authenticated;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon, authenticated;
