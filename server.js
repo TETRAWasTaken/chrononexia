@@ -239,9 +239,9 @@ app.get("/api/team", async (req, res) => {
         FROM advisory_committee 
         ORDER BY 
           CASE 
-            WHEN LOWER(name) LIKE '%director%' AND LOWER(name) NOT LIKE '%deputy%' AND LOWER(name) NOT LIKE '%dd%' THEN 1
-            WHEN LOWER(name) LIKE '%dd mam%' OR LOWER(name) LIKE '%dd ma%' THEN 2
-            WHEN LOWER(name) LIKE '%dd sir%' THEN 3
+            WHEN LOWER(name) LIKE '%ketan%' OR LOWER(name) LIKE '%kotecha%' OR (LOWER(position) LIKE '%director%' AND LOWER(position) NOT LIKE '%deputy%' AND LOWER(position) NOT LIKE '%dd%') THEN 1
+            WHEN LOWER(name) LIKE '%deepali%' OR LOWER(name) LIKE '%vora%' OR LOWER(name) LIKE '%dd mam%' OR LOWER(name) LIKE '%dd ma%' THEN 2
+            WHEN LOWER(name) LIKE '%satish%' OR LOWER(name) LIKE '%patil%' OR LOWER(name) LIKE '%dd sir%' THEN 3
             ELSE 4
           END, 
           name ASC
@@ -318,9 +318,9 @@ app.get("/api/advisory-committee", async (req, res) => {
       FROM advisory_committee 
       ORDER BY 
         CASE 
-          WHEN LOWER(name) LIKE '%director%' AND LOWER(name) NOT LIKE '%deputy%' AND LOWER(name) NOT LIKE '%dd%' THEN 1
-          WHEN LOWER(name) LIKE '%dd mam%' OR LOWER(name) LIKE '%dd ma%' THEN 2
-          WHEN LOWER(name) LIKE '%dd sir%' THEN 3
+          WHEN LOWER(name) LIKE '%ketan%' OR LOWER(name) LIKE '%kotecha%' OR (LOWER(position) LIKE '%director%' AND LOWER(position) NOT LIKE '%deputy%' AND LOWER(position) NOT LIKE '%dd%') THEN 1
+          WHEN LOWER(name) LIKE '%deepali%' OR LOWER(name) LIKE '%vora%' OR LOWER(name) LIKE '%dd mam%' OR LOWER(name) LIKE '%dd ma%' THEN 2
+          WHEN LOWER(name) LIKE '%satish%' OR LOWER(name) LIKE '%patil%' OR LOWER(name) LIKE '%dd sir%' THEN 3
           ELSE 4
         END, 
         name ASC
