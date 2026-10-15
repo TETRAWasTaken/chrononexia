@@ -114,19 +114,43 @@ export const SLUG_TO_SR_NO: Record<string, number> = {
 
 /**
  * Custom sort comparator for Advisory Committee
- * Order: Director first -> DD Mam -> DD Sir -> Alphabetical
+ * Order: Prof. Ketan Kotecha (left-most) -> Dr. Deepali Vora (middle) -> Dr. Satish Patil (right-most) -> Alphabetical
  */
-function sortAdvisory(a: TeamMember, b: TeamMember): number {
-  const getWeight = (name: string): number => {
-    const lower = (name || "").toLowerCase();
-    if (lower.includes("director") && !lower.includes("deputy") && !lower.includes("dd")) return 1;
-    if (lower.includes("dd mam") || lower.includes("dd ma")) return 2;
-    if (lower.includes("dd sir")) return 3;
+export function sortAdvisory(a: TeamMember, b: TeamMember): number {
+  const getWeight = (m: TeamMember): number => {
+    const name = (m.name || "").toLowerCase();
+    const pos = (m.position || "").toLowerCase();
+
+    // 1. Prof. Ketan Kotecha (Left-most)
+    if (
+      name.includes("ketan") ||
+      name.includes("kotecha") ||
+      (pos.includes("director") && !pos.includes("deputy") && !pos.includes("dd"))
+    ) {
+      return 1;
+    }
+    // 2. Dr. Deepali Vora (Middle)
+    if (
+      name.includes("deepali") ||
+      name.includes("vora") ||
+      name.includes("dd mam") ||
+      name.includes("dd ma")
+    ) {
+      return 2;
+    }
+    // 3. Dr. Satish Patil (Right-most)
+    if (
+      name.includes("satish") ||
+      name.includes("patil") ||
+      name.includes("dd sir")
+    ) {
+      return 3;
+    }
     return 4;
   };
 
-  const weightA = getWeight(a.name);
-  const weightB = getWeight(b.name);
+  const weightA = getWeight(a);
+  const weightB = getWeight(b);
   if (weightA !== weightB) return weightA - weightB;
   return (a.name || "").localeCompare(b.name || "");
 }

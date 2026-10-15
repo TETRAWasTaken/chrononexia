@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, Shield, User, Users, Quote, Award, Crown, BookOpen, Building2, Trophy, Globe, Cpu } from "lucide-react";
-import { getTeamDataCached, ChiefGuest } from "../utils/apiCache";
+import { getTeamDataCached, ChiefGuest, sortAdvisory } from "../utils/apiCache";
 import MemberModal from "./MemberModal";
 import RegistrationPaymentSection from "./RegistrationPaymentSection";
 import symbiLogo from "../assets/SYMBITECH/logo.png";
@@ -119,7 +119,7 @@ export default function SymbitechIntro() {
           heads: heads,
           coHeads: coHeads,
           headsAndCoheads: rawHeadsAndCoheads,
-          advisoryCommittee: data.advisoryCommittee || [],
+          advisoryCommittee: ((data.advisoryCommittee || []) as TeamMember[]).sort(sortAdvisory),
           organizingFaculty: data.organizingFaculty || [],
           chiefGuests: data.chiefGuests || [],
         });
